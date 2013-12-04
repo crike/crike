@@ -13,4 +13,4 @@ End
 
 Related projects
 ----------------
-https://github.com/fotomxq/qidimission-en/commits/master
+https://github.com/fotomxq/qidimission-en
