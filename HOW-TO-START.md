@@ -10,3 +10,7 @@ Front
 End
 -------
 1. Learn redis, mongodb, mysql, nginx.
+
+Related projects
+----------------
+https://github.com/fotomxq/qidimission-en/commits/master
