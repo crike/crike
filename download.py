@@ -6,11 +6,8 @@ Created on 2013-12-5
 
 # -*- coding: gbk -*-
 
-import re
 import os.path
-import threading
 import time
-import urllib.request
 
 
 try: input = raw_input
