@@ -55,6 +55,9 @@ def main():
     
     for wordname in words:
         
+        if wordname.isalpha() == False:
+            continue
+        
         wordfilename = wordname.lower()+'.mp3'
         
         if os.path.exists(wordfilename) and os.path.getsize(wordfilename) > 0: #TODO MD5
