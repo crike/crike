@@ -43,7 +43,7 @@ def get_data_from_req(req):
     while attempts < 5:
         try:
             binary = urlopen(req)
-            time.sleep(0.5)
+            time.sleep(1) # be nice to web host
             break
         except Exception as e:
             attempts += 1
