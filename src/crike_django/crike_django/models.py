@@ -1,7 +1,11 @@
 from django.db import models
 
-# 数据库基本模型分为dict、user、course、voice、image、game、video
-# 当前目标：实现dict、user、course，其余皆往后排
+# 数据库基本模型分为word、dict、user、course、voice、image、game、video
+# 当前目标：实现word、dict、user、course，其余皆往后排
+# dict包含多个word，course包含多个word，user包含多个course
+
+class Word(models.Model):
+    pass
 
 class BasicDict(models.Model):
     pass
