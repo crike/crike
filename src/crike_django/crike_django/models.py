@@ -1,9 +1,9 @@
 #coding:utf-8
 from django.db import models
 
-# 数据库基本模型分为word、dict、user、course、voice、image、game、video
-# 当前目标：实现word、dict、user、course，其余皆往后排
-# dict包含多个word，course包含多个word，user包含多个course
+# 鏁版嵁搴撳熀鏈ā鍨嬪垎涓簑ord銆乨ict銆乽ser銆乧ourse銆乿oice銆乮mage銆乬ame銆乿ideo
+# 褰撳墠鐩爣锛氬疄鐜皐ord銆乨ict銆乽ser銆乧ourse锛屽叾浣欑殕寰�鍚庢帓
+# dict鍖呭惈澶氫釜word锛宑ourse鍖呭惈澶氫釜word锛寀ser鍖呭惈澶氫釜course
 
 class Word(models.Model):
     pass

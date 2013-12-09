@@ -6,21 +6,21 @@ from django.shortcuts import render
 
 from crike_django.models import *
 
-# Upload fileµÄview
-# ¹æ¶¨¾ßÌåµÄget/post¶ÔÓ¦ÊÂ¼ş
+# Upload fileçš„view
+# è§„å®šå…·ä½“çš„get/postå¯¹åº”äº‹ä»¶
 class DictView(TemplateView):
     template_name = 'crike_django/dict_view.html'
 
     def get(self, request, *args, **kwargs):
-        # 1.È¡³öËùÓĞ/Ö¸¶¨´Êµä£¬È»ºóÓÃÄ£°æäÖÈ¾
-        # 2.°´Ò³½øĞĞ·ÖÒ³£¬Ê¹ÓÃpagination
+        # 1.å–å‡ºæ‰€æœ‰/æŒ‡å®šè¯å…¸ï¼Œç„¶åç”¨æ¨¡ç‰ˆæ¸²æŸ“
+        # 2.æŒ‰é¡µè¿›è¡Œåˆ†é¡µï¼Œä½¿ç”¨pagination
         basic_dicts = BasicDict.objects.all()
         p = Paginator(basic_dicts, 20).page(1)
         return render(request, self.template_name, {
             'p_dicts': p,
         })
 
-    # µ±Ç°´Ëpost·½·¨½öÎªÉÏ´«wordÖÁdictÊ¹ÓÃ
+    # å½“å‰æ­¤postæ–¹æ³•ä»…ä¸ºä¸Šä¼ wordè‡³dictä½¿ç”¨
     def post(self, request, *args, **kwargs):
         word = request.POST.get('word', None)
         word_translated = request.POST.get('word_translated', None)
