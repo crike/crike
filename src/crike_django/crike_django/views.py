@@ -1,4 +1,4 @@
-
+#coding:utf-8
 from django.views.generic import *
 from django.http import *
 from django.core.paginator import Paginator

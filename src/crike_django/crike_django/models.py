@@ -1,3 +1,4 @@
+#coding:utf-8
 from django.db import models
 
 # 数据库基本模型分为word、dict、user、course、voice、image、game、video
