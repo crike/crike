@@ -3,8 +3,12 @@ from django.views.generic import *
 from django.http import *
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 
+# Imaginary function to handle an uploaded file.
 from crike_django.models import *
+from crike_django.forms import *
 
 # Upload file的view
 # 规定具体的get/post对应事件
@@ -33,6 +37,16 @@ class DictView(TemplateView):
 
 def import_dict():
     pass
+
+def upload_file(request, handle_uploaded_file=None):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('/success/url/')
+    else:
+        form = UploadFileForm()
+    return render_to_response('upload.html', {'form': form})
 
 class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'
