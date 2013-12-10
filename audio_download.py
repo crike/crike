@@ -54,8 +54,13 @@ def get_data_from_req(req):
 
 def is_file_valid(file):
     try:
-        file.read()
-        return True
+        first_char = file.read(1) #get the first character
+        if not first_char:
+            print "file is empty" #first character is the empty string..
+            return False
+        else:
+            file.seek(0)
+            return True
     except Exception as e:
         print(e)
         return False
@@ -65,6 +70,9 @@ def main():
 
     con = Connection()
     db = con.audiodb
+
+    if use_proxy == True:
+        install_proxy()
 
     words = open(filename).read().split()
     for wordname in words:
@@ -76,8 +84,6 @@ def main():
         if num > 0:
             print("Already got "+"\""+wordname+"\"")
             continue
-        if use_proxy == True:
-            install_proxy()
         try:
             mp3file = get_data_from_req(
                     "https://ssl.gstatic.com/dictionary/static/sounds/de/0/"+wordfilename)
