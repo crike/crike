@@ -96,10 +96,23 @@ def main():
             print(e)
 
 
+def get_file():
+    filename = input("Input a file name: ")
+    if not os.path.exists(filename):
+        print "%s doesn't exists" % filename
+        filename = get_file()
+    elif not os.path.getsize(filename):
+        print "%s is empty" % filename
+        filename = get_file()
+    else:
+        pass
+
+    return filename
+
 http_proxy = "http://localhost:8086"
 use_proxy = False
 http_proxys = {'http':http_proxy}
-filename = input("Input a file name: ");
+filename = get_file()
 
 start = time.time()
 if __name__ == '__main__':
