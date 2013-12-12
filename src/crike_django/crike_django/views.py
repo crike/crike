@@ -10,8 +10,9 @@ from django.shortcuts import render_to_response
 from crike_django.models import *
 from crike_django.forms import *
 
-# Upload file的view
+# TODO: Upload file的view
 # 规定具体的get/post对应事件
+
 class DictView(TemplateView):
     template_name = 'crike_django/dict_view.html'
 
@@ -38,6 +39,7 @@ class DictView(TemplateView):
 def import_dict():
     pass
 
+#功能：上传文件，然后把文件用handle_uploaded_file处理
 def upload_file(request, handle_uploaded_file=None):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
