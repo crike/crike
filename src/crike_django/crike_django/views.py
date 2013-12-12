@@ -66,5 +66,6 @@ class TeacherView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
-def home():
+def home(request):
+    print request
     return HttpResponse("Hello crike!")
