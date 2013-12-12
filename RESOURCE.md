@@ -1,21 +1,45 @@
 Resource
 --------
 
-* jquery-upload-file: https://github.com/blueimp/jQuery-File-Upload
+jquery, div + css, django
 
-* jquery-cookie: https://github.com/carhartl/jquery-cookie
+jqeury
+=====
 
-* jquery-pjax: https://github.com/defunkt/jquery-pjax
+* upload-file: https://github.com/blueimp/File-Upload
 
-* jquery-validate:
- https://github.com/jzaefferer/jquery-validation  
+* cookie: https://github.com/carhartl/cookie
+
+* pjax: https://github.com/defunkt/pjax
+
+* validate:
+ https://github.com/jzaefferer/validation  
  validate most forms you input, like email, username, etc.
 
-* jquery-backstretch:
- https://github.com/srobbin/jquery-backstretch  
+* backstretch:
+ https://github.com/srobbin/backstretch  
  allow you to resize any background automatically when window/element size changes
 
-* jquery-transit:
+* transit:
  https://github.com/rstacruz/jquery.transit  
  Super-smooth CSS3 transformations and transitions for jQuery
 
+* menu-aim:
+ https://github.com/kamens/menu-aim  
+ useful dropdown menu!
+
+* mousewheel:
+ https://github.com/brandonaaron/mousewheel
+ handle the mouse's wheel, very useful when using iframe..
+
+div + css
+=====
+
+* bootstrap: https://github.com/twbs/bootstrap
+
+* bootstrap-theme: https://github.com/thomaspark/bootswatch
+
+* font & icon: https://github.com/FortAwesome/Font-Awesome
+
+django
+=====
