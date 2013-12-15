@@ -5,6 +5,7 @@ import json
 import re
 import requests
 import urllib2
+import threading
 from multiprocessing import Process
 from PIL import Image
 from StringIO import StringIO
@@ -59,7 +60,7 @@ def download_from_bing(query, path):
  
     x = 0
     for imgurl in urllist:
-        if len(os.listdir(BASE_PATH)) > pics_per_word:
+        if len(os.listdir(BASE_PATH)) >= pics_per_word:
             break
 
         try:
@@ -100,7 +101,7 @@ def download_thru_googleapi(query, path):
  
     start = 0 # Google's start query string parameter for pagination.
     while start < 16: # Google will only return a max of 56 results.
-        if len(os.listdir(BASE_PATH)) > pics_per_word:
+        if len(os.listdir(BASE_PATH)) >= pics_per_word:
             break
 
         r = requests.get(BASE_URL % start, verify=False)
@@ -109,7 +110,6 @@ def download_thru_googleapi(query, path):
             if len(urllist) == 0:
                 continue
             url = urllist[0]
-            print url
             try:
                 image_r = requests.get(url)
                 if image_r.content == 0:
@@ -138,6 +138,7 @@ def download_thru_googleapi(query, path):
         # Be nice to Google and they'll be nice back :)
         time.sleep(2)
  
+
 def is_file_valid(file):
     try:
         first_char = file.read(1) #get the first character
@@ -151,82 +152,94 @@ def is_file_valid(file):
         print(e)
         return False
 
+
+def get_dir_len(path):
+    if os.path.exists(path):
+        return len(os.listdir(path))
+    else:
+        return 0
+
+
+def download_thread_single_engine(wordname, engine):
+    lastlen = get_dir_len('images/'+wordname)
+    count = 0
+
+    process = Process(target=engine, args=(wordname, 'images'))
+    while not isinstance(process, Process):
+        print("Process init failed")
+        process = Process(target=engine, args=(wordname, 'images'))
+    process.start()
+    time.sleep(1)
+
+    while process.is_alive():
+        print str(process)+ ' ' + wordname + ' ' + str(count)
+        time.sleep(10)
+        currentlen = get_dir_len('images/'+wordname)
+
+        if currentlen == lastlen:
+            count += 1
+            if count == 10:
+                process.terminate()
+                break
+        else:
+            lastlen = currentlen
+
+    return lastlen
+
+
+class download_thread(threading.Thread):
+    def __init__(self, words):
+        threading.Thread.__init__(self)
+        self.words = words
+
+    def run(self):
+        words_lock.acquire()
+        num = len(self.words)
+        print self.words
+        words_lock.release()
+
+        while num > 0:
+            words_lock.acquire()
+            wordname = self.words.pop()
+            words_lock.release()
+            if not wordname.isalpha():
+                continue
+            elif os.path.exists('images/'+wordname) and len(os.listdir('images/'+wordname)) > pics_per_word:
+                continue
+        
+            print('Start downloading "%s"' % wordname)
+            lastlen = download_thread_single_engine(wordname, download_from_bing)
+
+            if lastlen < pics_per_word:
+                print('Try another engine')
+                download_thread_single_engine(wordname, download_thru_googleapi)
+
+            words_lock.acquire()
+            num = len(self.words)
+            words_lock.release()
+        
+
+
 def main():
     """For images downloading to filesystem, then manually filter them"""
     if use_proxy == True:
         install_proxy()
 
     words = open(filename).read().split()
-    for i in range(0, len(words), 2):
-        wordname1 = words[i]
-        if len(words)-1 < i+1:
-            wordname2 = '0'
-        else:
-            wordname2 = words[i+1]
-        process1 = None
-        process2 = None
-        
-        if not wordname1.isalpha():
-            pass
-        elif os.path.exists('images/'+wordname1) and len(os.listdir('images/'+wordname1)) > pics_per_word:
-            pass
-        else:
-            process1 = Process(target=download_from_bing, args=(wordname1, 'images'))
 
-        if not wordname2.isalpha():
-            pass
-        elif os.path.exists('images/'+wordname2) and len(os.listdir('images/'+wordname2)) > pics_per_word:
-            pass
-        else:
-            # process2 = Process(target=download_thru_googleapi, args=(wordname2, 'images'))
-            process2 = Process(target=download_from_bing, args=(wordname2, 'images'))
+    thread1 = download_thread(words)
+    thread1.start()
+    print('Thread 1 started!')
+    time.sleep(2)
+    thread2 = download_thread(words)
+    thread2.start()
+    print('Thread 2 started!')
 
-        if process1:
-            process1.start()
-        time.sleep(2)
-        if process2:
-            process2.start()
+    thread1.join()
+    print('Thread 1 Done!')
+    thread2.join()
+    print('Thread 2 Done!')
 
-        time.sleep(5)
-        
-        if os.path.exists('images/'+wordname1):
-            lastlen1 = len(os.listdir('images/'+wordname1))
-        else:
-            lastlen1 = 0
-        if os.path.exists('images/'+wordname2):
-            lastlen2 = len(os.listdir('images/'+wordname2))
-        else:
-            lastlen2 = 0
-
-        while process1 and process1.is_alive() or \
-              process2 and process2.is_alive():
-            time.sleep(20)
-            if os.path.exists('images/'+wordname1):
-                currentlen1 = len(os.listdir('images/'+wordname1))
-            else:
-                currentlen1 = 0
-            if os.path.exists('images/'+wordname2):
-                currentlen2 = len(os.listdir('images/'+wordname2))
-            else:
-                currentlen2 = 0
-            
-            if process1 and process1.is_alive() and currentlen1 == lastlen1:
-                process1.terminate()
-
-            if process2 and process2.is_alive() and currentlen2 == lastlen2:
-                process2.terminate()
-
-            lastlen1 = currentlen1
-            lastlen2 = currentlen2
-
-        """
-        if process1 != '':
-            process1.join()
-            print("%s Done!" % wordname1)
-        if process2 != '':
-            process2.join()
-            print("%s Done!" % wordname2)
-        """
             
 
 def get_file():
@@ -247,6 +260,7 @@ use_proxy = False
 http_proxys = {'http':http_proxy}
 filename = get_file()
 pics_per_word = 4
+words_lock = threading.Lock()
 
 start = time.time()
 if __name__ == '__main__':
