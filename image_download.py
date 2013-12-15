@@ -182,6 +182,7 @@ def download_thread_single_engine(wordname, engine):
                 process.terminate()
                 break
         else:
+            count = 0
             lastlen = currentlen
 
     return lastlen
@@ -258,12 +259,12 @@ def get_file():
 http_proxy = "http://localhost:8086"
 use_proxy = False
 http_proxys = {'http':http_proxy}
-filename = get_file()
 pics_per_word = 4
 words_lock = threading.Lock()
 
-start = time.time()
 if __name__ == '__main__':
+    filename = get_file()
+    start = time.time()
     main()
-print("Elapsed Time:", (time.time() - start))
+    print("Elapsed Time:", (time.time() - start))
 
