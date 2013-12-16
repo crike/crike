@@ -72,6 +72,24 @@ def hello_crike(request):
     print request
     return HttpResponse("Hello crike!")
 
+class LessonView(TemplateView):
+    template_name='crike_django/lesson_view.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
+
+class ExamView(TemplateView):
+    template_name='crike_django/exam_view.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
+
 class HomeView(TemplateView):
     template_name='crike_django/home.html'
 

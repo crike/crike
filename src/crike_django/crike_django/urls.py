@@ -8,7 +8,9 @@ from crike_django.views import *
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^(home)?$', HomeView.as_view(), name='home'),
+    url(r'^lesson$', LessonView.as_view(), name='lesson'),
+    url(r'^exam$', ExamView.as_view(), name='exam'),
     # url(r'^crike_django/', include('crike_django.foo.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
