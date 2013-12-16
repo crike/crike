@@ -72,6 +72,12 @@ def hello_crike(request):
     print request
     return HttpResponse("Hello crike!")
 
+def testdb(request):
+    # test
+    entry = Word(name='test')
+    entry.save()
+    return HttpResponse("Word saved!")
+
 class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
