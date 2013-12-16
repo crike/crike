@@ -72,6 +72,12 @@ def hello_crike(request):
     print request
     return HttpResponse("Hello crike!")
 
+def testdb(request):
+    # test
+    entry = Word(name='test')
+    entry.save()
+    return HttpResponse("Word saved!")
+
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'
 
