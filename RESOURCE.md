@@ -30,7 +30,7 @@ jqeury
 
 * mousewheel:
  https://github.com/brandonaaron/mousewheel
- handle the mouse's wheel, very useful when using iframe..
+ handle the mouse wheel, very useful when using iframe..
 
 div + css
 =====
@@ -43,3 +43,21 @@ div + css
 
 django
 =====
+
+mongo+django
+=====
+ 
+* http://www.cnblogs.com/holbrook/archive/2012/03/11/2390715.html
+ 
+* http://artori.us/use-mongodb-with-django/
+ 
+* http://django-mongodb-engine.readthedocs.org/en/latest/
+ very useful dictionary of mongoengine
+
+
+
+dictionary
+=====
+
+* http://www.dicts.info/dictionaries.php
+
