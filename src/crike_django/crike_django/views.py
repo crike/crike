@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
 from crike_django.forms import *
+from word_download import *
 
 # TODO: Upload file的view
 # 规定具体的get/post对应事件
@@ -74,9 +75,16 @@ def hello_crike(request):
 
 def testdb(request):
     # test
-    entry = Word(name='test')
-    entry.save()
-    return HttpResponse("Word saved!")
+    # entry = Word(name='test')
+    wordname = "apple"
+    if len(Word.objects(name=wordname)) > 0:
+        e = Word.objects(name=wordname)[0]
+    else:
+        e = download_word(wordname)
+        e.save()
+    print "word:"+e["name"]+': ['+e["phonetics"]+'] '+e["pos"][0]+' '+e["mean"][0]
+    ret =  e["name"]+': ['+e["phonetics"]+'] '+e["pos"][0]+' '+e["mean"][0]
+    return HttpResponse(ret.encode("utf-8"))
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'

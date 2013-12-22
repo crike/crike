@@ -8,7 +8,7 @@ import mongoengine as me
 
 class Word(me.Document):
     name = me.StringField(required=True, max_length=50)
-    phonetic_symbol = me.StringField(required=True, max_lenght=80)
+    phonetics = me.StringField(required=True, max_length=80)
     mean = me.ListField(me.StringField(max_length=50))
     pos = me.ListField(me.StringField(max_length=5))
     audio = me.FileField(required=True)
