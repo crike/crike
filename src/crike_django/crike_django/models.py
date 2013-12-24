@@ -1,24 +1,25 @@
 #coding:utf-8
 from django.db import models
-import mongoengine as me
+from mongoengine import *
 
 # 数据库基本模型分为word、dict、user、course、voice、image、game、video
 # 当前目标：实现word、dict、user、course，其余皆往后排
 # dict包含多个word，course包含多个word，user包含多个course
 
-class Word(me.Document):
-    name = me.StringField(required=True, max_length=50)
-    phonetics = me.StringField(required=True, max_length=80)
-    mean = me.ListField(me.StringField(max_length=50))
-    pos = me.ListField(me.StringField(max_length=5))
-    audio = me.FileField(required=True)
-    image = me.ImageField()
+class Word(Document):
+    name = StringField(required=True, max_length=50)
+    phonetics = StringField(required=True, max_length=80)
+    mean = ListField(StringField(max_length=50))
+    pos = ListField(StringField(max_length=5))
+    audio = FileField(required=True)
+    image = ImageField()
 
-class BasicDict(models.Model):
-    name = me.StringField(required=True)
-    num = me.IntField()
-    dictionary = me.ListField(Word(), required=True)
-    pass
+class BasicDict(Document):
+    name = StringField(required=True)
+    num = IntField()
+    dictionary = ListField(ReferenceField(Word), required=True)
+
+    meta = {'allow_inheritance': True}
 
 class CET4Dict(BasicDict):
     pass

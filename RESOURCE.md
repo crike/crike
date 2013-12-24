@@ -52,6 +52,8 @@ mongo+django
 * http://artori.us/use-mongodb-with-django/
  
 * http://django-mongodb-engine.readthedocs.org/en/latest/
+
+* http://docs.mongoengine.org/en/latest/tutorial.html
  very useful dictionary of mongoengine
 
 

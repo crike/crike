@@ -1,0 +1,44 @@
+<!-- words_index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--link href="{{STATIC_URL}}blog.css" rel="stylesheet" type="text/css"-->
+  </head> 
+  <body>
+    <h1>Crike</h1>
+    <form method="post" action="http://127.0.0.1:8000/">
+      {% csrf_token %}
+      <ul>
+        <li>
+          <input type="text" name="title" placeholder="Post Title" required>
+        </li>
+        <li>
+          <textarea name="content" placeholder="Enter Content" rows=5 cols=50 required>
+          </textarea>
+        </li>
+        <li>
+          <input type="submit" value="Add Post">
+        </li>
+      </ul>
+    </form>
+<!-- Cycle through entries -->
+    {% for word in Words %}
+      <h2> {{ word.name }} </h2>
+      <p>[{{ word.phonetics }}]</p>
+      {% for mean in word.mean %}
+        <li{display:inline}>{{ mean }}</li>
+      {% endfor %}
+      <!--form method="get" action="http://127.0.0.1:8000/update">
+        <input type="hidden" name="id" value="{{ post.id }}">
+        <input type="hidden" name="title" value="{{ post.title }}">
+        <input type="hidden" name="last_update" value="{{ post.last_update }}">
+        <input type="hidden" name="content" value="{{ post.content }}">
+        <input type="submit" name="" value="update">
+      </form-->
+      <form method="get" action="http://127.0.0.1:8000/delete">
+        <input type="hidden" name="id" value="{{word.id}}">
+        <input type="submit" value="delete">
+      </form>
+    {% endfor %}
+  </body>
+</html>

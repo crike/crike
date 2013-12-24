@@ -86,6 +86,32 @@ def testdb(request):
     ret =  e["name"]+': ['+e["phonetics"]+'] '+e["pos"][0]+' '+e["mean"][0]
     return HttpResponse(ret.encode("utf-8"))
 
+def show_words(request):
+    template_name='crike_django/words_list.html'
+
+    words = Word.objects.all()
+    if len(words) == 0:
+        return HttpResponse("Empty DataBase!")
+    else:
+        request.encoding = "utf-8"
+        return render(request, template_name, {'Words':words})
+
+class WordDeleteView(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        id = request.GET['id']
+        template = 'crike_django/word_delete.html'
+        params = { 'id': id }
+        return render(request, template, params)
+
+    def post(self, request, *args, **kwargs):
+        id = request.POST['id']
+        word = Word.objects(id=id)[0]
+        word.delete()
+        template = 'crike_django/words_list.html'
+        params = {'Words': Word.objects.all()}
+        return render(request, template, params)
+
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'
 
