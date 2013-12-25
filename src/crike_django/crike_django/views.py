@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
 from crike_django.forms import *
-from word_download import *
+from word_utils import *
 
 # TODO: Upload file的view
 # 规定具体的get/post对应事件
@@ -41,15 +41,16 @@ def import_dict():
     pass
 
 #功能：上传文件，然后把文件用handle_uploaded_file处理
-def upload_file(request, handle_uploaded_file=None):
+def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/success/url/')
+            #return HttpResponseRedirect('/show/')
+            return show_words(request)
     else:
         form = UploadFileForm()
-    return render_to_response('upload.html', {'form': form})
+    return render(request, 'crike_django/upload_file.html', {'form': form})
 
 class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'

@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     url(r'^testdb/', views.testdb),
     url(r'^show/', views.show_words),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
+    url(r'^upload/', views.upload_file),
 )

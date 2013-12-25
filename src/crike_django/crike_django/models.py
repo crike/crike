@@ -10,7 +10,7 @@ class Word(Document):
     name = StringField(required=True, max_length=50)
     phonetics = StringField(required=True, max_length=80)
     mean = ListField(StringField(max_length=50))
-    pos = ListField(StringField(max_length=5))
+    pos = ListField(StringField(max_length=20))
     audio = FileField(required=True)
     image = ImageField()
 

@@ -71,5 +71,9 @@ def download_word(wordname):
     download_from_aiciba(word)
     return word
 
-#download_from_aiciba("nice")
+def handle_uploaded_file(words_file):
+    words = words_file.read().split()
+    for word in words:#TODO multi-thread
+        if len(Word.objects(name=word)) == 0:
+            download_word(word).save()
 
