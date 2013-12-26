@@ -23,7 +23,10 @@
 <!-- Cycle through entries -->
     {% for word in Words %}
       <h2> {{ word.name }} </h2>
-      <p>[{{ word.phonetics }}]</p>
+      <p>
+      <li{display:inline}>[{{ word.phonetics }}] </li>
+      <li{display:inline}><a onmouseout="clearTimeout(timer);" onmouseover="onSecondDelay({{ word.audio }})" onclick="asplay({{ word.audio }})" title="发音" href="javascript:;" class="ico_sound">READ</a></li>
+      </p>
       {% for mean in word.mean %}
         <li{display:inline}>{{ mean }}</li>
       {% endfor %}
