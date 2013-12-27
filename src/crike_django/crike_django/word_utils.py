@@ -7,7 +7,6 @@ Created on 2013-12-20
 
 import time
 import re
-import bson
 from crike_django.models import Word
 
 try: 
@@ -67,10 +66,10 @@ def download_from_iciba(word):
     print(pos_list)
     word.pos = pos_list
 
-    #audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3[^\'\"]*\.mp3)\'\)', content, re.M | re.S)
-    #print audio_list
-    #download_audio_from_iciba(audio_list[0], word)
- 
+    audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3[^\'\"]*\.mp3)\'\)', content, re.M | re.S)
+    print audio_list
+    download_audio_from_iciba(audio_list[0], word)
+
 
 def get_data_from_req(req):
     attempts = 0
@@ -103,27 +102,23 @@ def download_audio_from_google(word):
     try:
         mp3file = get_data_from_req(
                 "https://ssl.gstatic.com/dictionary/static/sounds/de/0/"+word.name+".mp3")
-        print mp3file
-        #if not is_file_valid(mp3file):
-        #    return
-        word.audio = bson.Binary(mp3file.read())
+        word.audio.put(mp3file.read(), content_type='audio/mp3')
     except Exception as e:
         print(e)
 
 def download_audio_from_iciba(url, word):
     try:
         mp3file = get_data_from_req(url)
-        print mp3file
-        #if not is_file_valid(mp3file):
-        #    return
-        word.audio = bson.Binary(mp3file.read())
+        print url
+        print mp3file.read(50)
+        word.audio.put(mp3file.read(), content_type='audio/mp3')
     except Exception as e:
         print(e)
 
 def download_word(wordname):
     word = Word(name=wordname)
     download_from_iciba(word)
-    download_audio_from_google(word)
+    #download_audio_from_google(word)
     return word
 
 def handle_uploaded_file(words_file):

@@ -6,7 +6,7 @@
   </head> 
   <body>
     <h1>Crike</h1>
-    <form method="post" action="http://127.0.0.1:8000/">
+    <!--form method="post" action="http://127.0.0.1:8000/">
       {% csrf_token %}
       <ul>
         <li>
@@ -19,17 +19,25 @@
           <input type="submit" value="Add Post">
         </li>
       </ul>
+    </form-->
+    <form method="get" action="http://127.0.0.1:8000/upload/">
+      <input type="submit" value="upload">
     </form>
 <!-- Cycle through entries -->
     {% for word in Words %}
       <h2> {{ word.name }} </h2>
       <p>
-      <li{display:inline}>[{{ word.phonetics }}] </li>
-      <li{display:inline}><a onmouseout="clearTimeout(timer);" onmouseover="onSecondDelay({{ word.audio }})" onclick="asplay({{ word.audio }})" title="发音" href="javascript:;" class="ico_sound">READ</a></li>
-      </p>
+        <form method="get" action="http://127.0.0.1:8000/listen">
+          <input type="hidden" name="id" value="{{word.id}}">
+          <input type="submit" value="listen">
+        </form>
+        <!--li{display:inline}><a onmouseout="clearTimeout(timer);" onmouseover="onSecondDelay({{ word.audio }})" onclick="asplay({{ word.audio }})" title="发音" href="javascript:;" class="ico_sound">READ</a></li>
+        <li{display:inline}><a title="发音" href="{{ word.audio }}" class="ico_sound">Download</a></li-->
+        <li{display:inline}> [{{ word.phonetics }}] </li>
       {% for mean in word.mean %}
         <li{display:inline}>{{ mean }}</li>
       {% endfor %}
+      </p>
       <!--form method="get" action="http://127.0.0.1:8000/update">
         <input type="hidden" name="id" value="{{ post.id }}">
         <input type="hidden" name="title" value="{{ post.title }}">

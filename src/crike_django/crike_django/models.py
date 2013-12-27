@@ -11,8 +11,8 @@ class Word(Document):
     phonetics = StringField(required=True, max_length=80)
     mean = ListField(StringField(max_length=50), required=True)
     pos = ListField(StringField(max_length=20), required=True)
-    audio = BinaryField(required=True)
-    image = ImageField()
+    audio = FileField(required=True)
+    image = FileField()
 
 class BasicDict(Document):
     name = StringField(required=True)
