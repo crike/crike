@@ -86,11 +86,9 @@ def testdb(request):
     ret =  e["name"]+': ['+e["phonetics"]+'] '+e["pos"][0]+' '+e["mean"][0]
     return HttpResponse(ret.encode("utf-8"))
 
-def listen(request):
-    id = request.GET['id']
-    word = Word.objects(id=id).first()
-    response = HttpResponse(word.audio.read(), content_type="audio/mpeg")
-    return response
+def play_audio(request, name):
+    word = Word.objects(name=name).first()
+    return HttpResponse(word.audio.read(), content_type="audio/mpeg")
 
 def show_words(request):
     template_name='crike_django/words_list.html'
@@ -112,7 +110,7 @@ class WordDeleteView(TemplateView):
     def post(self, request, *args, **kwargs):
         id = request.POST['id']
         word = Word.objects(id=id)[0]
-        os.remove(word.audio)
+        #os.remove(word.audio)
         word.delete()
         template = 'crike_django/words_list.html'
         params = {'Words': Word.objects.all()}

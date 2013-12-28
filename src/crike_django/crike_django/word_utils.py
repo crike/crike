@@ -111,12 +111,14 @@ def download_audio_from_iciba(url, word):
     try:
         mp3file = get_data_from_req(url)
         print url
+        """
         filepath = os.path.join(PATH, word.name+'.mp3')
         file = open(filepath, 'wb')
         file.write(mp3file.read())
         word.audio = filepath
         file.close()
-        #word.audio.put(mp3file.read(), content_type='audio/mp3')
+        """
+        word.audio.put(mp3file.read(), content_type='audio/mp3')
     except Exception as e:
         print(e)
 
