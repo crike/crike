@@ -7,6 +7,7 @@ Created on 2013-12-20
 
 import time
 import re
+import os
 from crike_django.models import Word
 
 try: 
@@ -110,8 +111,12 @@ def download_audio_from_iciba(url, word):
     try:
         mp3file = get_data_from_req(url)
         print url
-        print mp3file.read(50)
-        word.audio.put(mp3file.read(), content_type='audio/mp3')
+        filepath = os.path.join(PATH, word.name+'.mp3')
+        file = open(filepath, 'wb')
+        file.write(mp3file.read())
+        word.audio = filepath
+        file.close()
+        #word.audio.put(mp3file.read(), content_type='audio/mp3')
     except Exception as e:
         print(e)
 
@@ -121,7 +126,11 @@ def download_word(wordname):
     #download_audio_from_google(word)
     return word
 
+PATH = 'audios'
 def handle_uploaded_file(words_file):
+    if not os.path.exists(PATH):
+        os.makedirs(PATH)
+
     words = words_file.read().split()
     for word in words:#TODO multi-thread
         if word.isalpha() == False:

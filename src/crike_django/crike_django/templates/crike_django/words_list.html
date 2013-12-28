@@ -3,6 +3,12 @@
 <html>
   <head>
     <link href="blog.css" rel="stylesheet" type="text/css">
+    <script language="javascript" type="text/javascript">
+         function playSound(soundfile) {
+              document.getElementById("dummy").innerHTML=
+                   "<embed src=\""+soundfile+"\" hidden=\"true\" autostart=\"true\" loop=\"false\" />";
+               }
+    </script>
   </head> 
   <body>
     <h1>Crike</h1>
@@ -24,15 +30,19 @@
       <input type="submit" value="upload">
     </form>
 <!-- Cycle through entries -->
+    <span id="dummy"></span>
     {% for word in Words %}
       <h2> {{ word.name }} </h2>
+      <li>{{ word.audio }}</li>
       <p>
-        <form method="get" action="http://127.0.0.1:8000/listen">
+        <!--form method="get" action="http://127.0.0.1:8000/listen">
           <input type="hidden" name="id" value="{{word.id}}">
           <input type="submit" value="listen">
-        </form>
-        <!--li{display:inline}><a onmouseout="clearTimeout(timer);" onmouseover="onSecondDelay({{ word.audio }})" onclick="asplay({{ word.audio }})" title="发音" href="javascript:;" class="ico_sound">READ</a></li>
-        <li{display:inline}><a title="发音" href="{{ word.audio }}" class="ico_sound">Download</a></li-->
+        </form-->
+        <li{display:inline}>
+        <a onmouseout="clearTimeout(timer);" onmouseover="playSound('http://127.0.0.1:8000/{{ word.audio }}');" onclick="playSound('http://127.0.0.1:8000/{{ word.audio }}');" title="发音" href="#" class="ico_sound">READ</a>
+        </li>
+        <li{display:inline}><a title="发音" href="http://127.0.0.1:8000/{{ word.audio }}" class="ico_sound">Play</a></li>
         <li{display:inline}> [{{ word.phonetics }}] </li>
       {% for mean in word.mean %}
         <li{display:inline}>{{ mean }}</li>
@@ -50,5 +60,6 @@
         <input type="submit" value="delete">
       </form>
     {% endfor %}
+
   </body>
 </html>

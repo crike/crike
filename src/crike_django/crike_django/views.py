@@ -89,7 +89,7 @@ def testdb(request):
 def listen(request):
     id = request.GET['id']
     word = Word.objects(id=id).first()
-    response = HttpResponse(word.audio.read(), mimetype="audio/mpeg")
+    response = HttpResponse(word.audio.read(), content_type="audio/mpeg")
     return response
 
 def show_words(request):
@@ -112,6 +112,7 @@ class WordDeleteView(TemplateView):
     def post(self, request, *args, **kwargs):
         id = request.POST['id']
         word = Word.objects(id=id)[0]
+        os.remove(word.audio)
         word.delete()
         template = 'crike_django/words_list.html'
         params = {'Words': Word.objects.all()}
