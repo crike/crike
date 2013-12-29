@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
 from crike_django.forms import *
+from crike_django.settings import MEDIA_ROOT
 from word_utils import *
 
 # TODO: Upload file的view
@@ -110,7 +111,9 @@ class WordDeleteView(TemplateView):
     def post(self, request, *args, **kwargs):
         id = request.POST['id']
         word = Word.objects(id=id)[0]
-        #os.remove(word.audio)
+        audiofile = MEDIA_ROOT+'/'+word.name+'.mp3'
+        if os.path.exists(audiofile):
+            os.remove(audiofile)
         word.delete()
         template = 'crike_django/words_list.html'
         params = {'Words': Word.objects.all()}

@@ -9,6 +9,7 @@ import time
 import re
 import os
 from crike_django.models import Word
+from crike_django.settings import MEDIA_ROOT
 
 try: 
     input = raw_input
@@ -111,14 +112,12 @@ def download_audio_from_iciba(url, word):
     try:
         mp3file = get_data_from_req(url)
         print url
-        """
+
         filepath = os.path.join(PATH, word.name+'.mp3')
         file = open(filepath, 'wb')
         file.write(mp3file.read())
-        word.audio = filepath
         file.close()
-        """
-        word.audio.put(mp3file.read(), content_type='audio/mp3')
+        #word.audio.put(mp3file.read(), content_type='audio/mp3')
     except Exception as e:
         print(e)
 
@@ -128,7 +127,7 @@ def download_word(wordname):
     #download_audio_from_google(word)
     return word
 
-PATH = 'audios'
+PATH = MEDIA_ROOT + '/audios'
 def handle_uploaded_file(words_file):
     if not os.path.exists(PATH):
         os.makedirs(PATH)

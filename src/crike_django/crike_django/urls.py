@@ -3,6 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic import *
 from crike_django import views
+from crike_django import settings
+from django.conf.urls.static import static
 
 from crike_django.views import *
 
@@ -20,5 +22,5 @@ urlpatterns = patterns('',
     url(r'^show/', views.show_words),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^upload/', views.upload_file),
-    url(r'^audios/(?P<name>.*?)/?$', views.play_audio),
-)
+    #url(r'^audios/(?P<name>.*?)/?$', views.play_audio),
+)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

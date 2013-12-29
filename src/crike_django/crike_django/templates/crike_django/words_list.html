@@ -27,8 +27,8 @@
       </script-->
       <p>
         <li{display:inline}>
-        <a onmouseover="playSound('http://127.0.0.1:8000/audios/{{ word.name }}');" 
-            onclick="playSound('http://127.0.0.1:8000/audios/{{ word.name }}');" title="发音" href="#" class="ico_sound">READ</a>
+        <a onmouseover="playSound('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');" 
+            onclick="playSound('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');" title="发音" href="#" class="ico_sound">READ</a>
         </li>
         <li{display:inline}> [{{ word.phonetics }}] </li>
       {% for mean in word.mean %}
