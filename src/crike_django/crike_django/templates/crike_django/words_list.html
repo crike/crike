@@ -4,10 +4,18 @@
     <link href="/static/blog.css" rel="stylesheet" type="text/css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script language="javascript" type="text/javascript">
-         function playSound(soundfile) {
-              $('#dummy').html(
-                   "<embed src=\""+soundfile+"\" hidden=\"true\" autostart=\"true\" loop=\"false\" />");
-               }
+        var timer = null;
+        function playSound(mp3) {
+            $('#dummy').html("<embed src=\""+mp3+"\" hidden=\"true\" autostart=\"true\" loop=\"false\" />");
+        }
+        function callback(mp3) {
+            playSound(mp3);
+        }
+        function delayPlay(mp3) {
+            clearTimeout(timer);
+            var cb = "callback('"+mp3+"')";
+            timer = setTimeout(cb, 100);
+        }
     </script>
   </head> 
   <body>
@@ -27,8 +35,10 @@
       </script-->
       <p>
         <li{display:inline}>
-        <a onmouseover="playSound('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');" 
-            onclick="playSound('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');" title="发音" href="#" class="ico_sound">READ</a>
+        <a onmouseover="delayPlay('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');"
+            onmouseout ="clearTimeout(timer);" 
+            onclick="playSound('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');" 
+            title="发音" href="#" class="ico_sound">READ</a>
         </li>
         <li{display:inline}> [{{ word.phonetics }}] </li>
       {% for mean in word.mean %}
