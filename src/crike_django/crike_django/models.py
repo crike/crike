@@ -9,9 +9,9 @@ from mongoengine import *
 class Word(Document):
     name = StringField(required=True, max_length=50)
     phonetics = StringField(required=True, max_length=80)
-    mean = ListField(StringField(max_length=50), required=True)
+    mean = ListField(StringField(max_length=80), required=True)
     pos = ListField(StringField(max_length=20), required=True)
-    audio = FileField(required=True)
+    #audio = FileField(required=True)
     #audio = StringField()
     image = FileField()
 

@@ -52,23 +52,28 @@ def download_from_iciba(word):
     content = get_content_from_url(BASE_URL)
 
     phonetics_list = re.findall(
-            "\[</strong><strong lang=\"EN-US\" xml:lang=\"EN-US\">([^<>/]*)</strong><strong>\]", content, re.M | re.S)
+            "\[</strong><strong lang=\"EN-US\" xml:lang=\"EN-US\">(.+?)</strong><strong>\]", content, re.M | re.S)
     print(phonetics_list)
     if len(phonetics_list) > 0:
         word.phonetics =  phonetics_list[0]
 
     mean_list = []
-    mean_span_list = re.findall('<span class=\"label_list\">.*</span>', content, re.M | re.S)
+    mean_span_list = re.findall('<span class=\"label_list\">(.+?)</span>', content, re.M | re.S)
+    print mean_span_list
     for mean_span in mean_span_list:
-        mean_list.append(re.findall('<label>([^<>/]*)</label>', mean_span, re.M | re.S))
+        label_list = re.findall('<label>(.+?)</label>', mean_span, re.M | re.S)
+        labels = ''
+        for label in label_list:
+            labels += label
+        mean_list.append(labels)
     print(mean_list)
-    word.mean = mean_list[0]
+    word.mean = mean_list
 
-    pos_list = re.findall('<strong class=\"fl\">([^<>/]*)</strong>', content, re.M | re.S)
+    pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
     print(pos_list)
     word.pos = pos_list
 
-    audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3[^\'\"]*\.mp3)\'\)', content, re.M | re.S)
+    audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3.+?\.mp3)\'\)', content, re.M | re.S)
     print audio_list
     download_audio_from_iciba(audio_list[0], word)
 
