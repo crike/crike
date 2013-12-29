@@ -1,0 +1,22 @@
+body {
+  font-family: arial;
+}
+
+h1, h2 {
+  text-shadow: white 0px 1px 0px;
+  background-color: lightblue;
+}
+
+h1 {
+  font-size: xx-large;
+}
+
+ul {
+  list-style : none;
+}
+
+input[type=submit] {
+  background-color : lightgreen;
+  border-color : lightgreen;
+  text-shadow: white 0px 1px 0px;
+}

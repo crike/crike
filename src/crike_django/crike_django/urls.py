@@ -22,5 +22,5 @@ urlpatterns = patterns('',
     url(r'^show/', views.show_words),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^upload/', views.upload_file),
-    #url(r'^audios/(?P<name>.*?)/?$', views.play_audio),
-)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^media/audios/(?P<name>.*?)/?$', views.play_audio),
+)#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

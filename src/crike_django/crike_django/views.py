@@ -9,7 +9,7 @@ from django.shortcuts import render_to_response
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
 from crike_django.forms import *
-from crike_django.settings import MEDIA_ROOT
+from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
 from word_utils import *
 
 # TODO: Upload file的view
@@ -88,8 +88,24 @@ def testdb(request):
     return HttpResponse(ret.encode("utf-8"))
 
 def play_audio(request, name):
-    word = Word.objects(name=name).first()
-    return HttpResponse(word.audio.read(), content_type="audio/mpeg")
+    #word = Word.objects(name=name).first()
+    #return HttpResponse(word.audio.read(), content_type="audio/mpeg")
+    path = MEDIA_ROOT+'/audios/'+name
+    if os.path.exists(path):
+        file = open(path, 'rb')
+        return HttpResponse(file.read(), content_type="audio/mpeg")
+    else:
+        return HttpResponse(None)
+
+"""
+def display_image(request, name):
+    path = STATIC_ROOT+'/images/'+name
+    if os.path.exists(path):
+        file = open(path, 'rb')
+        return HttpResponse(file.read(), content_type="image/jpeg")
+    else:
+        return HttpResponse(None)
+"""
 
 def show_words(request):
     template_name='crike_django/words_list.html'
