@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <!--link href="http://127.0.0.1:8000/static/blog.css" rel="stylesheet" type="text/css"/-->
+    <link href="/static/blog.css" rel="stylesheet" type="text/css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script language="javascript" type="text/javascript">
          function playSound(soundfile) {
@@ -16,7 +16,6 @@
       <input type="submit" value="upload">
     </form>
 <!-- Cycle through entries -->
-    <span id="dummy"></span>
     {% for word in Words %}
       <h2> {{ word.name }} </h2>
       <!--audio id="{{word.name}}" src="http://127.0.0.1:8000/audios/{{word.name}}" preload="auto"></audio>
@@ -36,18 +35,12 @@
         <li{display:inline}>{{ mean }}</li>
       {% endfor %}
       </p>
-      <!--form method="get" action="http://127.0.0.1:8000/update">
-        <input type="hidden" name="id" value="{{ post.id }}">
-        <input type="hidden" name="title" value="{{ post.title }}">
-        <input type="hidden" name="last_update" value="{{ post.last_update }}">
-        <input type="hidden" name="content" value="{{ post.content }}">
-        <input type="submit" name="" value="update">
-      </form-->
       <form method="get" action="http://127.0.0.1:8000/delete">
         <input type="hidden" name="id" value="{{word.id}}">
         <input type="submit" value="delete">
       </form>
-    {% endfor %}
+      {% endfor %}
 
+    <span id="dummy"></span>
   </body>
 </html>
