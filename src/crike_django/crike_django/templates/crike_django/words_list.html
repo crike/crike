@@ -44,7 +44,7 @@
       {% for pos in word.pos %}
         <script>
             d = $('#{{word.name}}pos{{forloop.counter}}');
-            d.text('{{pos}} '+d.text());
+            d.text(('{{pos}} ').replace("&amp;","&")+d.text());
         </script>
       {% endfor %}
       <form method="get" action="http://127.0.0.1:8000/delete">
