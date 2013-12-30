@@ -15,20 +15,23 @@ class Word(Document):
     #audio = StringField()
     image = FileField()
 
-class BasicDict(Document):
+class Lesson(EmbeddedDocument):
     name = StringField(required=True)
-    num = IntField()
-    dictionary = ListField(ReferenceField(Word), required=True)
+    words = ListField(ReferenceField(Word), required=True)
+
+class Dict(Document):
+    name = StringField(required=True)
+    lessons = ListField(EmbeddedDocumentField(Lesson), required=True)
 
     meta = {'allow_inheritance': True}
 
-class CET4Dict(BasicDict):
+class CET4Dict(Dict):
     pass
 
-class CET6Dict(BasicDict):
+class CET6Dict(Dict):
     pass
 
-class WebsterDict(BasicDict):
+class WebsterDict(Dict):
     pass
 
 class BasicUser(models.Model):

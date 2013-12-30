@@ -18,7 +18,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^testdb/', views.testdb),
     url(r'^show/', views.show_words),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^upload/', views.upload_file),

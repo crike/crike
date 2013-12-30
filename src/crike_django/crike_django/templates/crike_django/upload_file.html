@@ -8,6 +8,7 @@
     <form enctype="multipart/form-data" method="post" action="http://127.0.0.1:8000/upload/">
       {% csrf_token %}
       {{ form }}
+      <p><strong>{{ warning }}</strong></p>
       <p><input type="submit" value="upload"></p>
     </form>
   </body>

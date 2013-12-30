@@ -8,7 +8,7 @@ Created on 2013-12-20
 import time
 import re
 import os
-from crike_django.models import Word
+from crike_django.models import Word, Lesson, Dict
 from crike_django.settings import MEDIA_ROOT
 
 try: 
@@ -133,16 +133,28 @@ def download_word(wordname):
     return word
 
 PATH = MEDIA_ROOT + '/audios'
-def handle_uploaded_file(words_file):
+def handle_uploaded_file(dictname, lessonname, words_file):
     if not os.path.exists(PATH):
         os.makedirs(PATH)
 
+    lesson = Lesson(name=lessonname)
     words = words_file.read().split()
     for word in words:#TODO multi-thread
         if word.isalpha() == False:
             continue
         word = word.lower()
         if len(Word.objects(name=word)) == 0:
-            download_word(word).save()
+            wordrecord = download_word(word)
+            wordrecord.save()
+            lesson.words.append(wordrecord)
             time.sleep(1)
+
+    if len(Dict.objects(name=dictname)) == 0:
+        dic = Dict(name=dictname)
+        dic.lessons.append(lesson)
+        dic.save()
+    else:
+        dic = Dict.objects(name=dictname).first()
+        dic.lessons.append(lesson)
+        dic.update()
 

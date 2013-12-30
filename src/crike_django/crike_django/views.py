@@ -43,14 +43,23 @@ def import_dict():
 
 #功能：上传文件，然后把文件用handle_uploaded_file处理
 def upload_file(request):
+    upload_template = 'crike_django/upload_file.html'
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
+            dictname = request.POST['dict']
+            lesson = request.POST['lesson']
+            if len(Dict.objects(name=dictname)) > 0:
+                dic = Dict.objects(name=dictname).first()
+                if len(dic.lessons.objects(name=lesson)) > 0:
+                    return render(request, upload_template, {'form':form, 'warning':'Duplicated Lesson!!'})
+            handle_uploaded_file(request.POST['dict'], 
+                    request.POST['lesson'],             
+                    request.FILES['file'])
             return HttpResponseRedirect('/show/')
     else:
         form = UploadFileForm()
-    return render(request, 'crike_django/upload_file.html', {'form': form})
+    return render(request, upload_template, {'form': form})
 
 class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'
@@ -73,19 +82,6 @@ class TeacherView(TemplateView):
 def hello_crike(request):
     print request
     return HttpResponse("Hello crike!")
-
-def testdb(request):
-    # test
-    # entry = Word(name='test')
-    wordname = "apple"
-    if len(Word.objects(name=wordname)) > 0:
-        e = Word.objects(name=wordname)[0]
-    else:
-        e = download_word(wordname)
-        e.save()
-    print "word:"+e["name"]+': ['+e["phonetics"]+'] '+e["pos"][0]+' '+e["mean"][0]
-    ret =  e["name"]+': ['+e["phonetics"]+'] '+e["pos"][0]+' '+e["mean"][0]
-    return HttpResponse(ret.encode("utf-8"))
 
 def play_audio(request, name):
     #word = Word.objects(name=name).first()
