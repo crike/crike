@@ -8,6 +8,8 @@ Created on 2013-12-20
 import time
 import re
 import os
+import threading
+from multiprocessing import Process
 from crike_django.models import Word, Lesson, Dict
 from crike_django.settings import MEDIA_ROOT
 
@@ -53,29 +55,34 @@ def download_from_iciba(word):
 
     phonetics_list = re.findall(
             "\[</strong><strong lang=\"EN-US\" xml:lang=\"EN-US\">(.+?)</strong><strong>\]", content, re.M | re.S)
-    print(phonetics_list)
     if len(phonetics_list) > 0:
         word.phonetics =  phonetics_list[0]
+        print word.phonetics
 
     mean_list = []
     mean_span_list = re.findall('<span class=\"label_list\">(.+?)</span>', content, re.M | re.S)
-    print mean_span_list
     for mean_span in mean_span_list:
         label_list = re.findall('<label>(.+?)</label>', mean_span, re.M | re.S)
         labels = ''
         for label in label_list:
             labels += label
         mean_list.append(labels)
-    print(mean_list)
     word.mean = mean_list
+    print mean_list
 
     pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
-    print(pos_list)
     word.pos = pos_list
+    print pos_list
+            
+    try:
+        word.save()
+    except Exception as e:
+        print(word.name+' download failed!')
+        print(e)
 
-    audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3.+?\.mp3)\'\)', content, re.M | re.S)
-    print audio_list
-    download_audio_from_iciba(audio_list[0], word)
+    if not os.path.exists(PATH+word.name+'.mp3'):
+        audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3.+?\.mp3)\'\)', content, re.M | re.S)
+        download_audio_from_iciba(audio_list[0], word)
 
 
 def get_data_from_req(req):
@@ -109,7 +116,11 @@ def download_audio_from_google(word):
     try:
         mp3file = get_data_from_req(
                 "https://ssl.gstatic.com/dictionary/static/sounds/de/0/"+word.name+".mp3")
-        word.audio.put(mp3file.read(), content_type='audio/mp3')
+        filepath = os.path.join(PATH, word.name+'.mp3')
+        file = open(filepath, 'wb')
+        file.write(mp3file.read())
+        file.close()
+        #word.audio.put(mp3file.read(), content_type='audio/mp3')
     except Exception as e:
         print(e)
 
@@ -132,22 +143,105 @@ def download_word(wordname):
     #download_audio_from_google(word)
     return word
 
-PATH = MEDIA_ROOT + '/audios'
+def download_thread_single_engine(word, engine):
+    count = 0
+
+    process = Process(target=engine, args=(word,))
+    while not isinstance(process, Process):
+        print("Process init failed")
+        process = Process(target=engine, args=(word,))
+    process.start()
+    time.sleep(1)
+
+    while process.is_alive():
+        print str(process)+ ' ' + word.name + ' ' + str(count)
+        time.sleep(5)
+        count += 1
+        if count == 10:
+            process.terminate()
+            break
+
+class download_thread(threading.Thread):
+    def __init__(self, words):
+        threading.Thread.__init__(self)
+        self.words = words
+
+    def run(self):
+        words_lock.acquire()
+        num = len(self.words)
+        print self.words
+
+        while num > 0:
+            wordname = self.words.pop()
+            words_lock.release()
+            if not wordname.isalpha() or len(Word.objects(name=wordname)) > 0:
+                words_lock.acquire()
+                continue
+
+            word = Word(name=wordname)
+            print('Start downloading "%s"' % wordname)
+            download_thread_single_engine(word, download_from_iciba)
+
+            if not os.path.exists(PATH+wordname+'.mp3'):
+                print('Try another engine')
+                download_thread_single_engine(word, download_audio_from_google)
+
+            words_lock.acquire()
+            num = len(self.words)
+
+        words_lock.release()
+
+def install_proxy():
+    if use_proxy == False:
+        return
+    proxy_support = urllib.request.ProxyHandler({"http":http_proxy})
+    opener = urllib.request.build_opener(proxy_support)
+    urllib.request.install_opener(opener)
+    return
+
+PATH = MEDIA_ROOT + '/audios/'
+use_proxy = False
+http_proxy = "http://localhost:8086"
+words_lock = threading.Lock()
+
 def handle_uploaded_file(dictname, lessonname, words_file):
+    if use_proxy == True:
+        install_proxy()
+
     if not os.path.exists(PATH):
         os.makedirs(PATH)
 
     lesson = Lesson(name=lessonname)
     words = words_file.read().split()
-    for word in words:#TODO multi-thread
+    tempwords = words[:]
+
+    """
+    thread1 = download_thread(tempwords)
+    thread1.start()
+    print('Thread 1 started!')
+    time.sleep(2)
+    thread2 = download_thread(tempwords)
+    thread2.start()
+    print('Thread 2 started!')
+
+    thread1.join()
+    print('Thread 1 Done!')
+    thread2.join()
+    print('Thread 2 Done!')
+    """
+    thread1 = download_thread(tempwords)
+    thread1.start()
+    print('Thread 1 started!')
+    thread1.join()
+    print('Thread 1 Done!')
+
+
+    for word in words:
         if word.isalpha() == False:
             continue
-        word = word.lower()
-        if len(Word.objects(name=word)) == 0:
-            wordrecord = download_word(word)
-            wordrecord.save()
+        if len(Word.objects(name=word)) > 0:
+            wordrecord = Word.objects(name=word)[0]
             lesson.words.append(wordrecord)
-            time.sleep(1)
 
     if len(Dict.objects(name=dictname)) == 0:
         dic = Dict(name=dictname)
@@ -156,5 +250,5 @@ def handle_uploaded_file(dictname, lessonname, words_file):
     else:
         dic = Dict.objects(name=dictname).first()
         dic.lessons.append(lesson)
-        dic.update()
+        dic.save()
 
