@@ -51,8 +51,10 @@ def upload_file(request):
             lesson = request.POST['lesson']
             if len(Dict.objects(name=dictname)) > 0:
                 dic = Dict.objects(name=dictname).first()
-                if len(dic.lessons.objects(name=lesson)) > 0:
-                    return render(request, upload_template, {'form':form, 'warning':'Duplicated Lesson!!'})
+                for item in dic.lessons:
+                    if item.name == lesson:
+                        return render(request, upload_template, {'form':form, 'warning':'Duplicated Lesson!!'})
+
             handle_uploaded_file(request.POST['dict'], 
                     request.POST['lesson'],             
                     request.FILES['file'])
