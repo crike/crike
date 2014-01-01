@@ -175,6 +175,9 @@ def delete_lesson_confirm(request, dic, lesson):
             dicob.save()
     return HttpResponseRedirect("/show/")
 
+def show_lib(request):
+    return render(request, 'crike_django/lib.html', {})
+
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'
 
