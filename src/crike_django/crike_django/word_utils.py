@@ -43,13 +43,43 @@ def get_content_from_url(url):
 
     return content
 
+def download_from_youdao(word):
+    BASE_URL = 'http://dict.youdao.com/search?q='+word.name
+    content = get_content_from_url(BASE_URL)
+
+    phonetics_list = re.findall('<span class="phonetic">\[(.+?)\]</span>', content, re.M | re.S)
+    if len(phonetics_list) > 0:
+        word.phonetics =  phonetics_list[0]
+        print word.phonetics
+
+        mean_list = []
+        pos_list = []
+        #div_list = re.findall('<div class="trans-container">[\n\t ]*<ul>(.+?)</ul>[\n\t ]*</div>', content, re.M | re.S)
+        label_list = re.findall('<li>([a-z]+\. .*?)</li>', content, re.M | re.S)
+        if len(label_list) > 0:
+            label_list = set(label_list)
+            for label in label_list:
+                index = label.find('.')
+                if index == -1:
+                    continue
+                pos_list.append(label[:index+1])
+                mean_list.append(label[index+1:])
+        word.mean = mean_list
+        word.pos = pos_list
+        print mean_list
+        print pos_list
+                
+        word.save()
+            
+        if not os.path.exists(PATH+word.name+'.mp3'):
+            download_audio_from_google(word)
+
+
+    else:
+        print(content)
+        print('[youdao] '+word.name+' download failed!')
     
 def download_from_iciba(word):
-    """Download full size images from Bing image search.
- 
-    Don't print or republish images without permission.
-    I used this to train a learning algorithm.
-    """
     BASE_URL = 'http://www.iciba.com/'+word.name
     content = get_content_from_url(BASE_URL)
 
@@ -77,11 +107,11 @@ def download_from_iciba(word):
         word.save()
 
         if not os.path.exists(PATH+word.name+'.mp3'):
-            audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3.+?\.mp3)\'\)', content, re.M | re.S)
+            audio_list = re.findall('asplay\(\'(http://res.+?\.mp3)\'\)', content, re.M | re.S)
             download_audio_from_iciba(audio_list[0], word)
     else:
         print(content)
-        print(word.name+' download failed!')
+        print('[iciba] '+word.name+' download failed!')
 
 def get_data_from_req(req):
     attempts = 0
@@ -163,10 +193,11 @@ def download_thread_single_engine(word, engine):
             process.terminate()
             break
 
-class download_thread(threading.Thread):
-    def __init__(self, words):
+class download_thread_with_engine(threading.Thread):
+    def __init__(self, words, engine):
         threading.Thread.__init__(self)
         self.words = words
+        self.engine = engine
 
     def run(self):
         words_lock.acquire()
@@ -176,8 +207,9 @@ class download_thread(threading.Thread):
         while num > 0:
             wordname = self.words.pop()
             words_lock.release()
-            if not wordname.isalpha() or len(Word.objects(name=wordname)) > 0:
+            if len(Word.objects(name=wordname)) > 0:
                 words_lock.acquire()
+                num = len(self.words)
                 continue
 
             if len(Word.objects(name=wordname)) > 0:
@@ -185,11 +217,7 @@ class download_thread(threading.Thread):
             else:
                 word = Word(name=wordname)
                 print('Start downloading "%s"' % wordname)
-                download_thread_single_engine(word, download_from_iciba)
-
-            if not os.path.exists(PATH+wordname+'.mp3'):
-                print('Try another engine')
-                download_thread_single_engine(word, download_audio_from_google)
+                download_thread_single_engine(word, self.engine)
 
             words_lock.acquire()
             num = len(self.words)
@@ -221,11 +249,11 @@ def handle_uploaded_file(dictname, lessonname, words_file):
     words = words_file.read().split()
     tempwords = words[:]
 
-    thread1 = download_thread(tempwords)
+    thread1 = download_thread_with_engine(tempwords, download_from_iciba)
     thread1.start()
     print('Thread 1 started!')
     time.sleep(2)
-    thread2 = download_thread(tempwords)
+    thread2 = download_thread_with_engine(tempwords, download_from_youdao)
     thread2.start()
     print('Thread 2 started!')
 
@@ -233,18 +261,8 @@ def handle_uploaded_file(dictname, lessonname, words_file):
     print('Thread 1 Done!')
     thread2.join()
     print('Thread 2 Done!')
-    """
-    thread1 = download_thread(tempwords)
-    thread1.start()
-    print('Thread 1 started!')
-    thread1.join()
-    print('Thread 1 Done!')
-    """
-
 
     for word in words:
-        if word.isalpha() == False:
-            continue
         if len(Word.objects(name=word)) > 0:
             wordrecord = Word.objects(name=word)[0]
             lesson.words.append(wordrecord)

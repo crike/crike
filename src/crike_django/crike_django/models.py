@@ -17,11 +17,11 @@ class Word(Document):
 
 class Lesson(EmbeddedDocument):
     name = StringField(required=True)
-    words = ListField(ReferenceField(Word), required=True)
+    words = ListField(ReferenceField(Word))
 
 class Dict(Document):
     name = StringField(required=True)
-    lessons = ListField(EmbeddedDocumentField(Lesson), required=True)
+    lessons = ListField(EmbeddedDocumentField(Lesson))
 
     meta = {'allow_inheritance': True}
 
