@@ -21,7 +21,7 @@ class DictView(TemplateView):
     def get(self, request, *args, **kwargs):
         # 1.取出所有/指定词典，然后用模版渲染
         # 2.按页进行分页，使用pagination
-        basic_dicts = BasicDict.objects.all()
+        basic_dicts = Dict.objects.all()
         p = Paginator(basic_dicts, 20).page(1)
         return render(request, self.template_name, {
             'p_dicts': p,
@@ -33,7 +33,7 @@ class DictView(TemplateView):
         word_translated = request.POST.get('word_translated', None)
         dict_type = request.POST.get('dict_type', 'BasicDict')
 
-        bd = BasicDict.objects.get(dict_type=dict_type)
+        bd = Dict.objects.get(dict_type=dict_type)
         bd[word] = word_translated
         bd.save()
         return

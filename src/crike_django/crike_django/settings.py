@@ -131,6 +131,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.humanize',
+    'registration',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -163,3 +165,15 @@ LOGGING = {
         },
     }
 }
+
+# Registration app configurations
+# Test command:
+#   python -m smtpd -n -c DebuggingServer localhost:8025
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 8025
+#EMAIL_HOST_USER = 'username'
+#EMAIL_HOST_PASSWORD = 'password'
+ACCOUNT_ACTIVATION_DAYS = 7
+LOGIN_REDIRECT_URL = 'index'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+EMAIL_FROM = 'webmaster@localhost'
