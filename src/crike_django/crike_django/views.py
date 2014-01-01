@@ -105,7 +105,7 @@ def display_image(request, name):
         return HttpResponse(None)
 """
 
-def show_words(request):
+def show_all_words(request):
     template_name='crike_django/words_list.html'
 
     words = Word.objects.all()
@@ -113,6 +113,36 @@ def show_words(request):
         request.encoding = "utf-8"
 
     return render(request, template_name, {'Words':words})
+
+def show_words(request, dic, lesson):
+    template_name='crike_django/words_list.html'
+
+    words = []
+    for lessonob in Dict.objects(name=dic)[0].lessons:
+        if lessonob.name == lesson:
+            words = lessonob.words
+    if len(words) != 0:
+        request.encoding = "utf-8"
+
+    return render(request, template_name, {'Words':words, 'dic':dic, 'lesson':lesson})
+
+def show_lessons(request, dic):#TODO
+    template_name='crike_django/lessons_list.html'
+
+    words = Word.objects.all()
+    if len(words) != 0:
+        request.encoding = "utf-8"
+
+    return render(request, template_name, {'Words':words})
+
+def show_dicts(request):
+    template_name='crike_django/dicts_list.html'
+
+    dicts = Dict.objects.all()
+    if len(dicts) != 0:
+        request.encoding = "utf-8"
+
+    return render(request, template_name, {'Dicts':dicts})
 
 class WordDeleteView(TemplateView):
 
@@ -129,9 +159,21 @@ class WordDeleteView(TemplateView):
         if os.path.exists(audiofile):
             os.remove(audiofile)
         word.delete()
-        template = 'crike_django/words_list.html'
-        params = {'Words': Word.objects.all()}
-        return HttpResponseRedirect("/show/")
+        return HttpResponseRedirect("/show_all_words/")
+
+def delete_lesson(request, dic, lesson):
+    template = 'crike_django/lesson_delete.html'
+    params = { 'dic':dic, 'lesson':lesson }
+    return render(request, template, params)
+
+def delete_lesson_confirm(request, dic, lesson):
+    print dic, lesson
+    dicob = Dict.objects(name=dic).first()
+    for lessonobj in dicob.lessons:
+        if lessonobj.name == lesson:
+            dicob.lessons.remove(lessonobj)
+            dicob.save()
+    return HttpResponseRedirect("/show/")
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'

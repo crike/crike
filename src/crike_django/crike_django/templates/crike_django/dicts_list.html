@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link href="/static/blog.css" rel="stylesheet" type="text/css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript">
+    </script>
+  </head> 
+  <body>
+    <h1>Crike -- Dictionaries</h1>
+    <form method="get" action="http://127.0.0.1:8000/upload/">
+      <input type="submit" value="upload">
+    </form>
+<!-- Cycle through entries -->
+    {% for dic in Dicts %}
+      <h2> {{ dic.name }} </h2>
+      {% for lesson in dic.lessons %}
+      <p>
+      <a title="查看" href="/show/{{dic.name}}/{{lesson.name}}/">{{lesson.name}}</a>
+        <button style="float: right;" onclick="location.href='/delete_lesson/{{dic.name}}/{{lesson.name}}/'">delete</button>
+      </p>
+      {% endfor %}
+
+    {% endfor %}
+
+    <span id="dummy"></span>
+  </body>
+</html>

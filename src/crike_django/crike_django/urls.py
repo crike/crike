@@ -18,8 +18,12 @@ urlpatterns = patterns('',
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^show/', views.show_words),
+    url(r'^show_all_words/', views.show_all_words),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^upload/', views.upload_file),
     url(r'^media/audios/(?P<name>.*?)/?$', views.play_audio),
+    url(r'^show/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.show_words),
+    url(r'^show/', views.show_dicts),
+    url(r'^delete_lesson/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson, name='delete_Lesson'),
+    url(r'^delete_lesson_confirm/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson_confirm, name='delete_Lesson_confirm'),
 )#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
