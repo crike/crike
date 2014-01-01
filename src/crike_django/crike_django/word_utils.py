@@ -59,41 +59,43 @@ def download_from_iciba(word):
         word.phonetics =  phonetics_list[0]
         print word.phonetics
 
-    mean_list = []
-    mean_span_list = re.findall('<span class=\"label_list\">(.+?)</span>', content, re.M | re.S)
-    for mean_span in mean_span_list:
-        label_list = re.findall('<label>(.+?)</label>', mean_span, re.M | re.S)
-        labels = ''
-        for label in label_list:
-            labels += label
-        mean_list.append(labels)
-    word.mean = mean_list
-    print mean_list
+        mean_list = []
+        mean_span_list = re.findall('<span class=\"label_list\">(.+?)</span>', content, re.M | re.S)
+        for mean_span in mean_span_list:
+            label_list = re.findall('<label>(.+?)</label>', mean_span, re.M | re.S)
+            labels = ''
+            for label in label_list:
+                labels += label
+            mean_list.append(labels)
+        word.mean = mean_list
+        print mean_list
 
-    pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
-    word.pos = pos_list
-    print pos_list
-            
-    try:
+        pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
+        word.pos = pos_list
+        print pos_list
+                
         word.save()
-    except Exception as e:
+
+        if not os.path.exists(PATH+word.name+'.mp3'):
+            audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3.+?\.mp3)\'\)', content, re.M | re.S)
+            download_audio_from_iciba(audio_list[0], word)
+    else:
+        print(content)
         print(word.name+' download failed!')
-        print(e)
-
-    if not os.path.exists(PATH+word.name+'.mp3'):
-        audio_list = re.findall('asplay\(\'(http://res.iciba.com/resource/amp3.+?\.mp3)\'\)', content, re.M | re.S)
-        download_audio_from_iciba(audio_list[0], word)
-
 
 def get_data_from_req(req):
     attempts = 0
     binary = ''
     while attempts < 5:
+        download_lock.acquire()
         try:
             binary = urlopen(req)
-            time.sleep(1) # be nice to web host
+            time.sleep(2) # be nice to web host
+            download_lock.release()
             break
         except Exception as e:
+            time.sleep(2) # be nice to web host
+            download_lock.release()
             attempts += 1
             print("Attempts: "+str(attempts))
             print(e)
@@ -178,9 +180,12 @@ class download_thread(threading.Thread):
                 words_lock.acquire()
                 continue
 
-            word = Word(name=wordname)
-            print('Start downloading "%s"' % wordname)
-            download_thread_single_engine(word, download_from_iciba)
+            if len(Word.objects(name=wordname)) > 0:
+                word = Word.objects(name=wordname)[0]
+            else:
+                word = Word(name=wordname)
+                print('Start downloading "%s"' % wordname)
+                download_thread_single_engine(word, download_from_iciba)
 
             if not os.path.exists(PATH+wordname+'.mp3'):
                 print('Try another engine')
@@ -203,6 +208,7 @@ PATH = MEDIA_ROOT + '/audios/'
 use_proxy = False
 http_proxy = "http://localhost:8086"
 words_lock = threading.Lock()
+download_lock = threading.Lock()
 
 def handle_uploaded_file(dictname, lessonname, words_file):
     if use_proxy == True:
@@ -215,7 +221,6 @@ def handle_uploaded_file(dictname, lessonname, words_file):
     words = words_file.read().split()
     tempwords = words[:]
 
-    """
     thread1 = download_thread(tempwords)
     thread1.start()
     print('Thread 1 started!')
@@ -234,6 +239,7 @@ def handle_uploaded_file(dictname, lessonname, words_file):
     print('Thread 1 started!')
     thread1.join()
     print('Thread 1 Done!')
+    """
 
 
     for word in words:
