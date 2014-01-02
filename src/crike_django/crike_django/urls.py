@@ -11,7 +11,8 @@ from crike_django.views import *
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^(home)?$', HomeView.as_view(), name='home'),
+    url(r'^$', TemplateView.as_view(template_name='base.html'), name='index' ),
+    url(r'^home$', HomeView.as_view(), name='home'),
     url(r'^lesson$', LessonView.as_view(), name='lesson'),
     url(r'^exam$', ExamView.as_view(), name='exam'),
     url(r'^accounts/', include('registration.backends.default.urls')),
