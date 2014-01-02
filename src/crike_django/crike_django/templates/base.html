@@ -36,8 +36,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="{% url "index" %}">{% trans "Home" %}</a></li>
-                    <li><a href="/auth">{% trans "Auth" %}</a></li>
-                    <li><a href="/dict">{% trans "Dict" %}</a></li>
+                    <li><a href="{% url "auth" %}">{% trans "Auth" %}</a></li>
+                    <li><a href="{% url "dict" %}">{% trans "Dict" %}</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -75,6 +75,8 @@
 
     <div class="container">
     {% block container %}
+    {% endblock %}
+    {% block content %}
     {% endblock %}
     <hr>
     <footer>
