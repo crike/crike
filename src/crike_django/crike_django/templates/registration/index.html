@@ -2,17 +2,32 @@
 {% load i18n %}
 
 {% block container %}
-        <div class="content">
+<div class="content">
 <div class="jumbotron">
   <h1>Crike!</h1>
   <p>{% trans "Sample using Bootstrap from Twitter with django-registration." %}</p>
   <p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
 </div>
-            <ul>
-                <li><a href="{% url "django.contrib.auth.views.login" %}">{% trans "Log in" %}</a></li>
-                <li><a href="{% url "django.contrib.auth.views.logout" %}">{% trans "Log out" %}</a></li>
-                <li><a href="{% url "django.contrib.auth.views.password_change" %}">{% trans "Change password" %}</a></li>
-                <li><a href="{% url "django.contrib.auth.views.password_reset" %}">{% trans "Reset my password" %}</a></li>
-            </ul>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+    </div>
+</div>
 {% endblock %}
