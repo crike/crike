@@ -3,9 +3,11 @@
 
 {% block container %}
         <div class="content">
-            <div class="page-header">
-                <h1>Crike <small>{% trans "Sample using Bootstrap from Twitter with django-registration" %}</small></h1>
-            </div>
+<div class="jumbotron">
+  <h1>Crike!</h1>
+  <p>{% trans "Sample using Bootstrap from Twitter with django-registration." %}</p>
+  <p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
+</div>
             <ul>
                 <li><a href="{% url "django.contrib.auth.views.login" %}">{% trans "Log in" %}</a></li>
                 <li><a href="{% url "django.contrib.auth.views.logout" %}">{% trans "Log out" %}</a></li>
