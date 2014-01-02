@@ -1,29 +1,30 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
+{% extends 'crike_django/base_index_view.html' %}
+
+{% block content %}
     <link href="/static/blog.css" rel="stylesheet" type="text/css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script language="javascript" type="text/javascript">
-        var timer = null;
-        function playSound(mp3) {
-            $('#dummy').html("<embed src=\""+mp3+"\" hidden=\"true\" autostart=\"true\" loop=\"false\" />");
-        }
-        function callback(mp3) {
-            playSound(mp3);
-        }
-        function delayPlay(mp3) {
-            clearTimeout(timer);
-            var cb = "callback('"+mp3+"')";
-            timer = setTimeout(cb, 500);
-        }
+      var timer = null;
+      function playSound(mp3) {
+          $('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+      }
+      function callback(mp3) {
+          playSound(mp3);
+      }
+      function delayPlay(mp3) {
+          clearTimeout(timer);
+          var cb = "callback('"+mp3+"')";
+          timer = setTimeout(cb, 1000);
+      }
     </script>
-  </head> 
-  <body>
-    <h1>Crike -- {{dic}}/{{lesson}} sum:{{Words|length}}</h1>
-    <form method="get" action="http://127.0.0.1:8000/upload/">
-      <input type="submit" value="upload">
-    </form>
+    <div class='jumbotron'>
+      <h1>Crike -- {{dic}}/{{lesson}} sum:{{Words|length}}</h1>
+      <form method="get" action="http://127.0.0.1:8000/upload/">
+        <input type="submit" value="upload">
+      </form>
+    </div>
 <!-- Cycle through entries -->
+    <div class='row'>
     {% for word in Words %}
       <h2> {{ word.name }} </h2>
       <p>
@@ -52,7 +53,6 @@
         <input type="submit" value="delete">
       </form>
     {% endfor %}
-
+    </div>
     <span id="dummy"></span>
-  </body>
-</html>
+{% endblock %}
