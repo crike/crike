@@ -36,8 +36,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="{% url "index" %}">{% trans "Home" %}</a></li>
-                    <li><a href="#about">{% trans "About" %}</a></li>
-                    <li><a href="#contact">{% trans "Contact" %}</a></li>
+                    <li><a href="#index">{% trans "Index" %}</a></li>
+                    <li><a href="#dict">{% trans "Dict" %}</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -75,17 +75,6 @@
 
     <div class="container">
     {% block container %}
-        <div class="content">
-            <div class="page-header">
-                <h1>Crike <small>{% trans "Sample using Bootstrap from Twitter with django-registration" %}</small></h1>
-            </div>
-            <ul>
-                <li><a href="{% url "django.contrib.auth.views.login" %}">{% trans "Log in" %}</a></li>
-                <li><a href="{% url "django.contrib.auth.views.logout" %}">{% trans "Log out" %}</a></li>
-                <li><a href="{% url "django.contrib.auth.views.password_change" %}">{% trans "Change password" %}</a></li>
-                <li><a href="{% url "django.contrib.auth.views.password_reset" %}">{% trans "Reset my password" %}</a></li>
-            </ul>
-        </div>
     {% endblock %}
     <hr>
     <footer>
