@@ -54,3 +54,8 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# cscope
+cscope.out
+
+
