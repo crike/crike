@@ -37,13 +37,13 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="{% active request "index" %}"><a href="{% url "index" %}">{% trans "Home" %}</a></li>
-                    <li class="{% active request "auth" %}"><a href="{% url "auth" %}">{% trans "Auth" %}</a></li>
-                    <li class="{% active request "dict" %}"><a href="{% url "dict" %}">{% trans "Dict" %}</a></li>
-                    <li class="{% active request "lesson" %}"><a href="{% url "lesson" %}">{% trans "Lesson" %}</a></li>
-                    <li class="{% active request "exam" %}"><a href="{% url "exam" %}">{% trans "Exam" %}</a></li>
+                    <li class="{% active request "index" %}"><a href="{% url "index" %}">{% trans "主页" %}</a></li>
+                    <li class="{% active request "auth" %}"><a href="{% url "auth" %}">{% trans "账户" %}</a></li>
+                    <li class="{% active request "dict" %}"><a href="{% url "dict" %}">{% trans "词典" %}</a></li>
+                    <li class="{% active request "lesson" %}"><a href="{% url "lesson" %}">{% trans "课程" %}</a></li>
+                    <li class="{% active request "exam" %}"><a href="{% url "exam" %}">{% trans "考试" %}</a></li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计 <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#">Action</a></li>
                   <li><a href="#">Another action</a></li>
@@ -71,6 +71,12 @@
                     <input type="password" class="input-small" id="id_password" placeholder="{% trans 'Password' %}">
                     <button type="submit" class="btn">{% trans 'Log in' %}</button>
                 </form>
+
+<!-- 弹出框相关 -->
+<ul class="nav navbar-nav navbar-right">
+<li><a href="#" data-toggle="modal" data-target="#loginModal">登录</a></li>
+<li><a href="#" data-toggle="modal" data-target="#registerModal">注册</a></li>
+</ul>
                 {% endif %}
 
             </div><!-- /.nav-collapse -->
@@ -78,6 +84,45 @@
     </div>
 
     <div class="container">
+
+<!-- Modal 弹出框 -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal 弹出框 -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">注册</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
     {% block container %}
     {% endblock %}
     {% block content %}
