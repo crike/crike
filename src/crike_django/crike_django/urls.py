@@ -30,4 +30,5 @@ urlpatterns = patterns('',
     url(r'^delete_lesson/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson, name='delete_Lesson'),
     url(r'^delete_lesson_confirm/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson_confirm, name='delete_Lesson_confirm'),
     url(r'^lib/', views.show_lib),
+    url(r'^learn_pick/', LearnPickView.as_view(), name='pick'),
 )#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

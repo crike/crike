@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <link href="/static/blog.css" rel="stylesheet" type="text/css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript">
+      var timer = null;
+      function playSound(mp3) {
+         //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+         $('#dummy').html("<embed autostart='true' height=0 width=0 src='"+mp3+"'></embed>");
+      }
+      function callback(mp3) {
+          playSound(mp3);
+      }
+      function delayPlay(mp3) {
+          clearTimeout(timer);
+          var cb = "callback('"+mp3+"')";
+          timer = setTimeout(cb, 500);
+      }
+    </script>
+    {% block subcontent %}{% endblock %}
+
+    <span id="dummy"></span>
+{% endblock %}

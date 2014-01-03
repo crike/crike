@@ -20,20 +20,30 @@
     </script>
     <div class='jumbotron'>
       <h1>{{dic}}/{{lesson}}</h1>
-      <form method="get" action="http://127.0.0.1:8000/upload/">
-        <input type="submit" value="upload">
+      <form method="get" action="/learn_pick/">
+        <input type="hidden" name="dic" value="{{dic}}">
+        <input type="hidden" name="lesson" value="{{lesson}}">
+        <input type="submit" value="选释义">
       </form>
+      <!--button onclick="location.href='/learn_pick/{{dic.name}}/{{lesson.name}}/'">选释义</button>
+      <button onclick="location.href='/learn_fill/{{dic.name}}/{{lesson.name}}/'">填单词</button>
+      <button onclick="location.href='/learn_listen/{{dic.name}}/{{lesson.name}}/'">听写</button-->
     </div>
 <!-- Cycle through entries -->
     <div class='row'>
     {% for word in Words %}
-      <h2> {{ word.name }} </h2>
+      <h2> {{ word.name }} 
+        <form{display:inline;} style="float: right; font-size: 14px;" method="get" action="/delete/">
+          <input type="hidden" name="id" value="{{word.id}}">
+          <input type="submit" value="delete">
+        </form>
+      </h2>
       <p>
         <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
         <li{display:inline}>
-        <a onmouseover="delayPlay('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');"
+        <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
             onmouseout ="clearTimeout(timer);" 
-            onclick="playSound('http://127.0.0.1:8000/media/audios/{{ word.name }}.mp3');" 
+            onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
             title="发音" href="javascript:;"><img src="/static/images/s-audio.png"/></a>
         </li>
       </p>
@@ -49,10 +59,6 @@
             d.text(('{{pos}} ').replace("&amp;","&")+d.text());
         </script>
       {% endfor %}
-      <form method="get" action="http://127.0.0.1:8000/delete">
-        <input type="hidden" name="id" value="{{word.id}}">
-        <input type="submit" value="delete">
-      </form>
     {% endfor %}
     </div>
     <span id="dummy"></span>

@@ -1,7 +1,7 @@
 #coding:utf-8
 from django.views.generic import *
 from django.http import *
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -177,6 +177,38 @@ def delete_lesson_confirm(request, dic, lesson):
 
 def show_lib(request):
     return render(request, 'crike_django/lib.html', {})
+
+class LearnPickView(TemplateView):
+    template_name='crike_django/learn_pick.html'
+
+    def get(self, request, *args, **kwargs):
+        dic = request.GET.get('dic')
+        lesson = request.GET.get('lesson')
+        words_list = []
+        dicob = Dict.objects(name=dic).first()
+        for lessonobj in dicob.lessons:
+            if lessonobj.name == lesson:
+                words_list = lessonobj.words
+        options = ['TO','BE','DONE']# TODO random get three
+
+        paginator = Paginator(words_list, 1)
+
+        page = request.GET.get('page')
+        try:
+            words = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            words = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            words = paginator.page(paginator.num_pages)
+
+        options.append(words[0].mean[0]) # TODO insert(random index)
+        return render(request, self.template_name,
+               {'word':words[0].name, 'dic':dic, 'lesson':lesson, 'options':options})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'
