@@ -16,10 +16,11 @@
 <!-- Cycle through entries -->
     <div class='row'>
     {% for dic in Dicts %}
-      <h2> {{ dic.name }} </h2>
+      <h2> {{ dic.name }}</h2>
       {% for lesson in dic.lessons %}
       <p>
-      <a title="查看" href="/show/{{dic.name}}/{{lesson.name}}/">{{lesson.name}}</a>
+        <a title="查看" href="/show/{{dic.name}}/{{lesson.name}}/">{{lesson.name}}</a>
+        <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
         <button style="float: right;" onclick="location.href='/delete_lesson/{{dic.name}}/{{lesson.name}}/'">delete</button>
       </p>
       {% endfor %}
