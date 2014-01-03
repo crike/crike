@@ -4,7 +4,7 @@ Created on 2013-12-5
 @author: bn
 '''
 
-# -*- coding: gbk -*-
+# -*- coding: utf-8 -*-
 
 import os.path
 import time

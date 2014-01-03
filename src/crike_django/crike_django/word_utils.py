@@ -1,4 +1,4 @@
-# coding:gbk
+# coding:utf-8
 '''
 Created on 2013-12-20
 
@@ -55,6 +55,9 @@ def download_from_youdao(word):
         mean_list = []
         pos_list = []
         #div_list = re.findall('<div class="trans-container">[\n\t ]*<ul>(.+?)</ul>[\n\t ]*</div>', content, re.M | re.S)
+        index = content.find("webTransToggle")
+        if index != -1:
+            content = content[:index]
         label_list = re.findall('<li>([a-z]+\. .*?)</li>', content, re.M | re.S)
         if len(label_list) > 0:
             label_list = set(label_list)

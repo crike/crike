@@ -6,8 +6,8 @@
     <script language="javascript" type="text/javascript">
       var timer = null;
       function playSound(mp3) {
-         // $('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
-         $('#dummy').html("<embed preload='auto' autostart='true' src='"+mp3+"' type='hidden'></embed>");
+         //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+         $('#dummy').html("<embed autostart='true' height=0 width=0 src='"+mp3+"'></embed>");
       }
       function callback(mp3) {
           playSound(mp3);
@@ -19,7 +19,7 @@
       }
     </script>
     <div class='jumbotron'>
-      <h1>Crike -- {{dic}}/{{lesson}} sum:{{Words|length}}</h1>
+      <h1>{{dic}}/{{lesson}}</h1>
       <form method="get" action="http://127.0.0.1:8000/upload/">
         <input type="submit" value="upload">
       </form>
