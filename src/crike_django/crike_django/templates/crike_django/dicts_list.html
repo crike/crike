@@ -17,7 +17,7 @@
     <div class='row'>
     {% for dic in Dicts %}
       <h2> {{ dic.name }}</h2>
-      {% for lesson in dic.lessons %}
+      {% for lesson in dic.lessons|dictsort:"name" %}
       <p>
         <a title="查看" href="/show/{{dic.name}}/{{lesson.name}}/">{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
