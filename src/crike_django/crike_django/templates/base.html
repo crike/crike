@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load tags %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -35,9 +37,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="{% url "index" %}">{% trans "Home" %}</a></li>
-                    <li><a href="{% url "auth" %}">{% trans "Auth" %}</a></li>
-                    <li><a href="{% url "dict" %}">{% trans "Dict" %}</a></li>
+                    <li class="{% active request "index" %}"><a href="{% url "index" %}">{% trans "Home" %}</a></li>
+                    <li class="{% active request "auth" %}"><a href="{% url "auth" %}">{% trans "Auth" %}</a></li>
+                    <li class="{% active request "dict" %}"><a href="{% url "dict" %}">{% trans "Dict" %}</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
                 <ul class="dropdown-menu">

@@ -106,6 +106,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
+    "django.core.context_processors.request",
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
 )
@@ -142,6 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'registration',
+    'crike_django',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
