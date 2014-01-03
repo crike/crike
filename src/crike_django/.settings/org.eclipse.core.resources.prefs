@@ -2,4 +2,4 @@ eclipse.preferences.version=1
 encoding//crike_django/models.py=utf-8
 encoding//crike_django/urls.py=utf-8
 encoding//crike_django/views.py=utf-8
-encoding//crike_django/word_utils.py=gbk
+encoding//crike_django/word_utils.py=utf-8
