@@ -1,0 +1,29 @@
+{% extends 'crike_django/lesson_base.html' %}
+
+{% block subcontent %}
+<div class='row'>
+{% for word in words %}
+  <p style='font-size:200%;margin-left:50px'>
+    <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
+    <li{display:inline}>
+    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+        title="发音" href="javascript:;"><img src="/static/images/s-audio.png"/></a>
+    </li>
+  </p>
+
+  <p>
+  {% for mean in word.mean %}
+    <li style='margin-left:50px;font-size:200%'>{{mean}}</li>
+  {% endfor %}
+  </p>
+{% endfor %}
+</div>
+<form style="float: right; font-size: 14px;" method="get" action="/delete/">
+  <input type="hidden" name="dic" value="{{dic}}">
+  <input type="hidden" name="lesson" value="{{lesson}}">
+  <input type="submit" value="开始自测">
+</form>
+<span id="dummy"></span>
+{% endblock %}

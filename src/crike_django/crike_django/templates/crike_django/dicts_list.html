@@ -19,9 +19,9 @@
       <h2> {{ dic.name }}</h2>
       {% for lesson in dic.lessons|dictsort:"name" %}
       <p>
-        <a title="查看" href="/show/{{dic.name}}/{{lesson.name}}/">{{lesson.name}}</a>
+        <a title="查看" href="/lesson_show?dic={{dic.name}}&lesson={{lesson.name}}">{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-        <button style="float: right;" onclick="location.href='/delete_lesson/{{dic.name}}/{{lesson.name}}/'">delete</button>
+        <button style="float: right;" onclick="location.href='/show/{{dic.name}}/{{lesson.name}}/'">管理</button>
       </p>
       {% endfor %}
 

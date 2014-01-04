@@ -177,8 +177,38 @@ def delete_lesson_confirm(request, dic, lesson):
 def show_lib(request):
     return render(request, 'crike_django/lib.html', {})
 
-class LearnPickView(TemplateView):
-    template_name='crike_django/learn_pick.html'
+class LessonShowView(TemplateView):
+    template_name='crike_django/lesson_show.html'
+
+    def get(self, request, *args, **kwargs):
+        dic = request.GET.get('dic')
+        lesson = request.GET.get('lesson')
+        words_list = []
+        dicob = Dict.objects(name=dic).first()
+        for lessonobj in dicob.lessons:
+            if lessonobj.name == lesson:
+                words_list = lessonobj.words
+
+        paginator = Paginator(words_list, 1)
+
+        page = request.GET.get('page')
+        try:
+            words = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            words = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            words = paginator.page(paginator.num_pages)
+
+        return render(request, self.template_name,
+               {'words':words, 'dic':dic, 'lesson':lesson})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
+
+class LessonPickView(TemplateView):
+    template_name='crike_django/lesson_pick.html'
 
     def get(self, request, *args, **kwargs):
         dic = request.GET.get('dic')

@@ -21,10 +21,10 @@
     <div class='jumbotron'>
       {% if lesson %}
       <h1>{{dic}}/{{lesson}}</h1>
-      <form method="get" action="/learn_pick/">
+      <form method="get" action="/delete_lesson/">
         <input type="hidden" name="dic" value="{{dic}}">
         <input type="hidden" name="lesson" value="{{lesson}}">
-        <input type="submit" value="选释义">
+        <input type="submit" value="删除课程">
       </form>
       {% else %}
       <h1>词库</h1>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link href="/static/index.css" rel="stylesheet" type="text/css"/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script language="javascript" type="text/javascript">
+  var timer = null;
+  function playSound(mp3) {
+     //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+     $('#dummy').html("<embed autostart='true' style='float:left' height=0 width=0 src='"+mp3+"'></embed>");
+  }
+  function callback(mp3) {
+      playSound(mp3);
+  }
+  function delayPlay(mp3) {
+      clearTimeout(timer);
+      var cb = "callback('"+mp3+"')";
+      timer = setTimeout(cb, 500);
+  }
+</script>
+
+<div class='jumbotron'>
+    {% for word in words %}
+    <h1>{{word.name|capfirst}}</h1>
+    {% endfor %}
+</div>
+<div class="pagination" style="float:right">
+  <span class="step-links">
+    {% if words.has_previous %}
+        <a href="?page={{ words.previous_page_number }}&dic={{dic}}&lesson={{lesson}}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ words.number }} of {{ words.paginator.num_pages }}.
+    </span>
+
+    {% if words.has_next %}
+        <a href="?page={{ words.next_page_number }}&dic={{dic}}&lesson={{lesson}}">next</a>
+    {% endif %}
+  </span>
+  <span style='margin-left:20px;'>Back to  
+    <a href='/show/'>Dicts</a>
+  </span>
+</div>
+
+{% block subcontent %}{% endblock %}
+
+<span id="dummy"></span>
+{% endblock %}
