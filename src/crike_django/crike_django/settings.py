@@ -142,10 +142,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.humanize',
-    'registration',
-    'crike_django',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    # 3rd party
+    'registration',
+    'crispy_forms',
+    # mine
+    'crike_django',
 )
 
 # A sample logging configuration. The only tangible logging
