@@ -11,6 +11,7 @@ from crike_django.models import *
 from crike_django.forms import *
 from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
 from word_utils import *
+from random import sample, randrange
 
 # TODO: Upload file的view
 # 规定具体的get/post对应事件
@@ -189,7 +190,6 @@ class LearnPickView(TemplateView):
         for lessonobj in dicob.lessons:
             if lessonobj.name == lesson:
                 words_list = lessonobj.words
-        options = ['TO','BE','DONE']# TODO random get three
 
         paginator = Paginator(words_list, 1)
 
@@ -203,7 +203,10 @@ class LearnPickView(TemplateView):
             # If page is out of range (e.g. 9999), deliver last page of results.
             words = paginator.page(paginator.num_pages)
 
-        options.append(words[0].mean[0]) # TODO insert(random index)
+        words_list.remove(words[0])
+        options = sample(words_list, 3)
+        options.insert(randrange(len(options)+1), words[0])
+
         return render(request, self.template_name,
                {'words':words, 'dic':dic, 'lesson':lesson, 'options':options})
 

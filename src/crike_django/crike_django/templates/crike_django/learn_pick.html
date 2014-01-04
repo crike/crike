@@ -2,7 +2,6 @@
 
 {% block subcontent %}
 <div class='jumbotron'>
-  <a href='/show/{{dic}}/{{lesson}}/'>Back to {{lesson}}</a>
     {% for word in words %}
     <h1>{{word.name|capfirst}}</h1>
     {% endfor %}
@@ -21,32 +20,16 @@
         <a href="?page={{ words.next_page_number }}&dic={{dic}}&lesson={{lesson}}">next</a>
     {% endif %}
   </span>
+  <span style='margin-left:20px;'>Back to  
+    <a href='/show/{{dic}}/{{lesson}}/'>{{lesson}}</a>
+  </span>
 </div>
 <div class='row'>
-  <!--form{display:inline} action="/learn_pick/" method='get'>
-    <input type="hidden" name="page" value="{{page|add:"-1"}}">
-    <input type="hidden" name="dic" value="{{dic}}">
-    <input type="hidden" name="lesson" value="{{lesson}}">
-    <input type="submit" value="<Prev">
-  </form>
-  <form{display:inline} action="/learn_pick/" method='get'>
-    <input type="hidden" name="page" value="{{page|add:"1"}}">
-    <input type="hidden" name="dic" value="{{dic}}">
-    <input type="hidden" name="lesson" value="{{lesson}}">
-    <input type="submit" value="Next>">
-  </form-->
-  <!--{% for item in lesson.words %}
-  <form{display:inline} action="/learn_pick/" method='get'>
-    <input type="hidden" name="page" value="{{forloop.counter}}">
-    <input type="hidden" name="dic" value="{{dic}}">
-    <input type="hidden" name="lesson" value="{{lesson}}">
-    <input type="submit" value="{{item.name}}">
-  </form>
-  {% endfor %}-->
   <form action="/learn_pick/" method='post'>
     {% for option in options %}
-    <input type="radio" name="pick" value="male">{{option}}
+    <input type="radio" name="pick" value="{{option.mean|first}}" style="margin-left:30px;"><label style="font-size:200%;">{{option.mean|first}}</label></br>
     {% endfor %}
+    <input type="submit" style="margin-left:30px;" value="submit">
   </form>
 </div>
 {% endblock %}
