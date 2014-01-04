@@ -96,15 +96,13 @@ def play_audio(request, name):
     else:
         return HttpResponse(None)
 
-"""
-def display_image(request, name):
-    path = STATIC_ROOT+'/images/'+name
-    if os.path.exists(path):
-        file = open(path, 'rb')
-        return HttpResponse(file.read(), content_type='image/jpeg')
-    else:
-        return HttpResponse(None)
-"""
+   #def display_image(request, name):
+   #    path = STATIC_ROOT+'/images/'+name
+   #    if os.path.exists(path):
+   #        file = open(path, 'rb')
+   #        return HttpResponse(file.read(), content_type='image/jpeg')
+   #    else:
+   #        return HttpResponse(None)
 
 def show_all_words(request):
     template_name='crike_django/words_list.html'
@@ -156,7 +154,7 @@ class WordDeleteView(TemplateView):
     def post(self, request, *args, **kwargs):
         id = request.POST['id']
         word = Word.objects(id=id)[0]
-        audiofile = MEDIA_ROOT+'/'+word.name+'.mp3'
+        audiofile = MEDIA_ROOT+'/audios/'+word.name+'.mp3'
         if os.path.exists(audiofile):
             os.remove(audiofile)
         word.delete()
