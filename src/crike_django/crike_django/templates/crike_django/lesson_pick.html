@@ -1,6 +1,16 @@
 {% extends 'crike_django/lesson_base.html' %}
 
 {% block subcontent %}
+<div class='jumbotron'>
+  {% for word in words %}
+  <h1><strong style='font-size:150%'>{{word.name|capfirst}} </strong> [{{ word.phonetics }}]
+    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+        title="发音" href="javascript:;"><img src="/static/images/s-audio.png"/></a>
+  </h1>
+  {% endfor %}
+</div>
 <form action="/learn_pick/" method='post'>
   <div class='row'>
     {% for option in options %}
