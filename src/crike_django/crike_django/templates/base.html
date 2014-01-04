@@ -65,12 +65,7 @@
                     </ul>
 
                 {% else %}
-                <form class="navbar-form pull-right" action="{% url "django.contrib.auth.views.login" %}" method="post">
-                    {% csrf_token %}
-                    <input type="text" class="input-small" id="id_username" placeholder="{% trans 'Username' %}">
-                    <input type="password" class="input-small" id="id_password" placeholder="{% trans 'Password' %}">
-                    <button type="submit" class="btn">{% trans 'Log in' %}</button>
-                </form>
+
 
 <!-- 弹出框相关 -->
 <ul class="nav navbar-nav navbar-right">
@@ -85,16 +80,40 @@
 
     <div class="container">
 
+    <style type="text/css">
+      .form-signin .form-signin-heading,
+      .form-signin .checkbox {
+        margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+
+    </style>
+
 <!-- Modal 弹出框 -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">登录</h4>
       </div>
       <div class="modal-body">
-        ...
+        <form class="form-signin" action="{% url "django.contrib.auth.views.login" %}" method="post">
+          {% csrf_token %}
+          <h2 class="form-signin-heading">Please sign in</h2>
+          <input type="text" class="input-block-level" placeholder="Email address">
+          <input type="password" class="input-block-level" placeholder="Password">
+          <label class="checkbox">
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+         <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
