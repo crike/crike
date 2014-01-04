@@ -20,11 +20,6 @@
   }
 </script>
 
-<div class='jumbotron'>
-    {% for word in words %}
-    <h1>{{word.name|capfirst}}</h1>
-    {% endfor %}
-</div>
 <div class="pagination" style="float:right">
   <span class="step-links">
     {% if words.has_previous %}
