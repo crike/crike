@@ -32,12 +32,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </a>
+                </button>
                 <a class="navbar-brand" href="{% url "index" %}">Crike</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="{% active request "index" %}"><a href="{% url "index" %}">{% trans "主页" %}</a></li>
                     <li class="{% active request "auth" %}"><a href="{% url "auth" %}">{% trans "账户" %}</a></li>
                     <li class="{% active request "dict" %}"><a href="{% url "dict" %}">{% trans "词典" %}</a></li>
                     <li class="{% active request "lesson" %}"><a href="{% url "lesson" %}">{% trans "课程" %}</a></li>
