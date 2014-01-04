@@ -100,7 +100,7 @@ def display_image(request, name):
     path = STATIC_ROOT+'/images/'+name
     if os.path.exists(path):
         file = open(path, 'rb')
-        return HttpResponse(file.read(), content_type="image/jpeg")
+        return HttpResponse(file.read(), content_type='image/jpeg')
     else:
         return HttpResponse(None)
 """
@@ -205,7 +205,7 @@ class LearnPickView(TemplateView):
 
         options.append(words[0].mean[0]) # TODO insert(random index)
         return render(request, self.template_name,
-               {'word':words[0].name, 'dic':dic, 'lesson':lesson, 'options':options})
+               {'words':words, 'dic':dic, 'lesson':lesson, 'options':options})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")

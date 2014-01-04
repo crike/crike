@@ -2,10 +2,47 @@
 
 {% block subcontent %}
 <div class='jumbotron'>
-  <a href='/show/{{dict}}/{{lesson}}'>Back to {{lesson}}</a>
-  <h1>{{word|capfirst}}</h1>
+  <a href='/show/{{dic}}/{{lesson}}/'>Back to {{lesson}}</a>
+    {% for word in words %}
+    <h1>{{word.name|capfirst}}</h1>
+    {% endfor %}
+</div>
+<div class="pagination">
+  <span class="step-links">
+    {% if words.has_previous %}
+        <a href="?page={{ words.previous_page_number }}&dic={{dic}}&lesson={{lesson}}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ words.number }} of {{ words.paginator.num_pages }}.
+    </span>
+
+    {% if words.has_next %}
+        <a href="?page={{ words.next_page_number }}&dic={{dic}}&lesson={{lesson}}">next</a>
+    {% endif %}
+  </span>
 </div>
 <div class='row'>
+  <!--form{display:inline} action="/learn_pick/" method='get'>
+    <input type="hidden" name="page" value="{{page|add:"-1"}}">
+    <input type="hidden" name="dic" value="{{dic}}">
+    <input type="hidden" name="lesson" value="{{lesson}}">
+    <input type="submit" value="<Prev">
+  </form>
+  <form{display:inline} action="/learn_pick/" method='get'>
+    <input type="hidden" name="page" value="{{page|add:"1"}}">
+    <input type="hidden" name="dic" value="{{dic}}">
+    <input type="hidden" name="lesson" value="{{lesson}}">
+    <input type="submit" value="Next>">
+  </form-->
+  <!--{% for item in lesson.words %}
+  <form{display:inline} action="/learn_pick/" method='get'>
+    <input type="hidden" name="page" value="{{forloop.counter}}">
+    <input type="hidden" name="dic" value="{{dic}}">
+    <input type="hidden" name="lesson" value="{{lesson}}">
+    <input type="submit" value="{{item.name}}">
+  </form>
+  {% endfor %}-->
   <form action="/learn_pick/" method='post'>
     {% for option in options %}
     <input type="radio" name="pick" value="male">{{option}}
