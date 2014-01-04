@@ -19,12 +19,16 @@
       }
     </script>
     <div class='jumbotron'>
+      {% if lesson %}
       <h1>{{dic}}/{{lesson}}</h1>
       <form method="get" action="/learn_pick/">
         <input type="hidden" name="dic" value="{{dic}}">
         <input type="hidden" name="lesson" value="{{lesson}}">
         <input type="submit" value="选释义">
       </form>
+      {% else %}
+      <h1>词库</h1>
+      {% endif %}
       <!--button onclick="location.href='/learn_pick/{{dic.name}}/{{lesson.name}}/'">选释义</button>
       <button onclick="location.href='/learn_fill/{{dic.name}}/{{lesson.name}}/'">填单词</button>
       <button onclick="location.href='/learn_listen/{{dic.name}}/{{lesson.name}}/'">听写</button-->
@@ -32,13 +36,12 @@
 <!-- Cycle through entries -->
     <div class='row'>
     {% for word in Words %}
-      <h2> {{ word.name }} 
-        <form{display:inline;} style="float: right; font-size: 14px;" method="get" action="/delete/">
+      <h2> {{ word.name }}</h2>
+      <p>
+        <form style="float: right; font-size: 14px;" method="get" action="/delete/">
           <input type="hidden" name="id" value="{{word.id}}">
           <input type="submit" value="delete">
         </form>
-      </h2>
-      <p>
         <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
         <li{display:inline}>
         <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
@@ -50,15 +53,16 @@
 
       {% for mean in word.mean %}
       <p>
-        <li id={{word.name}}pos{{forloop.counter}}>{{mean}}</li>
+        <!--li id={{word.name}}pos{{forloop.counter}}>{{mean}}</li-->
+        <li>{{mean}}</li>
       </p>
       {% endfor %}
-      {% for pos in word.pos %}
+      <!--{% for pos in word.pos %}
         <script>
             d = $('#{{word.name}}pos{{forloop.counter}}');
             d.text(('{{pos}} ').replace("&amp;","&")+d.text());
         </script>
-      {% endfor %}
+        {% endfor %}-->
     {% endfor %}
     </div>
     <span id="dummy"></span>

@@ -52,25 +52,24 @@ def download_from_youdao(word):
         word.phonetics =  phonetics_list[0]
         print word.phonetics
 
-        mean_list = []
-        pos_list = []
+        #mean_list = []
+        #pos_list = []
         #div_list = re.findall('<div class="trans-container">[\n\t ]*<ul>(.+?)</ul>[\n\t ]*</div>', content, re.M | re.S)
         index = content.find("webTransToggle")
         if index != -1:
             content = content[:index]
         label_list = re.findall('<li>([a-z]+\. .*?)</li>', content, re.M | re.S)
         if len(label_list) > 0:
-            label_list = set(label_list)
-            for label in label_list:
-                index = label.find('.')
-                if index == -1:
-                    continue
-                pos_list.append(label[:index+1])
-                mean_list.append(label[index+1:])
-        word.mean = mean_list
-        word.pos = pos_list
-        print mean_list
-        print pos_list
+            label_list = list(set(label_list))
+            #for label in label_list:
+            #    index = label.find('.')
+            #    if index == -1:
+            #        continue
+            #    pos_list.append(label[:index+1])
+            #    mean_list.append(label[index+1:])
+        word.mean = label_list
+        #word.pos = pos_list
+        print label_list
                 
         word.save()
             
@@ -92,21 +91,21 @@ def download_from_iciba(word):
         word.phonetics =  phonetics_list[0]
         print word.phonetics
 
+        pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
+        #word.pos = pos_list
+        pos_list.reverse()
+
         mean_list = []
         mean_span_list = re.findall('<span class=\"label_list\">(.+?)</span>', content, re.M | re.S)
         for mean_span in mean_span_list:
             label_list = re.findall('<label>(.+?)</label>', mean_span, re.M | re.S)
-            labels = ''
+            labels = pos_list.pop()+' '
             for label in label_list:
                 labels += label
             mean_list.append(labels)
         word.mean = mean_list
         print mean_list
 
-        pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
-        word.pos = pos_list
-        print pos_list
-                
         word.save()
 
         if not os.path.exists(PATH+word.name+'.mp3'):
