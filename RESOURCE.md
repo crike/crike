@@ -56,7 +56,12 @@ mongo+django
 * http://docs.mongoengine.org/en/latest/tutorial.html
  very useful dictionary of mongoengine
 
+awesome-font
+=====
 
+* http://fortawesome.github.io/Font-Awesome/cheatsheet/
+
+* http://fortawesome.github.io/Font-Awesome/examples/
 
 dictionary
 =====
