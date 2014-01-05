@@ -30,7 +30,6 @@ urlpatterns = patterns('',
     url(r'^show/', views.show_dicts, name='dict'),
     url(r'^delete_lesson/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson, name='delete_Lesson'),
     url(r'^delete_lesson_confirm/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson_confirm, name='delete_Lesson_confirm'),
-    url(r'^lib/', views.show_lib),
 
 # Study process for students
     url(r'^lesson_show/', LessonShowView.as_view(), name='lesson_show'),
