@@ -12,6 +12,7 @@ import threading
 from multiprocessing import Process
 from crike_django.models import Word, Lesson, Dict
 from crike_django.settings import MEDIA_ROOT
+from string import capitalize
 
 try: 
     input = raw_input
@@ -62,7 +63,7 @@ def download_from_youdao(word):
         if len(label_list) > 0:
             label_list = set(label_list)
             for label in label_list:
-                if label.find(')人名；') != -1:
+                if label.find('('+capitalize(word.name)+')') != -1:
                     continue
                 mean_list.append(label)
         word.mean = mean_list
