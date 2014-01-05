@@ -6,38 +6,85 @@
     <script language="javascript" type="text/javascript">
       function showUploadform() {
         if (document.getElementById("uploadform").style.display == "none") {
+          document.getElementById("deleteform").style.display="none";
           document.getElementById("uploadform").style.display="block";
         } else {
           document.getElementById("uploadform").style.display="none";
         }
-      }
+      };
+      function showDeleteform() {
+        if (document.getElementById("deleteform").style.display == "none") {
+          document.getElementById("uploadform").style.display="none";
+          document.getElementById("deleteform").style.display="block";
+          $(".checkdic").show();
+
+        } else {
+          document.getElementById("deleteform").style.display="none";
+          $(".checkdic").hide();
+        }
+      };
+      function appenddic(cb, n, v) {
+        if (cb.checked) { 
+          $('<input>').attr({id:n+v,name:n,value:v,style:'display:none'}).prependTo('#deleteform');
+          $(".checkdic").attr('disabled', true);
+          cb.disabled=false;
+          $("."+v+"lesson").show();
+          $("#deletesubmit").attr('disabled', false);
+        } else {
+          $('#'+n+v).remove();
+          $(".checkdic").attr('disabled', false);
+          $("."+v+"lesson").hide();
+          $("#deletesubmit").attr('disabled', true);
+        }
+      };
+      function appendlesson(cb, n, v) {
+        if (cb.checked) { 
+          $('<input>').attr({id:n+v,name:n,value:v,style:'display:none'}).prependTo('#deleteform');
+        } else {
+          $('#'+n+v).remove();
+        }
+      };
     </script>
     <div class="jumbotron">
       <h1>Crike -- Dictionaries</h1>
       <button onclick="showUploadform();">添加课程</button>
+      <button onclick="showDeleteform();">删除课程</button>
       {% if Showform == "uploadform" %}
-      <div style="display: block;" id='uploadform'>
+      <form id='uploadform' style="display: block" enctype="multipart/form-data" method="post" action="/dicts/">
       {% else %}
-      <div style="display: none;" id='uploadform'>
+      <form id='uploadform' style="display: none" enctype="multipart/form-data" method="post" action="/dicts/">
       {% endif %}
-        <form style="font-size:80%" enctype="multipart/form-data" method="post" action="/dicts/">
-          {% csrf_token %}
-          {{ Uploadform }}
-          <input type="submit" value="upload">
-          <strong>{{ Uploadwarning }}</strong>
-        </form>
-      </div>
-      <span id='formposition'></span>
+        {% csrf_token %}
+        {{ Uploadform }}
+        <input hidden='true' name='extra' value='add'>
+        <input type="submit" value="upload">
+        <strong>{{ Uploadwarning }}</strong>
+      </form>
+      {% if Showform == "deleteform" %}
+      <form id="deleteform" style="display:block" enctype="multipart/form-data" method="post" action="/dicts/">
+      {% else %}
+      <form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/dicts/">
+      {% endif %}
+        {% csrf_token %}
+        <label>请选择要删除的课程（先勾选所属词库）</label>
+        <input hidden='true' name='extra' value='delete'>
+        <input id="deletesubmit" type="submit" disabled="true" value="delete">
+        <strong>{{ Deletewarning }}</strong>
+      </form>
     </div>
 <!-- Cycle through entries -->
     <div class='row'>
     {% for dic in Dicts %}
-      <h2> {{ dic.name }}</h2>
+      <h2>
+        <input class="checkdic" style="display:none" type="checkbox" onclick="appenddic(this,'deldic','{{dic.name}}');">
+        {{ dic.name }}
+      </h2>
       {% for lesson in dic.lessons|dictsort:"name" %}
       <p>
-        <a title="查看" href="/lesson_show?dic={{dic.name}}&lesson={{lesson.name}}">{{lesson.name}}</a>
+        <input type="checkbox" class="{{dic.name}}lesson" style="display: none" onclick="appendlesson(this, 'dellessons','{{lesson.name}}');">
+        <a title="开始学习" href="/lesson_show?dic={{dic.name}}&lesson={{lesson.name}}">{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-        <button style="float: right;" onclick="location.href='/show/{{dic.name}}/{{lesson.name}}/'">管理</button>
+        <button style="float: right;" onclick="location.href='/show/{{dic.name}}/{{lesson.name}}/'">管理单词</button>
       </p>
       {% endfor %}
 

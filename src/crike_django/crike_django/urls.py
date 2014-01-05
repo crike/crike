@@ -27,8 +27,6 @@ urlpatterns = patterns('',
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^media/audios/(?P<name>.*?)/?$', views.play_audio),
     url(r'^show/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.show_words),
-    url(r'^delete_lesson/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson, name='delete_Lesson'),
-    url(r'^delete_lesson_confirm/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.delete_lesson_confirm, name='delete_Lesson_confirm'),
 
 # Study process for students
     url(r'^lesson_show/', LessonShowView.as_view(), name='lesson_show'),

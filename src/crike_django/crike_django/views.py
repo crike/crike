@@ -134,15 +134,6 @@ def delete_lesson(request, dic, lesson):
     params = { 'dic':dic, 'lesson':lesson }
     return render(request, template, params)
 
-def delete_lesson_confirm(request, dic, lesson):
-    print dic, lesson
-    dicob = Dict.objects(name=dic).first()
-    for lessonobj in dicob.lessons:
-        if lessonobj.name == lesson:
-            dicob.lessons.remove(lessonobj)
-            dicob.save()
-    return HttpResponseRedirect("/dicts/")
-
 def show_lib(request):
     return render(request, 'crike_django/lib.html', {})
 
@@ -233,24 +224,38 @@ class DictsView(TemplateView):
 
     #功能：上传文件，然后把文件用handle_uploaded_file处理
     def post(self, request, *args, **kwargs):
-        uploadform = UploadFileForm(request.POST, request.FILES)
-        if uploadform.is_valid():
-            dictname = request.POST['dict']
-            lesson = request.POST['lesson']
-            if len(Dict.objects(name=dictname)) > 0:
-                dic = Dict.objects(name=dictname).first()
-                for item in dic.lessons:
-                    if item.name == lesson:
-                        return render(request, self.template_name,
-                                {'Dicts':self.dicts,'Uploadform':uploadform,
-                                  'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
+        if request.POST['extra'] == 'add':
+            uploadform = UploadFileForm(request.POST, request.FILES)
+            if uploadform.is_valid():
+                dictname = request.POST['dict']
+                lesson = request.POST['lesson']
+                if len(Dict.objects(name=dictname)) > 0:
+                    dic = Dict.objects(name=dictname).first()
+                    for item in dic.lessons:
+                        if item.name == lesson:
+                            return render(request, self.template_name,
+                                    {'Dicts':self.dicts,'Uploadform':uploadform,
+                                      'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
 
-            handle_uploaded_file(request.POST['dict'],
-                    request.POST['lesson'],
-                    request.FILES['file'])
-            return HttpResponseRedirect('/dicts/')
-        return render(request, self.template_name,
-                {'Dicts':self.dicts, 'Uploadform':uploadform, 'Showform':'uploadform'})
+                handle_uploaded_file(request.POST['dict'],
+                        request.POST['lesson'],
+                        request.FILES['file'])
+                return HttpResponseRedirect('/dicts/')
+            return render(request, self.template_name,
+                    {'Dicts':self.dicts, 'Uploadform':uploadform, 'Showform':'uploadform'})
+
+        elif request.POST['extra'] == 'delete':
+            dic = request.POST['deldic']
+            print request.POST
+            lessons = request.POST.getlist('dellessons')
+            dicob = Dict.objects(name=dic).first()
+            for lesson in lessons:
+                for lessonobj in dicob.lessons:
+                    if lessonobj.name == lesson:
+                        dicob.lessons.remove(lessonobj)
+            dicob.save()
+
+        return HttpResponseRedirect("/dicts/")
 
 class ExamView(TemplateView):
     template_name='crike_django/exam_view.html'
