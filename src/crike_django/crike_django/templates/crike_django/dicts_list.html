@@ -1,17 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-
     <link href="/static/index.css" rel="stylesheet" type="text/css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script language="javascript" type="text/javascript">
+      function showUploadform() {
+        if (document.getElementById("uploadform").style.display == "none") {
+          document.getElementById("uploadform").style.display="block";
+        } else {
+          document.getElementById("uploadform").style.display="none";
+        }
+      }
     </script>
     <div class="jumbotron">
       <h1>Crike -- Dictionaries</h1>
-      <form method="get" action="/upload/">
-        <input type="submit" value="upload">
-      </form>
+      <button onclick="showUploadform();">添加课程</button>
+      {% if Showform == "uploadform" %}
+      <div style="display: block;" id='uploadform'>
+      {% else %}
+      <div style="display: none;" id='uploadform'>
+      {% endif %}
+        <form style="font-size:80%" enctype="multipart/form-data" method="post" action="/dicts/">
+          {% csrf_token %}
+          {{ Uploadform }}
+          <input type="submit" value="upload">
+          <strong>{{ Uploadwarning }}</strong>
+        </form>
+      </div>
+      <span id='formposition'></span>
     </div>
 <!-- Cycle through entries -->
     <div class='row'>
