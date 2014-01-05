@@ -191,3 +191,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_REDIRECT_URL = 'index'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 EMAIL_FROM = 'webmaster@localhost'
+
+# crispy_form
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
