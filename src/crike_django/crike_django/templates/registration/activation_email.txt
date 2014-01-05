@@ -1,0 +1,10 @@
+{% load humanize %}
+
+尊敬的XXX：您好！
+感谢使用Crike！
+请点击以下按钮验证您的电子邮件地址
+
+//XXX 这个url是本地的，后续可能可以用全站url配置？
+http://127.0.0.1:8000/accounts/activate/{{ activation_key }}/
+
+或者将以上地址复制到您的浏览器地址栏中直接访问。

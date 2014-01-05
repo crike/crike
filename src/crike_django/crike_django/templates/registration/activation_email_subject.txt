@@ -1,0 +1,1 @@
+请在{{ expiration_days }}天内激活你在crike的帐号，过期自动作废
