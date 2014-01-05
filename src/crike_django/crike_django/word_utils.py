@@ -52,7 +52,7 @@ def download_from_youdao(word):
         word.phonetics =  phonetics_list[0]
         print word.phonetics
 
-        #mean_list = []
+        mean_list = []
         #pos_list = []
         #div_list = re.findall('<div class="trans-container">[\n\t ]*<ul>(.+?)</ul>[\n\t ]*</div>', content, re.M | re.S)
         index = content.find("webTransToggle")
@@ -60,14 +60,12 @@ def download_from_youdao(word):
             content = content[:index]
         label_list = re.findall('<li>([a-z]+\. .*?)</li>', content, re.M | re.S)
         if len(label_list) > 0:
-            label_list = list(set(label_list))
-            #for label in label_list:
-            #    index = label.find('.')
-            #    if index == -1:
-            #        continue
-            #    pos_list.append(label[:index+1])
-            #    mean_list.append(label[index+1:])
-        word.mean = label_list
+            label_list = set(label_list)
+            for label in label_list:
+                if label.find(')人名；')
+                    continue
+                mean_list.append(label)
+        word.mean = mean_list
         #word.pos = pos_list
         print label_list
                 
