@@ -4,6 +4,7 @@
 
 {% block header %}
     <script src="http://cdn.bootcss.com/holder/2.0/holder.js"></script>
+    <link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
 {% block container %}
 <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
@@ -84,9 +85,8 @@
 <p class="pull-right visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
 </p>
-
   <div class="jumbotron">
-    <h1>Crike [kraɪk] <img src="{% static "images/s-audio.png" %}"/></h1> 
+    <h1>Crike [kraɪk] <i class="fa fa-volume-up"></i></h1>
     <p>{% trans "好好学英语，不然以后就只能来做网页了" %}</p>
     <p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
   </div>
