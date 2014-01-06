@@ -216,6 +216,7 @@ class DictsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         uploadform = UploadFileForm()
+
         if len(self.dicts) != 0:
             request.encoding = "utf-8"
 
@@ -246,14 +247,16 @@ class DictsView(TemplateView):
 
         elif request.POST['extra'] == 'delete':
             dic = request.POST['deldic']
-            print request.POST
             lessons = request.POST.getlist('dellessons')
             dicob = Dict.objects(name=dic).first()
             for lesson in lessons:
                 for lessonobj in dicob.lessons:
                     if lessonobj.name == lesson:
                         dicob.lessons.remove(lessonobj)
-            dicob.save()
+            if len(dicob.lessons) == 0:
+                dicob.delete()
+            else:
+                dicob.save()
 
         return HttpResponseRedirect("/dicts/")
 
