@@ -63,7 +63,9 @@
                 
                 {% if user.is_authenticated %}
                     <ul class="nav navbar-nav pull-right">
-                        <li><a><i class="fa fa-user fa-lg"></i> {{ user.username }}</a></li>
+                        <li><a>
+                            <i class="fa fa-user fa-lg"></i> <strong>{{ user.username }}</strong>
+                        </a></li>
                         <li class="divider-vertical"></li>
                         <li><a href="{% url "django.contrib.auth.views.password_change" %}" data-toggle="tooltip" data-placement="bottom" title="修改密码">
                             <i class="fa fa-key fa-lg"></i>
