@@ -23,25 +23,46 @@
           $(".checkdic").hide();
         }
       };
-      function appenddic(cb, n, v) {
+      function appenddic(cb) {
+        var n = cb.name;
+        var v = cb.value;
         if (cb.checked) { 
-          $('<input>').attr({id:n+v,name:n,value:v,style:'display:none'}).prependTo('#deleteform');
-          $(".checkdic").attr('disabled', true);
-          cb.disabled=false;
+          $(cb).clone().attr({id:v+'inform',class:'checkdicinform',style:'display:none'}).prependTo('#deleteform');
+          console.log($('#deleteform').html());
           $("."+v+"lesson").show();
-          $("#deletesubmit").attr('disabled', false);
+          $("#checkall"+v).show();
+          $(".checkdic").prop('disabled', true);
+          cb.disabled=false;
+          $("#deletesubmit").prop('disabled', false);
         } else {
-          $('#'+n+v).remove();
-          $(".checkdic").attr('disabled', false);
+          $('#'+v+'inform').remove();
+          $("."+v+"lessoninform").remove();
+          $("."+v+"lesson").prop('checked',false);
           $("."+v+"lesson").hide();
-          $("#deletesubmit").attr('disabled', true);
+          $(".checkall").prop('checked',false);
+          $("#checkall"+v).hide();
+          $(".checkdic").prop('disabled', false);
+          $("#deletesubmit").prop('disabled', true);
         }
       };
-      function appendlesson(cb, n, v) {
+      function appendlesson(cb) {
         if (cb.checked) { 
-          $('<input>').attr({id:n+v,name:n,value:v,style:'display:none'}).prependTo('#deleteform');
+          $(cb).clone().attr({id:cb.value+'inform',class:cb.class+'inform',style:'display:none'}).prependTo('#deleteform');
         } else {
-          $('#'+n+v).remove();
+          $('.checkall').prop('checked', false);
+          $('#'+cb.value+'inform').remove();
+        }
+      };
+      function checkall(cb,v) {
+        if (cb.checked) {
+          $("."+v+"lessoninform").remove();//need remove added lessons then add all
+          $("."+v+"lesson").prop('checked',true);
+          $("."+v+"lesson").each(function() {
+              $(this).clone().attr({id:this.value+'inform','class':v+"lessoninform",style:'display:none'}).prependTo('#deleteform');
+           });
+        } else {
+          $("."+v+"lesson").prop('checked',false);
+          $("."+v+"lessoninform").remove();
         }
       };
     </script>
@@ -76,12 +97,16 @@
     <div class='row'>
     {% for dic in Dicts %}
       <h2>
-        <input class="checkdic" style="display:none" type="checkbox" onclick="appenddic(this,'deldic','{{dic.name}}');">
+        <input class="checkdic" style="display:none" type="checkbox" name='deldic' value='{{dic.name}}' onclick="appenddic(this);">
         {{ dic.name }}
+        <div id="checkall{{dic.name}}" style="display:none">
+          <input class="checkall" type="checkbox" onclick="checkall(this,'{{dic.name}}')">
+          <label style="font-size:50%" for="checkall{{dic.name}}">全选</label>
+        </div>
       </h2>
       {% for lesson in dic.lessons|dictsort:"name" %}
       <p>
-        <input type="checkbox" class="{{dic.name}}lesson" style="display: none" onclick="appendlesson(this, 'dellessons','{{lesson.name}}');">
+        <input type="checkbox" class="{{dic.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
         <a title="开始学习" href="/lesson_show?dic={{dic.name}}&lesson={{lesson.name}}">{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
         <button style="float: right;" onclick="location.href='/show/{{dic.name}}/{{lesson.name}}/'">管理单词</button>
