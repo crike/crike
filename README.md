@@ -6,12 +6,12 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful
+* optimize managment view (add delete media files checkbox, delete lesson checkbox
+* add word management view, enable word info modification manually and single word info download
 * learning process: choice
 * learning process: fill blanks
 * learning process: dictation
 * exam
-* statistic
-* images (youdao has pics or optimize result from search engine)
-* optimize managment view (multi-check and choose whether delete media files)
-* delete all words belong to a lesson should ask whether delete the lesson, same to dict
+* statistics
+* images (youdao has pics or optimize result from search engine), enable single image download and upload
 * redis
