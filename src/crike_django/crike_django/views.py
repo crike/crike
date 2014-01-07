@@ -192,7 +192,11 @@ class LessonPickView(TemplateView):
             words = paginator.page(paginator.num_pages)
 
         words_list.remove(words[0])
-        options = sample(words_list, 3)
+        count = len(words_list)
+        if count > 3:
+            options = sample(words_list, 3)
+        else:
+            options = sample(words_list, count)
         options.insert(randrange(len(options)+1), words[0])
 
         return render(request, self.template_name,
