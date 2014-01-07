@@ -39,7 +39,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="{% active request 'auth' %}"><a href="{% url 'auth' %}">{% trans '账户' %}</a></li>
+            <li class="{% active request 'auth' %} hide"><a href="{% url 'auth' %}">{% trans '账户' %}</a></li>
             <li class="{% active request 'dict' %}"><a href="{% url 'dict' %}">{% trans '词典' %}</a></li>
             <li class="{% active request 'lesson' %}"><a href="{% url 'lesson' %}">{% trans '课程' %}</a></li>
             <li class="{% active request 'exam' %}"><a href="{% url 'exam' %}">{% trans "考试" %}</a></li>
