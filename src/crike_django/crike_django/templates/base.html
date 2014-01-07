@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+
     <!-- Le styles -->
     <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/ico/favicon.ico">
-
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
     <style type="text/css">
@@ -19,9 +19,9 @@
         padding-top: 60px;
         padding-bottom: 40px;
       }
-
-    {% include "navbar_dwarf.css" %}
+      {% include "navbar_dwarf.css" %}
     </style>
+
     {% block header %}
     {% endblock %}
   </head>
@@ -30,165 +30,176 @@
     <div class="navbar-xs">
     <div class="navbar-primary">
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand nav" href="{% url "index" %}">Crike</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="{% active request "auth" %}"><a href="{% url "auth" %}">{% trans "账户" %}</a></li>
-                    <li class="{% active request "dict" %}"><a href="{% url "dict" %}">{% trans "词典" %}</a></li>
-                    <li class="{% active request "lesson" %}"><a href="{% url "lesson" %}">{% trans "课程" %}</a></li>
-                    <li class="{% active request "exam" %}"><a href="{% url "exam" %}">{% trans "考试" %}</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计 <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">学习历史</a></li>
-                  <li><a href="#">常错词</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">教学 <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">学员成绩</a></li>
-                  <li><a href="#">历史曲线</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">班级</li>
-                  <li><a href="#">班级管理</a></li>
-                </ul>
-              </li>
-                </ul>
-                
-                {% if user.is_authenticated %}
-                    <ul class="nav navbar-nav pull-right">
-                        <li><a>
-                            <i class="fa fa-user fa-lg"></i> <strong>{{ user.username }}</strong>
-                        </a></li>
-                        <li class="divider-vertical"></li>
-                        <li><a href="{% url "django.contrib.auth.views.password_change" %}" data-toggle="tooltip" data-placement="bottom" title="修改密码">
-                            <i class="fa fa-key fa-lg"></i>
-                        </a></li>
-                        <li><a class="btn btn-inverse" href="{% url "django.contrib.auth.views.logout" %}" data-toggle="tooltip" data-placement="bottom" title="登出">
-                            <i class="fa fa-sign-out fa-lg"></i>
-                        </a></li>
-                    </ul>
-
-                {% else %}
-					<!-- 弹出框相关 -->
-					<ul class="nav navbar-nav navbar-right">
-					<li><a href="#" data-toggle="modal" data-target="#loginModal">登录</a></li>
-					<li><a href="#" data-toggle="modal" data-target="#registerModal">注册</a></li>
-					</ul>
-                {% endif %}
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand nav" href="{% url 'index' %}">Crike</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="{% active request 'auth' %}"><a href="{% url 'auth' %}">{% trans '账户' %}</a></li>
+            <li class="{% active request 'dict' %}"><a href="{% url 'dict' %}">{% trans '词典' %}</a></li>
+            <li class="{% active request 'lesson' %}"><a href="{% url 'lesson' %}">{% trans '课程' %}</a></li>
+            <li class="{% active request 'exam' %}"><a href="{% url 'exam' %}">{% trans "考试" %}</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">学习历史</a></li>
+                <li><a href="#">常错词</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">教学 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">学员成绩</a></li>
+                <li><a href="#">历史曲线</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">班级</li>
+                <li><a href="#">班级管理</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% if user.is_authenticated %}
+          <ul class="nav navbar-nav pull-right">
+            <li><a>
+              <i class="fa fa-user fa-lg"></i> <strong>{{ user.username }}</strong>
+            </a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="{% url "django.contrib.auth.views.password_change" %}" data-toggle="tooltip" data-placement="bottom" title="修改密码">
+              <i class="fa fa-key fa-lg"></i>
+            </a></li>
+            <li><a class="btn btn-inverse" href="{% url "django.contrib.auth.views.logout" %}" data-toggle="tooltip" data-placement="bottom" title="登出">
+              <i class="fa fa-sign-out fa-lg"></i>
+            </a></li>
+          </ul>
+          {% else %}
+          <!-- 弹出框相关 -->
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#loginModal">登录</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#registerModal">注册</a></li>
+          </ul>
+          {% endif %}
 
             </div><!-- /.nav-collapse -->
         </div>
     </div>
-    </div>
-    </div>
+    </div><!-- /.navbar-xs -->
+    </div><!-- /.navbar-primary -->
 
     <div class="container">
 
-<!-- Modal 弹出框 -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h2 class="modal-title" id="myModalLabel">登录</h4>
-      </div>
-      <div class="modal-body">
-        <form id="login-form" class="form-inline" action="{% url "django.contrib.auth.views.login" %}" method="post">
-          {% csrf_token %}
-<style type="text/css">
-.modal-body .input-group {
-margin-bottom: 10px;
-}
-</style>
-          <div class="input-group margin-bottom-sm">
-            <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-            <input id="id_username" name="username" class="form-control" type="text" placeholder="邮箱 或 用户名"/>
-          </div>
-
-          <!-- XXX 这个form的实现简单暴力，应该考虑参考registration/login.html的form field调用方法，调用auth里的form，避免升级时出问题 -->
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-            <input id="id_password" name="password" class="form-control" type="password" placeholder="密码"/>
-          </div>
-
-          <label class="checkbox">
-            <input type="checkbox" value="remember-me"> 记住我
-          </label>
-         <button class="btn btn-large btn-primary" type="submit" value="Log in">登录</button>
-        </form>
-        <p><a href="{% url "django.contrib.auth.views.password_reset" %}">{% trans "重设密码" %}</a></p>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- Modal 弹出框 -->
-<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">注册</h4>
-      </div>
-      <div class="modal-body">
-        <form class="form-inline" method="post" action="{% url 'registration_register' %}">
-            {% csrf_token %}
-                <!-- XXX 这个实现不好，换成给register form会好点，但crispy的响应式做得不大好 -->
-                <div id="div_id_username" class="required"><label for="id_username" class="control-label  requiredField">
-				用户名<span class="asteriskField">*</span></label><div class="input-group ">
-				<span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-				<input class="form-control" id="id_username" maxlength="30" name="username" type="text" /> </div></div>
-				<div id="div_id_email" class="required"><label for="id_email" class="control-label  requiredField">
-				邮箱<span class="asteriskField">*</span></label><div class="input-group ">
-				<span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-				<input class="form-control" id="id_email" name="email" type="text" /> </div></div>
-				<div id="div_id_password1" class="required"><label for="id_password1" class="control-label  requiredField">
-				密码<span class="asteriskField">*</span></label><div class="input-group">
-				<span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-				<input class="form-control" id="id_password1" name="password1" type="password" /> </div></div>
-				<div id="div_id_password2" class="required"><label for="id_password2" class="control-label  requiredField">
-				密码 （再次输入）<span class="asteriskField">*</span></label><div class="input-group">
-				<span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-				<input class="form-control" id="id_password2" name="password2" type="password" /> </div></div>
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn">注册</button>
-              </div>
+      <!-- 登录：Modal 弹出框 -->
+      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h2 class="modal-title" id="myModalLabel">登录</h4>
             </div>
-        </form>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> -->
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+            <div class="modal-body">
+              <form id="login-form" class="form-inline" action="{% url "django.contrib.auth.views.login" %}" method="post">
+                {% csrf_token %}
+                <style type="text/css">
+                  .modal-body .input-group {
+                    margin-bottom: 10px;
+                  }
+                </style>
+                <div class="input-group margin-bottom-sm">
+                  <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                  <input id="id_username" name="username" class="form-control" type="text" placeholder="邮箱 或 用户名"/>
+                </div>
 
-    {% block container %}
-    {% endblock %}
-    {% block content %}
-    {% endblock %}
-    <hr>
-    <footer>
-    <ul class="list-inline">
-      <li><a href="help">帮助</a></li>
-      <li><a href="policy">隐私政策</a></li>
-      <li><a href="terms">服务条款</a></li>
-      <li>中国制造</li>
-      <li><a href="#">geekan&geekben</a> &copy; <a href='https://github.com/crike/crike'>CrikeProject</a> 2013</li>
-    </ul>
-    </footer>
+                <!-- XXX 这个form的实现简单暴力，应该考虑参考registration/login.html的form field调用方法，调用auth里的form，避免升级时出问题 -->
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                  <input id="id_password" name="password" class="form-control" type="password" placeholder="密码"/>
+                </div>
+
+                <label class="checkbox">
+                  <input type="checkbox" value="remember-me"> 记住我
+                </label>
+               <button class="btn btn-large btn-primary" type="submit" value="Log in">登录</button>
+              </form>
+              <p><a href="{% url 'django.contrib.auth.views.password_reset' %}">{% trans '重设密码' %}</a></p>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <!-- 注册：Modal 弹出框 -->
+      <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">注册</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-inline" method="post" action="{% url 'registration_register' %}">
+                {% csrf_token %}
+                <!-- XXX 这个实现不好，换成给register form会好点，但crispy的响应式做得不大好 -->
+                <div id="div_id_username" class="required">
+                  <label for="id_username" class="control-label  requiredField">用户名<span class="asteriskField">*</span></label>
+                  <div class="input-group ">
+                    <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                    <input class="form-control" id="id_username" maxlength="30" name="username" type="text" />
+                  </div>
+                </div>
+                <div id="div_id_email" class="required">
+                  <label for="id_email" class="control-label  requiredField">邮箱<span class="asteriskField">*</span></label>
+                  <div class="input-group ">
+                    <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                    <input class="form-control" id="id_email" name="email" type="text" />
+                  </div>
+                </div>
+                <div id="div_id_password1" class="required">
+                  <label for="id_password1" class="control-label  requiredField">密码<span class="asteriskField">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                    <input class="form-control" id="id_password1" name="password1" type="password" />
+                  </div>
+                </div>
+                <div id="div_id_password2" class="required">
+                  <label for="id_password2" class="control-label  requiredField">密码（再次输入）<span class="asteriskField">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                    <input class="form-control" id="id_password2" name="password2" type="password" />
+                  </div>
+                </div>
+                <div class="control-group">
+                  <div class="controls">
+                    <button type="submit" class="btn">注册</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      {% block container %}
+      {% endblock %}
+      {% block content %}
+      {% endblock %}
+
+      <hr>
+      <footer>
+      <ul class="list-inline">
+        <li><a href="help">帮助</a></li>
+        <li><a href="policy">隐私政策</a></li>
+        <li><a href="terms">服务条款</a></li>
+        <li>中国制造</li>
+        <li><a href="#">geekan&geekben</a> &copy; <a href='https://github.com/crike/crike'>CrikeProject</a> 2013</li>
+      </ul>
+      </footer>
     </div> <!-- /container -->
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
