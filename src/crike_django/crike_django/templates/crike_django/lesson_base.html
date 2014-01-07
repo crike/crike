@@ -24,19 +24,19 @@
 <div class="pagination" style="float:right">
   <span class="step-links">
     {% if words.has_previous %}
-        <a href="?page={{ words.previous_page_number }}&dic={{dic}}&lesson={{lesson}}">previous</a>
+        <a href="?page={{ words.previous_page_number }}&dic={{dic}}&lesson={{lesson}}">上一个</a>
     {% endif %}
 
     <span class="current">
-        Page {{ words.number }} of {{ words.paginator.num_pages }}.
+        第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
     </span>
 
     {% if words.has_next %}
-        <a href="?page={{ words.next_page_number }}&dic={{dic}}&lesson={{lesson}}">next</a>
+        <a href="?page={{ words.next_page_number }}&dic={{dic}}&lesson={{lesson}}">下一个</a>
     {% endif %}
   </span>
-  <span style='margin-left:20px;'>Back to  
-    <a href='/show/'>Dicts</a>
+  <span style='margin-left:20px;'>返回  
+    <a href='/dict_view?dic={{dic}}'>课程选择</a>
   </span>
 </div>
 
