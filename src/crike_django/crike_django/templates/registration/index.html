@@ -23,18 +23,27 @@
     </div>
     <div id="collapseOne" class="panel-collapse collapse in">
           <div class="list-group">
-            <a href="#" class="list-group-item active">一年级 上学期</a>
-            <a href="#" class="list-group-item">一年级 下学期</a>
-            <a href="#" class="list-group-item">二年级 上学期</a>
-            <a href="#" class="list-group-item">二年级 下学期</a>
-            <a href="#" class="list-group-item">三年级 上学期</a>
-            <a href="#" class="list-group-item">三年级 下学期</a>
-            <a href="#" class="list-group-item">四年级 上学期</a>
-            <a href="#" class="list-group-item">四年级 下学期</a>
-            <a href="#" class="list-group-item">五年级 上学期</a>
-            <a href="#" class="list-group-item">五年级 下学期</a>
-            <a href="#" class="list-group-item">六年级 上学期</a>
-            <a href="#" class="list-group-item">六年级 下学期</a>
+            {% for dic in Dicts %}
+            <a href="/dict_view?dic={{dic.name}}" class="list-group-item">{{dic.name}}</a>
+            {% endfor %}
+            <!--a href="/dict?dic=primary1a" class="list-group-item active">一年级 上学期</a>
+            <a href="/dict?dic=primary1b" class="list-group-item">一年级 下学期</a>
+            <a href="/dict?dic=primary2a" class="list-group-item">二年级 上学期</a>
+            <a href="/dict?dic=primary2b" class="list-group-item">二年级 下学期</a>
+            <a href="/dict?dic=primary3a" class="list-group-item">三年级 上学期</a>
+            <a href="/dict?dic=primary3b" class="list-group-item">三年级 下学期</a>
+            <a href="/dict?dic=primary4a" class="list-group-item">四年级 上学期</a>
+            <a href="/dict?dic=primary4b" class="list-group-item">四年级 下学期</a>
+            <a href="/dict?dic=primary5a" class="list-group-item">五年级 上学期</a>
+            <a href="/dict?dic=primary5b" class="list-group-item">五年级 下学期</a>
+            <a href="/dict?dic=primary6a" class="list-group-item">六年级 上学期</a>
+            <a href="/dict?dic=primary6b" class="list-group-item">六年级 下学期</a>
+            <a href="/dict?dic=primary7a" class="list-group-item">七年级 上学期</a>
+            <a href="/dict?dic=primary7b" class="list-group-item">七年级 下学期</a>
+            <a href="/dict?dic=primary8a" class="list-group-item">八年级 上学期</a>
+            <a href="/dict?dic=primary8b" class="list-group-item">八年级 下学期</a>
+            <a href="/dict?dic=primary9a" class="list-group-item">九年级 上学期</a>
+            <a href="/dict?dic=primary9b" class="list-group-item">九年级 下学期</a-->
           </div>
     </div>
   </div>

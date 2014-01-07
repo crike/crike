@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <link href="/static/index.css" rel="stylesheet" type="text/css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript">
+    </script>
+    <div class="jumbotron">
+      <h1>Crike -- Dictionaries</h1>
+    </div>
+<!-- Cycle through entries -->
+    <div class='row'>
+      <h2>
+        {{ Dic.name }}
+      </h2>
+      {% for lesson in Dic.lessons|dictsort:"name" %}
+      <p>
+        <a title="开始学习" href="/lesson_show?dic={{Dic.name}}&lesson={{lesson.name}}">{{lesson.name}}</a>
+        <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
+        <button style="float: right;" onclick="location.href='#'">学习状态</button>
+      </p>
+      {% endfor %}
+
+    </div>
+    <span id="dummy"></span>
+{% endblock %}

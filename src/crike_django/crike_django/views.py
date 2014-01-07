@@ -16,31 +16,15 @@ from random import sample, randrange
 # TODO: Upload file的view
 # 规定具体的get/post对应事件
 
-class DictView(TemplateView):
-    template_name = 'crike_django/dict_view.html'
+class HomeView(TemplateView):
+    template_name = 'registration/index.html'
 
     def get(self, request, *args, **kwargs):
-        # 1.取出所有/指定词典，然后用模版渲染
-        # 2.按页进行分页，使用pagination
-        basic_dicts = Dict.objects.all()
-        p = Paginator(basic_dicts, 20).page(1)
-        return render(request, self.template_name, {
-            'p_dicts': p,
-        })
+        dics = Dict.objects.all()
+        return render(request, self.template_name, {'Dicts':dics})
 
-    # 当前此post方法仅为上传word至dict使用
     def post(self, request, *args, **kwargs):
-        word = request.POST.get('word', None)
-        word_translated = request.POST.get('word_translated', None)
-        dict_type = request.POST.get('dict_type', 'BasicDict')
-
-        bd = Dict.objects.get(dict_type=dict_type)
-        bd[word] = word_translated
-        bd.save()
-        return
-
-def import_dict():
-    pass
+        return HttpResponse("Not implement yet")
 
 class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'
@@ -214,6 +198,60 @@ class LessonView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
+# for learning
+class DictView(TemplateView):
+    template_name='crike_django/dict_view.html'
+
+    def get(self, request, *args, **kwargs):
+        uploadform = UploadFileForm()
+
+        try:
+            dicname = request.GET['dic']
+            dic = Dict.objects(name=dicname).first()
+            request.encoding = "utf-8"
+            return render(request, self.template_name,
+                {'Dic':dic, 'Uploadform':uploadform})
+        except:
+            return HttpResponseRedirect('/index/')
+
+    #功能：上传文件，然后把文件用handle_uploaded_file处理
+    def post(self, request, *args, **kwargs):
+        if request.POST['extra'] == 'add':
+            uploadform = UploadFileForm(request.POST, request.FILES)
+            if uploadform.is_valid():
+                dictname = request.POST['dict']
+                lesson = request.POST['lesson']
+                if len(Dict.objects(name=dictname)) > 0:
+                    dic = Dict.objects(name=dictname).first()
+                    for item in dic.lessons:
+                        if item.name == lesson:
+                            return render(request, self.template_name,
+                                    {'Dicts':self.dicts,'Uploadform':uploadform,
+                                      'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
+
+                handle_uploaded_file(request.POST['dict'],
+                        request.POST['lesson'],
+                        request.FILES['file'])
+                return HttpResponseRedirect('/dicts/')
+            return render(request, self.template_name,
+                    {'Dicts':self.dicts, 'Uploadform':uploadform, 'Showform':'uploadform'})
+
+        elif request.POST['extra'] == 'delete':
+            dic = request.POST['deldic']
+            lessons = request.POST.getlist('dellessons')
+            dicob = Dict.objects(name=dic).first()
+            for lesson in lessons:
+                for lessonobj in dicob.lessons:
+                    if lessonobj.name == lesson:
+                        dicob.lessons.remove(lessonobj)
+            if len(dicob.lessons) == 0:
+                dicob.delete()
+            else:
+                dicob.save()
+
+        return HttpResponseRedirect("/dicts/")
+
+# for management
 class DictsView(TemplateView):
     template_name='crike_django/dicts_list.html'
     dicts = Dict.objects.all()
@@ -273,11 +311,3 @@ class ExamView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
-class HomeView(TemplateView):
-    template_name='crike_django/home.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
-
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")

@@ -10,9 +10,10 @@ from crike_django.views import *
 
 admin.autodiscover()
 
+#TODO rename all url names and addresses
 urlpatterns = patterns('',
 # accounts management for administrators
-    url(r'^$', TemplateView.as_view(template_name='registration/index.html'), name='index' ),
+    url(r'^$', HomeView.as_view(), name='index' ),
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
     url(r'^home$', HomeView.as_view(), name='home'),
     url(r'^lesson$', LessonView.as_view(), name='lesson'),
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^show/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.show_words),
 
 # Study process for students
+    url(r'^dict_view/', DictView.as_view(), name='dict_view'),
     url(r'^lesson_show/', LessonShowView.as_view(), name='lesson_show'),
     url(r'^lesson_pick/', LessonPickView.as_view(), name='lesson_pick'),
 )#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
