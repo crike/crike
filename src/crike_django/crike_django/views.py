@@ -20,8 +20,8 @@ class HomeView(TemplateView):
     template_name = 'registration/index.html'
 
     def get(self, request, *args, **kwargs):
-        dics = Dict.objects.all()
-        return render(request, self.template_name, {'Dicts':dics})
+        books = Book.objects.all()
+        return render(request, self.template_name, {'books':books})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
@@ -75,19 +75,19 @@ def show_all_words(request):
 
     return render(request, template_name, {'Words':words})
 
-def show_words(request, dic, lesson):
+def show_words(request, book, lesson):
     template_name='crike_django/words_list.html'
 
     words = []
-    for lessonob in Dict.objects(name=dic)[0].lessons:
+    for lessonob in Book.objects(name=book)[0].lessons:
         if lessonob.name == lesson:
             words = lessonob.words
     if len(words) != 0:
         request.encoding = "utf-8"
 
-    return render(request, template_name, {'Words':words, 'dic':dic, 'lesson':lesson})
+    return render(request, template_name, {'Words':words, 'book':book, 'lesson':lesson})
 
-def show_lessons(request, dic):#TODO
+def show_lessons(request, book):#TODO
     template_name='crike_django/lessons_list.html'
 
     words = Word.objects.all()
@@ -113,81 +113,68 @@ class WordDeleteView(TemplateView):
         word.delete()
         return HttpResponseRedirect("/show_all_words/")
 
-def delete_lesson(request, dic, lesson):
+def delete_lesson(request, book, lesson):
     template = 'crike_django/lesson_delete.html'
-    params = { 'dic':dic, 'lesson':lesson }
+    params = { 'book':book, 'lesson':lesson }
     return render(request, template, params)
 
 def show_lib(request):
     return render(request, 'crike_django/lib.html', {})
 
-class LessonShowView(TemplateView):
+def lesson_show(request, book, lesson):
     template_name='crike_django/lesson_show.html'
+    words_list = []
+    bookob = Book.objects(name=book).first()
+    for lessonobj in bookob.lessons:
+        if lessonobj.name == lesson:
+            words_list = lessonobj.words
 
-    def get(self, request, *args, **kwargs):
-        dic = request.GET.get('dic')
-        lesson = request.GET.get('lesson')
-        words_list = []
-        dicob = Dict.objects(name=dic).first()
-        for lessonobj in dicob.lessons:
-            if lessonobj.name == lesson:
-                words_list = lessonobj.words
+    paginator = Paginator(words_list, 1)
 
-        paginator = Paginator(words_list, 1)
+    page = request.GET.get('page')
+    try:
+        words = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        words = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        words = paginator.page(paginator.num_pages)
 
-        page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
+    return render(request, template_name,
+           {'words':words, 'book':book, 'lesson':lesson})
 
-        return render(request, self.template_name,
-               {'words':words, 'dic':dic, 'lesson':lesson})
-
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
-
-class LessonPickView(TemplateView):
+def lesson_pick(request, book, lesson):
     template_name='crike_django/lesson_pick.html'
+    words_list = []
+    bookob = Book.objects(name=book).first()
+    for lessonobj in bookob.lessons:
+        if lessonobj.name == lesson:
+            words_list = lessonobj.words
 
-    def get(self, request, *args, **kwargs):
-        dic = request.GET.get('dic')
-        lesson = request.GET.get('lesson')
-        words_list = []
-        dicob = Dict.objects(name=dic).first()
-        for lessonobj in dicob.lessons:
-            if lessonobj.name == lesson:
-                words_list = lessonobj.words
+    paginator = Paginator(words_list, 1)
 
-        paginator = Paginator(words_list, 1)
+    page = request.GET.get('page')
+    try:
+        words = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        words = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        words = paginator.page(paginator.num_pages)
 
-        page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
+    words_list.remove(words[0])
+    count = len(words_list)
+    if count > 3:
+        options = sample(words_list, 3)
+    else:
+        options = sample(words_list, count)
+    options.insert(randrange(len(options)+1), words[0])
 
-        words_list.remove(words[0])
-        count = len(words_list)
-        if count > 3:
-            options = sample(words_list, 3)
-        else:
-            options = sample(words_list, count)
-        options.insert(randrange(len(options)+1), words[0])
+    return render(request, template_name,
+           {'words':words, 'book':book, 'lesson':lesson, 'options':options})
 
-        return render(request, self.template_name,
-               {'words':words, 'dic':dic, 'lesson':lesson, 'options':options})
-
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'
@@ -199,108 +186,108 @@ class LessonView(TemplateView):
         return HttpResponse("Not implement yet")
 
 # for learning
-class DictView(TemplateView):
-    template_name='crike_django/dict_view.html'
+class BookView(TemplateView):
+    template_name='crike_django/book_view.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, book):
         uploadform = UploadFileForm()
 
         try:
-            dicname = request.GET['dic']
-            dic = Dict.objects(name=dicname).first()
+            bookobj = Book.objects(name=book).first()
             request.encoding = "utf-8"
             return render(request, self.template_name,
-                {'Dic':dic, 'Uploadform':uploadform})
-        except:
-            return HttpResponseRedirect('/index/')
+                {'Book':bookobj, 'Uploadform':uploadform})
+        except Exception as e:
+            print e
+            return HttpResponseRedirect('/index/')#TODO error page
 
     #功能：上传文件，然后把文件用handle_uploaded_file处理
     def post(self, request, *args, **kwargs):
         if request.POST['extra'] == 'add':
             uploadform = UploadFileForm(request.POST, request.FILES)
             if uploadform.is_valid():
-                dictname = request.POST['dict']
+                bookname = request.POST['book']
                 lesson = request.POST['lesson']
-                if len(Dict.objects(name=dictname)) > 0:
-                    dic = Dict.objects(name=dictname).first()
-                    for item in dic.lessons:
+                if len(Book.objects(name=bookname)) > 0:
+                    book = Book.objects(name=bookname).first()
+                    for item in book.lessons:
                         if item.name == lesson:
                             return render(request, self.template_name,
-                                    {'Dicts':self.dicts,'Uploadform':uploadform,
+                                    {'books':self.books,'Uploadform':uploadform,
                                       'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
 
-                handle_uploaded_file(request.POST['dict'],
+                handle_uploaded_file(request.POST['book'],
                         request.POST['lesson'],
                         request.FILES['file'])
-                return HttpResponseRedirect('/dicts/')
+                return HttpResponseRedirect('/admin/books/')
             return render(request, self.template_name,
-                    {'Dicts':self.dicts, 'Uploadform':uploadform, 'Showform':'uploadform'})
+                    {'books':self.books, 'Uploadform':uploadform, 'Showform':'uploadform'})
 
         elif request.POST['extra'] == 'delete':
-            dic = request.POST['deldic']
+            book = request.POST['delbook']
             lessons = request.POST.getlist('dellessons')
-            dicob = Dict.objects(name=dic).first()
+            bookob = Book.objects(name=book).first()
             for lesson in lessons:
-                for lessonobj in dicob.lessons:
+                for lessonobj in bookob.lessons:
                     if lessonobj.name == lesson:
-                        dicob.lessons.remove(lessonobj)
-            if len(dicob.lessons) == 0:
-                dicob.delete()
+                        bookob.lessons.remove(lessonobj)
+            if len(bookob.lessons) == 0:
+                bookob.delete()
             else:
-                dicob.save()
+                bookob.save()
 
-        return HttpResponseRedirect("/dicts/")
+        return HttpResponseRedirect("/admin/books/")
 
 # for management
-class DictsView(TemplateView):
-    template_name='crike_django/dicts_list.html'
-    dicts = Dict.objects.all()
+class BooksView(TemplateView):
+    template_name='crike_django/books_list.html'
+    books = Book.objects.all()
 
     def get(self, request, *args, **kwargs):
         uploadform = UploadFileForm()
 
-        if len(self.dicts) != 0:
+        if len(self.books) != 0:
             request.encoding = "utf-8"
 
         return render(request, self.template_name,
-                {'Dicts':self.dicts, 'Uploadform':uploadform})
+                {'books':self.books, 'Uploadform':uploadform})
 
     #功能：上传文件，然后把文件用handle_uploaded_file处理
     def post(self, request, *args, **kwargs):
         if request.POST['extra'] == 'add':
             uploadform = UploadFileForm(request.POST, request.FILES)
             if uploadform.is_valid():
-                dictname = request.POST['dict']
+                bookname = request.POST['book']
                 lesson = request.POST['lesson']
-                if len(Dict.objects(name=dictname)) > 0:
-                    dic = Dict.objects(name=dictname).first()
-                    for item in dic.lessons:
+                if len(Book.objects(name=bookname)) > 0:
+                    book = Book.objects(name=bookname).first()
+                    for item in book.lessons:
                         if item.name == lesson:
                             return render(request, self.template_name,
-                                    {'Dicts':self.dicts,'Uploadform':uploadform,
+                                    {'books':self.books,'Uploadform':uploadform,
                                       'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
 
-                handle_uploaded_file(request.POST['dict'],
+                handle_uploaded_file(request.POST['book'],
                         request.POST['lesson'],
                         request.FILES['file'])
-                return HttpResponseRedirect('/dicts/')
+                return HttpResponseRedirect('/admin/books/')
             return render(request, self.template_name,
-                    {'Dicts':self.dicts, 'Uploadform':uploadform, 'Showform':'uploadform'})
+                    {'books':self.books, 'Uploadform':uploadform, 'Showform':'uploadform'})
 
         elif request.POST['extra'] == 'delete':
-            dic = request.POST['deldic']
+            book = request.POST['delbook']
             lessons = request.POST.getlist('dellessons')
-            dicob = Dict.objects(name=dic).first()
+            bookob = Book.objects(name=book).first()
             for lesson in lessons:
-                for lessonobj in dicob.lessons:
+                for lessonobj in bookob.lessons:
                     if lessonobj.name == lesson:
-                        dicob.lessons.remove(lessonobj)
-            if len(dicob.lessons) == 0:
-                dicob.delete()
+                        bookob.lessons.remove(lessonobj)
+            if len(bookob.lessons) == 0:
+                bookob.delete()
             else:
-                dicob.save()
+                bookob.save()
 
-        return HttpResponseRedirect("/dicts/")
+        return HttpResponseRedirect("/admin/books/")
 
 class ExamView(TemplateView):
     template_name='crike_django/exam_view.html'
