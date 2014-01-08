@@ -60,16 +60,10 @@ class Profile(models.Model):
             return False
 
 class Teacher(Profile):
-    profile = models.ForeignKey(Profile)
-
-    class Meta:
-        db_table = 'teacher_user'
+    pass
 
 class Student(Profile):
-    profile = models.ForeignKey(Profile)
-
-    class Meta:
-        db_table = 'student_user'
+    pass
 
 class TeachingAssistant(Profile):
     pass
