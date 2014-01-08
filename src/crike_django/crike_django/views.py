@@ -195,8 +195,7 @@ class BookView(TemplateView):
         try:
             bookobj = Book.objects(name=book).first()
             request.encoding = "utf-8"
-            return render(request, self.template_name,
-                {'Book':bookobj, 'Uploadform':uploadform})
+            return render(request, self.template_name,{'book':bookobj})
         except Exception as e:
             print e
             return HttpResponseRedirect('/index/')#TODO error page
