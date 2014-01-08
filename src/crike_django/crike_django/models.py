@@ -35,8 +35,6 @@ class CET6Book(Book):
 class WebsterBook(Book):
     pass
 
-# Accounts area
-
 # This class is to keep compability with other apps
 # which use original User model.
 class Profile(models.Model):
@@ -58,6 +56,9 @@ class Profile(models.Model):
         except Student.DoesNotExist:
             return False
 
+# These fields use multi-table inheritance. See below urls for more details.
+#   https://docs.djangoproject.com/en/1.5/topics/db/models/#multi-table-inheritance
+#   http://stackoverflow.com/questions/3100521/django-registration-and-multiple-profiles
 class Teacher(Profile):
     pass
 
