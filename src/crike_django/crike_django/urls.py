@@ -2,10 +2,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic import *
+from django.conf.urls.static import static
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
+
 from crike_django import views
 from crike_django import settings
-from django.conf.urls.static import static
-
 from crike_django.views import *
 
 admin.autodiscover()
@@ -18,7 +20,10 @@ urlpatterns = patterns('',
     url(r'^home$', HomeView.as_view(), name='home'),
     url(r'^lesson$', LessonView.as_view(), name='lesson'),
     url(r'^exam$', ExamView.as_view(), name='exam'),
-    url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
+
+    # This is an interim implement to redirect when registration complete.
+    url(r'^users/(?P<username>.*)/?$', RedirectView.as_view(url=reverse_lazy('index'))),
 
 # resource management for teachers
     url(r'^dicts/', DictsView.as_view(), name='dict'),
