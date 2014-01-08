@@ -35,16 +35,16 @@ urlpatterns = patterns('',
     url(r'^users/(?P<username>.*)/?$', RedirectView.as_view(url=reverse_lazy('index'))),
 
 # resource management for teachers
-    url(r'^dicts/', DictsView.as_view(), name='dict'),
+    url(r'^admin/books/', BooksView.as_view(), name='books'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^show_all_words/', views.show_all_words),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^media/audios/(?P<name>.*?)/?$', views.play_audio),
-    url(r'^show/(?P<dic>.*?)/(?P<lesson>.*?)/?$', views.show_words),
+    url(r'^show/(?P<book>.*?)/(?P<lesson>.*?)/?$', views.show_words),
 
 # Study process for students
-    url(r'^study/(?P<book>.*?)/', DictView.as_view(), name='dict_view'),
+    url(r'^study/(?P<book>.*?)/$', BookView.as_view(), name='book_view'),
     url(r'^study/(?P<book>.*?)/(?P<lesson>.*?)/show', views.lesson_show),
     url(r'^study/(?P<book>.*?)/(?P<lesson>.*?)/pick', views.lesson_pick),
 )#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

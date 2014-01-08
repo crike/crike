@@ -4,15 +4,14 @@ from django.contrib.auth.models import User
 
 from mongoengine import *
 
-# 数据库基本模型分为word、dict、user、course、voice、image、game、video
-# 当前目标：实现word、dict、user、course，其余皆往后排
-# dict包含多个word，course包含多个word，user包含多个course
+# 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
+# 当前目标：实现word、book、user、course，其余皆往后排
+# book包含多个lesson，lesson包含多个word，user包含多个course
 
 class Word(Document):
     name = StringField(required=True, max_length=50)
     phonetics = StringField(required=True, max_length=80)
     mean = ListField(StringField(max_length=80), required=True)
-    #pos = ListField(StringField(max_length=20), required=True)
     #audio = FileField(required=True)
     #audio = StringField()
     image = FileField()
@@ -21,19 +20,19 @@ class Lesson(EmbeddedDocument):
     name = StringField(required=True)
     words = ListField(ReferenceField(Word))
 
-class Dict(Document):
+class Book(Document):
     name = StringField(required=True)
     lessons = ListField(EmbeddedDocumentField(Lesson))
 
     meta = {'allow_inheritance': True}
 
-class CET4Dict(Dict):
+class CET4Book(Book):
     pass
 
-class CET6Dict(Dict):
+class CET6Book(Book):
     pass
 
-class WebsterDict(Dict):
+class WebsterBook(Book):
     pass
 
 # Accounts area

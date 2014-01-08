@@ -16,22 +16,22 @@
         if (document.getElementById("deleteform").style.display == "none") {
           document.getElementById("uploadform").style.display="none";
           document.getElementById("deleteform").style.display="block";
-          $(".checkdic").show();
+          $(".checkbook").show();
 
         } else {
           document.getElementById("deleteform").style.display="none";
-          $(".checkdic").hide();
+          $(".checkbook").hide();
         }
       };
-      function appenddic(cb) {
+      function appendbook(cb) {
         var n = cb.name;
         var v = cb.value;
         if (cb.checked) { 
-          $(cb).clone().attr({id:v+'inform',class:'checkdicinform',style:'display:none'}).prependTo('#deleteform');
+          $(cb).clone().attr({id:v+'inform',class:'checkbookinform',style:'display:none'}).prependTo('#deleteform');
           console.log($('#deleteform').html());
           $("."+v+"lesson").show();
           $("#checkall"+v).show();
-          $(".checkdic").prop('disabled', true);
+          $(".checkbook").prop('disabled', true);
           cb.disabled=false;
           $("#deletesubmit").prop('disabled', false);
         } else {
@@ -41,7 +41,7 @@
           $("."+v+"lesson").hide();
           $(".checkall").prop('checked',false);
           $("#checkall"+v).hide();
-          $(".checkdic").prop('disabled', false);
+          $(".checkbook").prop('disabled', false);
           $("#deletesubmit").prop('disabled', true);
         }
       };
@@ -71,9 +71,9 @@
       <button onclick="showUploadform();">添加课程</button>
       <button onclick="showDeleteform();">删除课程</button>
       {% if Showform == "uploadform" %}
-      <form id='uploadform' style="display: block" enctype="multipart/form-data" method="post" action="/dicts/">
+      <form id='uploadform' style="display: block" enctype="multipart/form-data" method="post" action="/admin/books/">
       {% else %}
-      <form id='uploadform' style="display: none" enctype="multipart/form-data" method="post" action="/dicts/">
+      <form id='uploadform' style="display: none" enctype="multipart/form-data" method="post" action="/admin/books/">
       {% endif %}
         {% csrf_token %}
         {{ Uploadform }}
@@ -82,9 +82,9 @@
         <strong>{{ Uploadwarning }}</strong>
       </form>
       {% if Showform == "deleteform" %}
-      <form id="deleteform" style="display:block" enctype="multipart/form-data" method="post" action="/dicts/">
+      <form id="deleteform" style="display:block" enctype="multipart/form-data" method="post" action="/admin/books/">
       {% else %}
-      <form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/dicts/">
+      <form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/admin/books/">
       {% endif %}
         {% csrf_token %}
         <label>请选择要删除的课程（先勾选所属课本）</label>
@@ -95,21 +95,21 @@
     </div>
 <!-- Cycle through entries -->
     <div class='row'>
-    {% for dic in Dicts %}
+    {% for book in books %}
       <h2>
-        <input class="checkdic" style="display:none" type="checkbox" name='deldic' value='{{dic.name}}' onclick="appenddic(this);">
-        {{ dic.name }}
-        <div id="checkall{{dic.name}}" style="display:none">
-          <input class="checkall" type="checkbox" onclick="checkall(this,'{{dic.name}}')">
-          <label style="font-size:50%" for="checkall{{dic.name}}">全选</label>
+        <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
+        {{ book.name }}
+        <div id="checkall{{book.name}}" style="display:none">
+          <input class="checkall" type="checkbox" onclick="checkall(this,'{{book.name}}')">
+          <label style="font-size:50%" for="checkall{{book.name}}">全选</label>
         </div>
       </h2>
-      {% for lesson in dic.lessons|dictsort:"name" %}
+      {% for lesson in book.lessons|dictsort:"name" %}
       <p>
-        <input type="checkbox" class="{{dic.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
-        <a title="开始学习" href="/lesson_show?dic={{dic.name}}&lesson={{lesson.name}}">{{lesson.name}}</a>
+        <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
+        <a title="开始学习" href="/study/{{book.name}}/{{lesson.name}}/show">{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-        <button style="float: right;" onclick="location.href='/show/{{dic.name}}/{{lesson.name}}/'">管理单词</button>
+        <button style="float: right;" onclick="location.href='/show/{{book.name}}/{{lesson.name}}/'">管理单词</button>
       </p>
       {% endfor %}
 

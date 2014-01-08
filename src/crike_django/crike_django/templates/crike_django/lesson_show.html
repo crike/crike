@@ -20,9 +20,7 @@
   </p>
   {% endfor %}
 </div>
-<form style="float: right; font-size: 14px;" method="get" action="/lesson_pick/">
-  <input type="hidden" name="book" value="{{book}}">
-  <input type="hidden" name="lesson" value="{{lesson}}">
+<form style="float: right; font-size: 14px;" method="get" action="/lesson/{{book}}/{{lesson}}/pick">
   <input type="submit" value="开始自测">
 </form>
 <span id="dummy"></span>

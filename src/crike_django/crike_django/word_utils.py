@@ -10,7 +10,7 @@ import re
 import os
 import threading
 from multiprocessing import Process
-from crike_django.models import Word, Lesson, Dict
+from crike_django.models import Word, Lesson, Book
 from crike_django.settings import MEDIA_ROOT
 from string import capitalize
 
@@ -239,7 +239,7 @@ http_proxy = "http://localhost:8086"
 words_lock = threading.Lock()
 download_lock = threading.Lock()
 
-def handle_uploaded_file(dictname, lessonname, words_file):
+def handle_uploaded_file(bookname, lessonname, words_file):
     if use_proxy == True:
         install_proxy()
 
@@ -268,12 +268,12 @@ def handle_uploaded_file(dictname, lessonname, words_file):
             wordrecord = Word.objects(name=word)[0]
             lesson.words.append(wordrecord)
 
-    if len(Dict.objects(name=dictname)) == 0:
-        dic = Dict(name=dictname)
-        dic.lessons.append(lesson)
-        dic.save()
+    if len(Book.objects(name=bookname)) == 0:
+        book = Book(name=bookname)
+        book.lessons.append(lesson)
+        book.save()
     else:
-        dic = Dict.objects(name=dictname).first()
-        dic.lessons.append(lesson)
-        dic.save()
+        book = Book.objects(name=bookname).first()
+        book.lessons.append(lesson)
+        book.save()
 
