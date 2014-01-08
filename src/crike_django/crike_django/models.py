@@ -1,5 +1,7 @@
 #coding:utf-8
 from django.db import models
+from django.contrib.auth.models import User
+
 from mongoengine import *
 
 # 数据库基本模型分为word、dict、user、course、voice、image、game、video
@@ -34,16 +36,42 @@ class CET6Dict(Dict):
 class WebsterDict(Dict):
     pass
 
-class BasicUser(models.Model):
-    pass
+# Accounts area
 
-class Teacher(BasicUser):
-    pass
+# This class is to keep compability with other apps
+# which use original User model.
+class Profile(models.Model):
+    user = models.ForeignKey(User)
 
-class TeachingAssistant(BasicUser):
-    pass
+    @property
+    def is_student(self):
+        try:
+            self.student
+            return True
+        except Student.DoesNotExist:
+            return False
 
-class Student(BasicUser):
+    @property
+    def is_teacher(self):
+        try:
+            self.teacher
+            return True
+        except Student.DoesNotExist:
+            return False
+
+class Teacher(Profile):
+    profile = models.ForeignKey(Profile)
+
+    class Meta:
+        db_table = 'teacher_user'
+
+class Student(Profile):
+    profile = models.ForeignKey(Profile)
+
+    class Meta:
+        db_table = 'student_user'
+
+class TeachingAssistant(Profile):
     pass
 
 class Course(models.Model):
