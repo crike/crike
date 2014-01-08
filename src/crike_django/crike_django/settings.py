@@ -180,6 +180,9 @@ LOGGING = {
     }
 }
 
+import models
+AUTH_PROFILE_MODULE = models.Profile
+
 # Registration app configurations
 # Test command:
 #   python -m smtpd -n -c DebuggingServer localhost:8025
