@@ -87,7 +87,7 @@
       <form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/dicts/">
       {% endif %}
         {% csrf_token %}
-        <label>请选择要删除的课程（先勾选所属词库）</label>
+        <label>请选择要删除的课程（先勾选所属课本）</label>
         <input hidden='true' name='extra' value='delete'>
         <input id="deletesubmit" type="submit" disabled="true" value="delete">
         <strong>{{ Deletewarning }}</strong>
