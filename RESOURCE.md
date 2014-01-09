@@ -3,7 +3,7 @@ Resource
 
 jquery, div + css, django
 
-jqeury
+jquery
 =====
 
 * upload-file: https://github.com/blueimp/File-Upload
@@ -55,6 +55,8 @@ mongo+django
 
 * http://docs.mongoengine.org/en/latest/tutorial.html
  very useful dictionary of mongoengine
+
+* https://github.com/django-nonrel/mongodb-engine
 
 awesome-font
 =====
