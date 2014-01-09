@@ -38,7 +38,12 @@ class WebsterBook(Book):
 # This class is to keep compability with other apps
 # which use original User model.
 class Profile(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, unique=True)
+    location = models.CharField(max_length=140)
+    gender = models.CharField(max_length=140)
+    school = models.CharField(max_length=140)
+    profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
+    age = models.IntegerField()
 
     @property
     def is_student(self):
@@ -56,6 +61,9 @@ class Profile(models.Model):
         except Student.DoesNotExist:
             return False
 
+    def __unicode__(self):
+        return u'Profile of user: %s' % self.user.username
+
 # These fields use multi-table inheritance. See below urls for more details.
 #   https://docs.djangoproject.com/en/1.5/topics/db/models/#multi-table-inheritance
 #   http://stackoverflow.com/questions/3100521/django-registration-and-multiple-profiles
@@ -65,7 +73,7 @@ class Teacher(Profile):
     pass
 
 class Student(Profile):
-    pass
+    edu_stage = models.CharField(max_length=140)
 
 class TeachingAssistant(Profile):
     pass
