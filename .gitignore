@@ -1,4 +1,5 @@
 
+*.mp3
 *.db-journal
 .settings
 social_local_settings.py
