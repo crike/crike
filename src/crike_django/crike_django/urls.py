@@ -26,9 +26,9 @@ urlpatterns = patterns('',
     url(r'^home$', HomeView.as_view(), name='home'),
     url(r'^lesson$', LessonView.as_view(), name='lesson'),
     url(r'^exam$', ExamView.as_view(), name='exam'),
-    url(r'^accounts/register/$',
-          RegistrationView.as_view(form_class=RegistrationFormTermsOfService),
-          name='registration_register'),
+    #url(r'^accounts/register/$',
+    #      RegistrationView.as_view(form_class=RegistrationFormTermsOfService),
+    #      name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
 
     # This is an interim implement to redirect when registration complete.
