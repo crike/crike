@@ -121,60 +121,74 @@ def delete_lesson(request, book, lesson):
 def show_lib(request):
     return render(request, 'crike_django/lib.html', {})
 
-def lesson_show(request, book, lesson):
+class LessonShowView(TemplateView):
     template_name='crike_django/lesson_show.html'
-    words_list = []
-    bookob = Book.objects(name=book).first()
-    for lessonobj in bookob.lessons:
-        if lessonobj.name == lesson:
-            words_list = lessonobj.words
 
-    paginator = Paginator(words_list, 1)
+    def get(self, request, book, lesson):
+        words_list = []
+        bookob = Book.objects(name=book).first()
+        for lessonobj in bookob.lessons:
+            if lessonobj.name == lesson:
+                words_list = lessonobj.words
 
-    page = request.GET.get('page')
-    try:
-        words = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        words = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        words = paginator.page(paginator.num_pages)
+        paginator = Paginator(words_list, 1)
 
-    return render(request, template_name,
-           {'words':words, 'book':book, 'lesson':lesson})
+        page = request.GET.get('page')
+        try:
+            words = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            words = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            words = paginator.page(paginator.num_pages)
 
-def lesson_pick(request, book, lesson):
+        return render(request, self.template_name,
+               {'words':words, 'book':book, 'lesson':lesson})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
+
+class LessonPickView(TemplateView):
     template_name='crike_django/lesson_pick.html'
-    words_list = []
-    bookob = Book.objects(name=book).first()
-    for lessonobj in bookob.lessons:
-        if lessonobj.name == lesson:
-            words_list = lessonobj.words
 
-    paginator = Paginator(words_list, 1)
+    def get(request, book, lesson):
+        words_list = []
+        bookob = Book.objects(name=book).first()
+        for lessonobj in bookob.lessons:
+            if lessonobj.name == lesson:
+                words_list = lessonobj.words
 
-    page = request.GET.get('page')
-    try:
-        words = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        words = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        words = paginator.page(paginator.num_pages)
+        paginator = Paginator(words_list, 1)
 
-    words_list.remove(words[0])
-    count = len(words_list)
-    if count > 3:
-        options = sample(words_list, 3)
-    else:
-        options = sample(words_list, count)
-    options.insert(randrange(len(options)+1), words[0])
+        page = request.GET.get('page')
+        try:
+            words = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            words = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            words = paginator.page(paginator.num_pages)
 
-    return render(request, template_name,
-           {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+        words_list.remove(words[0])
+        count = len(words_list)
+        if count > 3:
+            options = sample(words_list, 3)
+        else:
+            options = sample(words_list, count)
+        options.insert(randrange(len(options)+1), words[0])
 
+        return render(request, self.template_name,
+               {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+
+    def post(self, request, book, lesson):
+        answer = request.POST['answer']
+        word = request.POST['word']
+        wordobj = Word.objects(name=word).first()
+        if len(set(wordobj.mean).intersection(answer)) == 0:
+            pass #TODO
+        return HttpResponse("Not implement yet")
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'

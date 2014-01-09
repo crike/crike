@@ -11,12 +11,13 @@
   </h1>
   {% endfor %}
 </div>
-<form action="/learn_pick/" method='post'>
+<form action="/study/{{book}}/{{lesson}}/pick" method='post'>
+  <input hidden="true" name="word" value="{{word}}">
   <input type="submit"  value="submit" style="margin-right:20px;margin-bottom:10px;">
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <input type="radio" name="pick" value="{{option.mean}}">
+      <input type="radio" name="answer" value="{{option.mean}}">
         {% for m in option.mean %}
         <li style="font-size:150%">{{m}}</li>
         {% endfor %}

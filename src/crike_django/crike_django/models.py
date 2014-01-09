@@ -1,6 +1,7 @@
 #coding:utf-8
 from django.db import models
 from django.contrib.auth.models import User
+from djangotoolbox.fields import EmbeddedModelField, ListField, ForeignKey,CharField
 
 from mongoengine import *
 
@@ -8,23 +9,19 @@ from mongoengine import *
 # 当前目标：实现word、book、user、course，其余皆往后排
 # book包含多个lesson，lesson包含多个word，user包含多个course
 
-class Word(Document):
-    name = StringField(required=True, max_length=50)
-    phonetics = StringField(required=True, max_length=80)
-    mean = ListField(StringField(max_length=80), required=True)
-    #audio = FileField(required=True)
-    #audio = StringField()
-    image = FileField()
+class Word(models.Models):
+    name = CharField(max_length=50)
+    phonetics = CharField(max_length=80)
+    mean = ListField(CharField(max_length=80))
+    #image = ImageField()
 
-class Lesson(EmbeddedDocument):
-    name = StringField(required=True)
-    words = ListField(ReferenceField(Word))
+class Lesson(models.Models):
+    name = CharField(max_length=50)
+    words = ListField(ForeignKey('Word'))
 
-class Book(Document):
-    name = StringField(required=True)
-    lessons = ListField(EmbeddedDocumentField(Lesson))
-
-    meta = {'allow_inheritance': True}
+class Book(models.Models):
+    name = CharField(max_length=50)
+    lessons = ListField(EmbeddedModelField('Lesson'))
 
 class CET4Book(Book):
     pass

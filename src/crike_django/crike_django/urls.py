@@ -44,7 +44,7 @@ urlpatterns = patterns('',
     url(r'^show/(?P<book>.*?)/(?P<lesson>.*?)/?$', views.show_words),
 
 # Study process for students
-    url(r'^study/(?P<book>.*?)/$', BookView.as_view(), name='book_view'),
-    url(r'^study/(?P<book>.*?)/(?P<lesson>.*?)/show', views.lesson_show),
-    url(r'^study/(?P<book>.*?)/(?P<lesson>.*?)/pick', views.lesson_pick),
+    url(r'^study/(?P<book>.*?)/?$', BookView.as_view(), name='book_view'),
+    url(r'^study/(?P<book>.*?)/(?P<lesson>.*?)/show/?$', LessonShowView.as_view(), name='lesson_show_view'),
+    url(r'^study/(?P<book>.*?)/(?P<lesson>.*?)/pick/?$', LessonPickView.as_view(), name='lesson_pick_view'),
 )#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
