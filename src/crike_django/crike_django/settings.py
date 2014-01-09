@@ -2,6 +2,7 @@
 import os
 from mongoengine import connect
 
+
 connect('crike_db')
 
 print('DB init done')
@@ -180,8 +181,7 @@ LOGGING = {
     }
 }
 
-import models
-AUTH_PROFILE_MODULE = models.Profile
+AUTH_PROFILE_MODULE = 'models.Profile'
 
 # Registration app configurations
 # Test command:
