@@ -6,7 +6,7 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful
-* learning process: choice
+* learning process: pick
 * learning process: fill blanks
 * learning process: dictation
 * exam
@@ -16,6 +16,8 @@ Todo
 * images (youdao has pics or optimize result from search engine), enable single image download and upload
 * redis
 * Rewrite a registration module for django-registration doens't support custom user.
+* naming
+* release
 
 Requirements
 -----
