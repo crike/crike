@@ -1,6 +1,5 @@
 # Django settings for crike_django project.
 import os
-from mongoengine import connect
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

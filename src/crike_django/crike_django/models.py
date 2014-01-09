@@ -1,26 +1,24 @@
 #coding:utf-8
 from django.db import models
 from django.contrib.auth.models import User
-from djangotoolbox.fields import EmbeddedModelField, ListField, ForeignKey,CharField
-
-from mongoengine import *
+from djangotoolbox.fields import EmbeddedModelField, ListField
 
 # 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
 # 当前目标：实现word、book、user、course，其余皆往后排
 # book包含多个lesson，lesson包含多个word，user包含多个course
 
-class Word(models.Models):
-    name = CharField(max_length=50)
-    phonetics = CharField(max_length=80)
-    mean = ListField(CharField(max_length=80))
+class Word(models.Model):
+    name = models.CharField(max_length=50)
+    phonetics = models.CharField(max_length=80)
+    mean = ListField(models.CharField(max_length=80))
     #image = ImageField()
 
-class Lesson(models.Models):
-    name = CharField(max_length=50)
-    words = ListField(ForeignKey('Word'))
+class Lesson(models.Model):
+    name = models.CharField(max_length=50)
+    words = ListField(models.ForeignKey('Word'))
 
-class Book(models.Models):
-    name = CharField(max_length=50)
+class Book(models.Model):
+    name = models.CharField(max_length=50)
     lessons = ListField(EmbeddedModelField('Lesson'))
 
 class CET4Book(Book):
