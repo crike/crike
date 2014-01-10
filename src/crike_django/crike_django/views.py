@@ -136,7 +136,9 @@ class LessonShowView(TemplateView):
         bookob = Book.objects.filter(name=book)[0]
         for lessonobj in bookob.lessons:
             if lessonobj.name == lesson:
-                words_list = lessonobj.words
+                # https://bitbucket.org/wkornewald/djangotoolbox/pull-request/3/allow-setting-an-actual-object-in-a/diff
+                words_list = Word.objects.filter(id__in=lessonobj.words)
+                print words_list
 
         paginator = Paginator(words_list, 1)
 
