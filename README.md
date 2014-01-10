@@ -16,7 +16,7 @@ Todo
 * images (youdao has pics or optimize result from search engine), enable single image download and upload
 * redis
 * Rewrite a registration module for django-registration doens't support custom user.
-* naming
+* naming, ICON in browser tab
 * release
 
 Requirements
