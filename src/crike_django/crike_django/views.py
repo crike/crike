@@ -13,6 +13,13 @@ from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
 from word_utils import *
 from random import sample, randrange
 
+# Utils
+def get_or_none(model, **kwargs):
+    try:
+        return model.objects.filter(**kwargs)
+    except model.DoesNotExist:
+        return None
+
 # TODO: Upload file的view
 # 规定具体的get/post对应事件
 
@@ -49,7 +56,7 @@ def hello_crike(request):
     return HttpResponse("Hello crike!")
 
 def play_audio(request, name):
-    #word = Word.objects(name=name).first()
+    #word = Word.objects.filter(name=name)[0]
     #return HttpResponse(word.audio.read(), content_type="audio/mpeg")
     path = MEDIA_ROOT+'/audios/'+name
     if os.path.exists(path):
@@ -79,7 +86,7 @@ def show_words(request, book, lesson):
     template_name='crike_django/words_list.html'
 
     words = []
-    for lessonob in Book.objects(name=book)[0].lessons:
+    for lessonob in Book.objects.filter(name=book)[0].lessons:
         if lessonob.name == lesson:
             words = lessonob.words
     if len(words) != 0:
@@ -106,7 +113,7 @@ class WordDeleteView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         id = request.POST['id']
-        word = Word.objects(id=id)[0]
+        word = Word.objects.filter(id=id)[0]
         audiofile = MEDIA_ROOT+'/audios/'+word.name+'.mp3'
         if os.path.exists(audiofile):
             os.remove(audiofile)
@@ -126,7 +133,7 @@ class LessonShowView(TemplateView):
 
     def get(self, request, book, lesson):
         words_list = []
-        bookob = Book.objects(name=book).first()
+        bookob = Book.objects.filter(name=book)[0]
         for lessonobj in bookob.lessons:
             if lessonobj.name == lesson:
                 words_list = lessonobj.words
@@ -154,7 +161,7 @@ class LessonPickView(TemplateView):
 
     def get(request, book, lesson):
         words_list = []
-        bookob = Book.objects(name=book).first()
+        bookob = Book.objects.filter(name=book)[0]
         for lessonobj in bookob.lessons:
             if lessonobj.name == lesson:
                 words_list = lessonobj.words
@@ -185,7 +192,7 @@ class LessonPickView(TemplateView):
     def post(self, request, book, lesson):
         answer = request.POST['answer']
         word = request.POST['word']
-        wordobj = Word.objects(name=word).first()
+        wordobj = Word.objects.filter(name=word)[0]
         if len(set(wordobj.mean).intersection(answer)) == 0:
             pass #TODO
         return HttpResponse("Not implement yet")
@@ -207,12 +214,12 @@ class BookView(TemplateView):
         uploadform = UploadFileForm()
 
         try:
-            bookobj = Book.objects(name=book).first()
+            bookobj = Book.objects.filter(name=book)[0]
             request.encoding = "utf-8"
             return render(request, self.template_name,{'book':bookobj})
         except Exception as e:
             print e
-            return HttpResponseRedirect('/index/')#TODO error page
+            return HttpResponseRedirect('/error/')#TODO error page
 
     #功能：上传文件，然后把文件用handle_uploaded_file处理
     def post(self, request, *args, **kwargs):
@@ -221,8 +228,8 @@ class BookView(TemplateView):
             if uploadform.is_valid():
                 bookname = request.POST['book']
                 lesson = request.POST['lesson']
-                if len(Book.objects(name=bookname)) > 0:
-                    book = Book.objects(name=bookname).first()
+                if len(Book.objects.filter(name=bookname)) > 0:
+                    book = Book.objects.filter(name=bookname)[0]
                     for item in book.lessons:
                         if item.name == lesson:
                             return render(request, self.template_name,
@@ -239,7 +246,7 @@ class BookView(TemplateView):
         elif request.POST['extra'] == 'delete':
             book = request.POST['delbook']
             lessons = request.POST.getlist('dellessons')
-            bookob = Book.objects(name=book).first()
+            bookob = Book.objects.filter(name=book)[0]
             for lesson in lessons:
                 for lessonobj in bookob.lessons:
                     if lessonobj.name == lesson:
@@ -272,8 +279,8 @@ class BooksView(TemplateView):
             if uploadform.is_valid():
                 bookname = request.POST['book']
                 lesson = request.POST['lesson']
-                if len(Book.objects(name=bookname)) > 0:
-                    book = Book.objects(name=bookname).first()
+                if  get_or_none(Book, name=bookname):
+                    book = Book.objects.filter(name=bookname)[0]
                     for item in book.lessons:
                         if item.name == lesson:
                             return render(request, self.template_name,
@@ -290,7 +297,7 @@ class BooksView(TemplateView):
         elif request.POST['extra'] == 'delete':
             book = request.POST['delbook']
             lessons = request.POST.getlist('dellessons')
-            bookob = Book.objects(name=book).first()
+            bookob = Book.objects.filter(name=book)[0]
             for lesson in lessons:
                 for lessonobj in bookob.lessons:
                     if lessonobj.name == lesson:

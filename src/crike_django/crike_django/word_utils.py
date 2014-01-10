@@ -171,7 +171,7 @@ def download_audio_from_iciba(url, word):
         print(e)
 
 def download_word(wordname):
-    word = Word(name=wordname)
+    word = Word.objects.create(name=wordname)
     download_from_iciba(word)
     #download_audio_from_google(word)
     return word
@@ -208,15 +208,15 @@ class download_thread_with_engine(threading.Thread):
         while num > 0:
             wordname = self.words.pop()
             words_lock.release()
-            if len(Word.objects(name=wordname)) > 0:
+            if len(Word.objects.filter(name=wordname)) > 0:
                 words_lock.acquire()
                 num = len(self.words)
                 continue
 
-            if len(Word.objects(name=wordname)) > 0:
-                word = Word.objects(name=wordname)[0]
+            if len(Word.objects.filter(name=wordname)) > 0:
+                word = Word.objects.get(name=wordname)[0]
             else:
-                word = Word(name=wordname)
+                word = Word.objects.create(name=wordname)
                 print('Start downloading "%s"' % wordname)
                 download_thread_single_engine(word, self.engine)
 
@@ -246,7 +246,7 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     if not os.path.exists(PATH):
         os.makedirs(PATH)
 
-    lesson = Lesson(name=lessonname)
+    lesson = Lesson.objects.create(name=lessonname)
     words = words_file.read().split()
     tempwords = words[:]
 
@@ -264,16 +264,16 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     print('Thread 2 Done!')
 
     for word in words:
-        if len(Word.objects(name=word)) > 0:
-            wordrecord = Word.objects(name=word)[0]
-            lesson.words.append(wordrecord)
+        if len(Word.objects.filter(name=word)) > 0:
+            wordrecord = Word.objects.filter(name=word)[0]
+            lesson.words.append(wordrecord.id)
 
-    if len(Book.objects(name=bookname)) == 0:
-        book = Book(name=bookname)
+    if len(Book.objects.filter(name=bookname)) == 0:
+        book = Book.objects.create(name=bookname)
         book.lessons.append(lesson)
         book.save()
     else:
-        book = Book.objects(name=bookname).first()
+        book = Book.objects.filter(name=bookname)[0]
         book.lessons.append(lesson)
         book.save()
 
