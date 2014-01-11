@@ -1,0 +1,62 @@
+{% extends 'crike_django/lesson_base.html' %}
+
+{% block subcontent %}
+<script>
+  $('.step-links').hide();
+  var numoftry = 0;
+
+  function onSubmit(e) {
+
+    numoftry++;
+
+    var form = $('#FillForm');
+    var ques = $(form).find( "input[name='question']" ).prop('value');
+    var ans = $(form).find( "input[name='answer']" ).prop('value');
+    console.log(ans)
+    console.log(ques)
+
+    if (ques == ans)
+    {
+      $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#FillForm');
+    } else {
+      e.preventDefault();
+      $('#feedback').text('不对哦，再想一想');
+      $('input[name="answer"]').prop('checked', false);
+    }
+  };
+</script>
+
+{% for word in words %}
+<div class='jumbotron'>
+  <span class="current" style="float:right">
+      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
+  </span>
+  <strong id='feedback'>请根据释义将单词填写完整</strong>
+  <form id='FillForm' action='/study/{{book}}/{{lesson}}/fill' method='post'>
+    {% csrf_token %}
+    {% if words.has_next %}
+    <input name="page" value="{{words.next_page_number}}" hidden="true">
+    {% else %}
+    <input name="page" value="0" hidden="true">
+    {% endif %}
+    <input name="question" value="{{word.name}}" hidden="true">
+    <h1>
+      <input type="text" style="border: none; border-bottom: 1px solid black;" size="15" autocomplete="off" name='answer'><br>
+      {% for opt in options %}
+      <strong id='options'>{{opt}}</strong>
+      {% endfor %}
+    </h1>
+    <input type="submit" onClick='onSubmit(event);' value="submit" style="margin-right:20px;margin-bottom:10px;">
+  </form>
+</div>
+
+<div class='row'>
+  {% for m in word.mean %}
+  <li style="font-size:150%">{{m}}</li>
+  {% endfor %}
+</div>
+
+{% endfor %}
+
+{% endblock %}
+
