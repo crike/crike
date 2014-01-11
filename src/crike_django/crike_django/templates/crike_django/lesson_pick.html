@@ -27,6 +27,9 @@
 <div id='PickDiv'>
 {% for word in words %}
 <div class='jumbotron'>
+  <span class="current" style="float:right">
+      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
+  </span>
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
         onmouseout ="clearTimeout(timer);" 
