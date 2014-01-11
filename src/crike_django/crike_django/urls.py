@@ -23,7 +23,7 @@ urlpatterns = patterns('',
 # accounts management for administrators
     url(r'^$', HomeView.as_view(), name='index' ),
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
-    url(r'^home$', HomeView.as_view(), name='home'),
+    url(r'^home$', HomeView.as_view(), name='home'), #TODO need read current user's learning process info
     url(r'^lesson$', LessonView.as_view(), name='lesson'),
     url(r'^exam$', ExamView.as_view(), name='exam'),
     #url(r'^accounts/register/$',
