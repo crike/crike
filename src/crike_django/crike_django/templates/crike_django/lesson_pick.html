@@ -26,7 +26,7 @@
                 function( data ) {
                   $( "#PickDiv" ).html( $(data).find("#PickDiv") );
                 });*/
-      $('<input>').attr({name:'num', value:numoftry}).appendTo('#PickForm');
+      $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#PickForm');
     } else {
       e.preventDefault();
       $('#feedback').text('不对哦，再想一想');

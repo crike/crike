@@ -24,7 +24,7 @@
 <div class="pagination" style="float:right">
   <span class="step-links">
     {% if words.has_previous %}
-        <a href="?page={{ words.previous_page_number }}&book={{book}}&lesson={{lesson}}">上一个</a>
+        <a href="?page={{ words.previous_page_number }}">上一个</a>
     {% endif %}
 
     <span class="current">
@@ -32,7 +32,7 @@
     </span>
 
     {% if words.has_next %}
-        <a href="?page={{ words.next_page_number }}&book={{book}}&lesson={{lesson}}">下一个</a>
+        <a href="?page={{ words.next_page_number }}">下一个</a>
     {% endif %}
   </span>
   <span style='margin-left:20px;'>返回  
