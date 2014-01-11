@@ -9,6 +9,15 @@
         onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
   </h1>
+  <form style="float: right; font-size: 20px;" method="get" action="/study/{{book}}/{{lesson}}/">
+    <input type="submit" value="听写">
+  </form>
+  <form style="float: right; font-size: 20px;" method="get" action="/study/{{book}}/{{lesson}}/fill">
+    <input type="submit" value="填单词">
+  </form>
+  <form style="float: right; font-size: 20px;" method="get" action="/study/{{book}}/{{lesson}}/pick">
+    <input type="submit" value="选释义">
+  </form>
   {% endfor %}
 </div>
 <div class='row'>
@@ -20,8 +29,5 @@
   </p>
   {% endfor %}
 </div>
-<form style="float: right; font-size: 14px;" method="get" action="/study/{{book}}/{{lesson}}/pick">
-  <input type="submit" value="开始自测">
-</form>
 <span id="dummy"></span>
 {% endblock %}
