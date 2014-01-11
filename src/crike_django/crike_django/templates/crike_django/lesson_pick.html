@@ -15,17 +15,6 @@
 
     if (ques == ans)
     {
-      /*var csrf = $(form).find( "input[name='csrfmiddlewaretoken']" ).prop('value');
-      var url = $(form).prop('action'); 
-      var npage;
-      if ('{{words.has_next}}' == 'True')
-        npage = {{words.next_page_number}};
-      else
-        npage = 0;
-        $.post(url, {'csrfmiddlewaretoken':csrf, 'page':npage, 'num':numoftry}, 
-                function( data ) {
-                  $( "#PickDiv" ).html( $(data).find("#PickDiv") );
-                });*/
       $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#PickForm');
     } else {
       e.preventDefault();
@@ -51,7 +40,11 @@
   {% csrf_token %}
   <input type="submit" onClick='onSubmit(event);' value="submit" style="margin-right:20px;margin-bottom:10px;">
   <input name="question" value="{{word.name}}" hidden="true">
+  {% if words.has_next %}
   <input name="page" value="{{words.next_page_number}}" hidden="true">
+  {% else %}
+  <input name="page" value="0" hidden="true">
+  {% endif %}
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  

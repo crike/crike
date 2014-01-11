@@ -197,7 +197,9 @@ class LessonPickView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         print num
         print "nnnnnnnnnnnnnnnn"
-        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/pick?page='+str(page))
+        if page == '0':
+            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
+        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/pick?page='+page)
 
 
 class LessonView(TemplateView):
