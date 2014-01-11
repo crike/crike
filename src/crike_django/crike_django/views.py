@@ -193,6 +193,10 @@ class LessonPickView(TemplateView):
     def post(self, request, book, lesson):
         page = request.POST.get('page')
         num = request.POST.get('num')
+# TODO put this word into this student's strange list if num > 1, and store the num
+        print "nnnnnnnnnnnnnnnn"
+        print num
+        print "nnnnnnnnnnnnnnnn"
         return HttpResponseRedirect('/study/'+book+'/'+lesson+'/pick?page='+str(page))
 
 

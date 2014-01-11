@@ -26,7 +26,7 @@
                 function( data ) {
                   $( "#PickDiv" ).html( $(data).find("#PickDiv") );
                 });*/
-        ;//TODO append numoftry to form
+      $('<input>').attr({name:'num', value:numoftry}).appendTo('#PickForm');
     } else {
       e.preventDefault();
       $('#feedback').text('不对哦，再想一想');
