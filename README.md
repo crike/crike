@@ -6,8 +6,6 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful
-* learning process: pick
-* learning process: fill blanks
 * learning process: dictation
 * exam
 * statistics
