@@ -4,7 +4,6 @@ from django.http import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
 
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
