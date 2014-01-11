@@ -159,12 +159,12 @@ class LessonShowView(TemplateView):
 class LessonPickView(TemplateView):
     template_name='crike_django/lesson_pick.html'
 
-    def get(request, book, lesson):
+    def get(self, request, book, lesson):
         words_list = []
         bookob = Book.objects.filter(name=book)[0]
         for lessonobj in bookob.lessons:
             if lessonobj.name == lesson:
-                words_list = lessonobj.words
+                words_list = Word.objects.filter(id__in=lessonobj.words)
 
         paginator = Paginator(words_list, 1)
 
@@ -178,7 +178,7 @@ class LessonPickView(TemplateView):
             # If page is out of range (e.g. 9999), deliver last page of results.
             words = paginator.page(paginator.num_pages)
 
-        words_list.remove(words[0])
+        words_list = filter(lambda x: x.name !=words[0].name, words_list)
         count = len(words_list)
         if count > 3:
             options = sample(words_list, 3)
@@ -187,15 +187,12 @@ class LessonPickView(TemplateView):
         options.insert(randrange(len(options)+1), words[0])
 
         return render(request, self.template_name,
-               {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+                {'words':words, 'book':book, 'lesson':lesson, 'options':options})
 
     def post(self, request, book, lesson):
-        answer = request.POST['answer']
-        word = request.POST['word']
-        wordobj = Word.objects.filter(name=word)[0]
-        if len(set(wordobj.mean).intersection(answer)) == 0:
-            pass #TODO
-        return HttpResponse("Not implement yet")
+        page = request.POST.get('page')
+        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/pick?page='+page)
+
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'

@@ -1,23 +1,48 @@
 {% extends 'crike_django/lesson_base.html' %}
 
 {% block subcontent %}
+<script>
+  $('.step-links').hide();
+
+  function onSubmit(e) {
+    e.preventDefault();
+
+    var ques = $('#PickForm').find( "input[name='question']" ).prop('value');
+    var ans = $('#PickForm').find( "input:radio[name='answer']:checked" ).prop('value');
+
+    if (ques == ans)
+    {
+      $('#feedback').text('太棒了,可以点下一页了');
+      $('.step-links').show();
+    } else {
+      $('#feedback').text('不对哦，再想一想');
+      $('.step-links').hide();
+    }
+
+    $('input[name="answer"]').prop('checked', false);
+
+  };
+</script>
+
+{% for word in words %}
 <div class='jumbotron'>
-  {% for word in words %}
-  <h1><strong style='font-size:150%'>{{word.name|capfirst}} </strong> [{{ word.phonetics }}]
+  <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
         onmouseout ="clearTimeout(timer);" 
         onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
   </h1>
-  {% endfor %}
+  <strong id='feedback'>请选择单词释义，只有一个正确哦</strong>
 </div>
-<form action="/study/{{book}}/{{lesson}}/pick" method='post'>
-  <input hidden="true" name="word" value="{{word}}">
-  <input type="submit"  value="submit" style="margin-right:20px;margin-bottom:10px;">
+
+<form id='PickForm' >
+  {% csrf_token %}
+  <input type="submit" onClick='onSubmit(event);' value="submit" style="margin-right:20px;margin-bottom:10px;">
+  <input name="question" value="{{word.name}}" hidden="true">
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <input type="radio" name="answer" value="{{option.mean}}">
+      <input type="radio" name="answer" value="{{option.name}}">
         {% for m in option.mean %}
         <li style="font-size:150%">{{m}}</li>
         {% endfor %}
@@ -25,4 +50,7 @@
     {% endfor %}
   </div>
 </form>
+{% endfor %}
+
 {% endblock %}
+
