@@ -4,7 +4,6 @@ from django.http import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
 
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
@@ -170,8 +169,6 @@ class LessonPickView(TemplateView):
         paginator = Paginator(words_list, 1)
 
         page = request.GET.get('page')
-        print page, type(page)
-        print words_list
         try:
             words = paginator.page(page)
         except PageNotAnInteger:
@@ -189,7 +186,6 @@ class LessonPickView(TemplateView):
             options = sample(words_list, count)
 
         options.insert(randrange(len(options)+1), words[0])
-        print options
 
         return render(request, self.template_name,
                 {'words':words, 'book':book, 'lesson':lesson, 'options':options})
