@@ -3,27 +3,39 @@
 {% block subcontent %}
 <script>
   $('.step-links').hide();
+  var numoftry = 0;
 
   function onSubmit(e) {
-    e.preventDefault();
 
-    var ques = $('#PickForm').find( "input[name='question']" ).prop('value');
-    var ans = $('#PickForm').find( "input:radio[name='answer']:checked" ).prop('value');
+    numoftry++;
+
+    var form = $('#PickForm');
+    var ques = $(form).find( "input[name='question']" ).prop('value');
+    var ans = $(form).find( "input:radio[name='answer']:checked" ).prop('value');
 
     if (ques == ans)
     {
-      $('#feedback').text('太棒了,可以点下一页了');
-      $('.step-links').show();
+      /*var csrf = $(form).find( "input[name='csrfmiddlewaretoken']" ).prop('value');
+      var url = $(form).prop('action'); 
+      var npage;
+      if ('{{words.has_next}}' == 'True')
+        npage = {{words.next_page_number}};
+      else
+        npage = 0;
+        $.post(url, {'csrfmiddlewaretoken':csrf, 'page':npage, 'num':numoftry}, 
+                function( data ) {
+                  $( "#PickDiv" ).html( $(data).find("#PickDiv") );
+                });*/
+        ;//TODO append numoftry to form
     } else {
+      e.preventDefault();
       $('#feedback').text('不对哦，再想一想');
-      $('.step-links').hide();
+      $('input[name="answer"]').prop('checked', false);
     }
-
-    $('input[name="answer"]').prop('checked', false);
-
   };
 </script>
 
+<div id='PickDiv'>
 {% for word in words %}
 <div class='jumbotron'>
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
@@ -35,10 +47,11 @@
   <strong id='feedback'>请选择单词释义，只有一个正确哦</strong>
 </div>
 
-<form id='PickForm' >
+<form id='PickForm' action='/study/{{book}}/{{lesson}}/pick' method='post'>
   {% csrf_token %}
   <input type="submit" onClick='onSubmit(event);' value="submit" style="margin-right:20px;margin-bottom:10px;">
   <input name="question" value="{{word.name}}" hidden="true">
+  <input name="page" value="{{words.next_page_number}}" hidden="true">
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
@@ -51,6 +64,6 @@
   </div>
 </form>
 {% endfor %}
-
+</div>
 {% endblock %}
 
