@@ -45,7 +45,8 @@ class Exam(models.Model):
 # This class is to keep compability with other apps
 # which use original User model.
 class Profile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    # OneToOneField
+    user = models.OneToOneField(User)
     location = models.CharField(max_length=140, blank=True, null=True)
     gender = models.CharField(max_length=140, blank=True, null=True)
     school = models.CharField(max_length=140, blank=True, null=True)
