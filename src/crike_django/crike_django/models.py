@@ -39,6 +39,9 @@ class WebsterBook(Book):
     pass
 
 
+class Exam(models.Model):
+    pass
+
 # This class is to keep compability with other apps
 # which use original User model.
 class Profile(models.Model):
@@ -89,6 +92,16 @@ class Teacher(Profile):
 
 class Student(Profile):
     edu_stage = models.CharField(max_length=140)
+
+
+class ExamResult(models.Model):
+    student = models.ForeignKey(Student)
+    exam = models.ForeignKey(Exam)
+
+
+class LessonResult(models.Model):
+    student = models.ForeignKey(Student)
+    lesson = models.ForeignKey(Lesson)
 
 
 class TeachingAssistant(Profile):
