@@ -1,6 +1,15 @@
 {% extends 'crike_django/lesson_base.html' %}
 
 {% block subcontent %}
+<script type="text/javascript"> 
+function stopRKey(evt) { 
+  var evt = (evt) ? evt : ((event) ? event : null); 
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+} 
+document.onkeypress = stopRKey; 
+</script>
+
 <div class='jumbotron'>
   <span style="float:right">返回  
     <a href='/study/{{book}}/{{lesson}}/show'>单词学习</a>
