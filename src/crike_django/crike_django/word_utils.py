@@ -51,7 +51,6 @@ def download_from_youdao(word):
     phonetics_list = re.findall('<span class="phonetic">\[(.+?)\]</span>', content, re.M | re.S)
     if len(phonetics_list) > 0:
         word.phonetics =  phonetics_list[0]
-        print word.phonetics
 
         mean_list = []
         #pos_list = []
@@ -68,7 +67,6 @@ def download_from_youdao(word):
                 mean_list.append(label)
         word.mean = mean_list
         #word.pos = pos_list
-        print label_list
                 
         word.save()
             
@@ -88,7 +86,6 @@ def download_from_iciba(word):
             "\[</strong><strong lang=\"EN-US\" xml:lang=\"EN-US\">(.+?)</strong><strong>\]", content, re.M | re.S)
     if len(phonetics_list) > 0:
         word.phonetics =  phonetics_list[0]
-        print word.phonetics
 
         pos_list = re.findall('<strong class=\"fl\">(.+?)</strong>', content, re.M | re.S)
         #word.pos = pos_list
@@ -103,7 +100,6 @@ def download_from_iciba(word):
                 labels += label
             mean_list.append(labels)
         word.mean = mean_list
-        print mean_list
 
         word.save()
 
