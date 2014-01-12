@@ -59,6 +59,7 @@ class Profile(models.Model):
     status = models.BooleanField(blank=True)
     last_login_ip = models.IPAddressField(blank=True, null=True)
     last_login_date = models.DateTimeField(blank=True, null=True)
+    is_human = models.BooleanField()
 
     @property
     def is_student(self):
@@ -77,11 +78,19 @@ class Profile(models.Model):
             return False
 
     def __unicode__(self):
-        return u'Profile of user: %s' % self.user.username
+        return u'Profile of user: %s' % self.user
 
-    class Meta:
-        abstract = True
 
+
+from registration.signals import user_registered
+
+
+def user_registered_callback(sender, user, request, **kwargs):
+    profile = Profile(user=user)
+    profile.is_human = bool(request.POST["is_human"])
+    profile.save()
+
+user_registered.connect(user_registered_callback)
 
 # These fields use multi-table inheritance. See below urls for more details.
 #   https://docs.djangoproject.com/en/1.5/topics/db/models/#multi-table-inheritance

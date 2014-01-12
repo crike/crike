@@ -8,7 +8,7 @@ from django.views.generic import RedirectView
 
 
 from registration.forms import RegistrationFormTermsOfService
-from registration.backends.default.views import RegistrationView
+from registration.backends.simple.views import RegistrationView
 
 
 from crike_django import views

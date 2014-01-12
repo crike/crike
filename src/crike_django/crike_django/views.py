@@ -29,6 +29,7 @@ class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
+        # import pdb; pdb.set_trace()
         return render(request, self.template_name, {'books':books})
 
     def post(self, request, *args, **kwargs):
@@ -297,7 +298,7 @@ class BooksStudyView(TemplateView):
         """
         books = Book.objects.all()
         return render(request, self.template_name, {'books':books})
-        
+
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect("/study/books/")
@@ -382,7 +383,7 @@ class BooksAdminView(TemplateView):
             if not uploadform.is_valid():
                 return render(request, self.template_name,
                         {'books':books, 'Uploadform':uploadform, 'Showform':'uploadform'})
-                
+
             bookname = request.POST['book']
             lesson = request.POST['lesson']
             if get_or_none(Book, name=bookname):

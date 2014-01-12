@@ -1,6 +1,6 @@
 # NOTE: This script will kill all django processes.
 pkill -f 'python manage.py'
 export PYTHONIOENCODING=utf-8
-nohup python manage.py runserver --noreload 0.0.0.0:8080 &
+python manage.py runserver --noreload 0.0.0.0:8080
 ps aux | grep --color \[m\]anage\.py
 echo "Restart crike_django succeed!"

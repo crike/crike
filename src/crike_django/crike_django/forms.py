@@ -19,6 +19,7 @@ class CrikeRegistrationForm(forms.Form):
                                 label=_("Password"))
     password2 = forms.CharField(widget=forms.PasswordInput,
                                 label=_("Password (again)"))
+    is_human = forms.NullBooleanField(label="Are you human?")
 
     def clean_username(self):
         existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
