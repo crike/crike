@@ -46,17 +46,17 @@ class Exam(models.Model):
 # which use original User model.
 class Profile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    location = models.CharField(max_length=140)
-    gender = models.CharField(max_length=140)
-    school = models.CharField(max_length=140)
+    location = models.CharField(max_length=140, blank=True, null=True)
+    gender = models.CharField(max_length=140, blank=True, null=True)
+    school = models.CharField(max_length=140, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
-    age = models.IntegerField()
-    dob = models.DateField()
-    phone = models.CharField(max_length=30)
-    mobile = models.CharField(max_length=30)
-    status = models.BooleanField()
-    last_login_ip = models.IPAddressField()
-    last_login_date = models.DateTimeField()
+    age = models.IntegerField(blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    mobile = models.CharField(max_length=30, blank=True, null=True)
+    status = models.BooleanField(blank=True)
+    last_login_ip = models.IPAddressField(blank=True, null=True)
+    last_login_date = models.DateTimeField(blank=True, null=True)
 
     @property
     def is_student(self):
@@ -87,20 +87,20 @@ class Profile(models.Model):
 # Another related work for more performance:
 #   http://onlypython.group.iteye.com/group/wiki/1519-expansion-django-user-model-by-non-profile-way
 class Teacher(Profile):
-    ori_school = models.CharField(max_length=140)
+    ori_school = models.CharField(max_length=140, blank=True, null=True)
 
 
 class Student(Profile):
-    edu_stage = models.CharField(max_length=140)
+    edu_stage = models.CharField(max_length=140, blank=True, null=True)
 
 
 class ExamResult(models.Model):
-    student = models.ForeignKey(Student)
+    user = models.ForeignKey(User)
     exam = models.ForeignKey(Exam)
 
 
 class LessonResult(models.Model):
-    student = models.ForeignKey(Student)
+    user = models.ForeignKey(User)
     lesson = models.ForeignKey(Lesson)
     show = models.BooleanField()
     pick = models.BooleanField()
