@@ -74,14 +74,18 @@ def play_audio(request, name):
    #    else:
    #        return HttpResponse(None)
 
-def show_all_words(request):
-    template_name='crike_django/words_list.html'
+class WordsAdminView(TemplateView):
+    template_name = 'crike_django/words_admin.html'
 
-    words = Word.objects.all()
-    if len(words) != 0:
-        request.encoding = "utf-8"
+    def get(self, request, *args, **kwargs):
+        words = Word.objects.all()
+        if len(words) != 0:
+            request.encoding = "utf-8"
 
-    return render(request, template_name, {'Words':words})
+        return render(request, self.template_name, {'Words':words})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
 
 def show_words(request, book, lesson):
     template_name='crike_django/words_list.html'
@@ -126,9 +130,8 @@ def delete_lesson(request, book, lesson):
     params = { 'book':book, 'lesson':lesson }
     return render(request, template, params)
 
-def show_lib(request):
-    return render(request, 'crike_django/lib.html', {})
 
+# for learning
 class LessonShowView(TemplateView):
     template_name='crike_django/lesson_show.html'
 
@@ -287,6 +290,25 @@ class LessonDictationView(TemplateView):
             return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
         return HttpResponseRedirect('/study/'+book+'/'+lesson+'/dictation?page='+page)
 
+class BookStudyView(TemplateView):
+    template_name='crike_django/book_study.html'
+
+    def get(self, request, book):
+        uploadform = UploadFileForm()
+        if not book:
+            book = Book.objects.first().name;#TODO get this from student infor
+
+        try:
+            bookobj = Book.objects.filter(name=book)[0]
+            request.encoding = "utf-8"
+            return render(request, self.template_name,{'book':bookobj})
+        except Exception as e:
+            print e
+            return HttpResponseRedirect('/error/')#TODO error page
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponseRedirect("/admin/books/")
+
 class ExamDictationView(TemplateView):
     template_name='crike_django/Exam_dictation.html'
 
@@ -328,8 +350,8 @@ class ExamDictationView(TemplateView):
             return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
         return HttpResponseRedirect('/study/'+book+'/'+lesson+'/fill?page='+page)
 
-
-class LessonView(TemplateView):
+# for management
+class LessonAdminView(TemplateView):
     template_name='crike_django/lesson_view.html'
 
     def get(self, request, *args, **kwargs):
@@ -338,61 +360,8 @@ class LessonView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
-# for learning
-class BookView(TemplateView):
-    template_name='crike_django/book_view.html'
-
-    def get(self, request, book):
-        uploadform = UploadFileForm()
-
-        try:
-            bookobj = Book.objects.filter(name=book)[0]
-            request.encoding = "utf-8"
-            return render(request, self.template_name,{'book':bookobj})
-        except Exception as e:
-            print e
-            return HttpResponseRedirect('/error/')#TODO error page
-
-    #功能：上传文件，然后把文件用handle_uploaded_file处理
-    def post(self, request, *args, **kwargs):
-        if request.POST['extra'] == 'add':
-            uploadform = UploadFileForm(request.POST, request.FILES)
-            if uploadform.is_valid():
-                bookname = request.POST['book']
-                lesson = request.POST['lesson']
-                if len(Book.objects.filter(name=bookname)) > 0:
-                    book = Book.objects.filter(name=bookname)[0]
-                    for item in book.lessons:
-                        if item.name == lesson:
-                            return render(request, self.template_name,
-                                    {'books':self.books,'Uploadform':uploadform,
-                                      'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
-
-                handle_uploaded_file(request.POST['book'],
-                        request.POST['lesson'],
-                        request.FILES['file'])
-                return HttpResponseRedirect('/admin/books/')
-            return render(request, self.template_name,
-                    {'books':self.books, 'Uploadform':uploadform, 'Showform':'uploadform'})
-
-        elif request.POST['extra'] == 'delete':
-            book = request.POST['delbook']
-            lessons = request.POST.getlist('dellessons')
-            bookob = Book.objects.filter(name=book)[0]
-            for lesson in lessons:
-                for lessonobj in bookob.lessons:
-                    if lessonobj.name == lesson:
-                        bookob.lessons.remove(lessonobj)
-            if len(bookob.lessons) == 0:
-                bookob.delete()
-            else:
-                bookob.save()
-
-        return HttpResponseRedirect("/admin/books/")
-
-# for management
-class BooksView(TemplateView):
-    template_name='crike_django/books_list.html'
+class BooksAdminView(TemplateView):
+    template_name='crike_django/books_admin.html'
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
