@@ -393,19 +393,20 @@ class BookView(TemplateView):
 # for management
 class BooksView(TemplateView):
     template_name='crike_django/books_list.html'
-    books = Book.objects.all()
 
     def get(self, request, *args, **kwargs):
+        books = Book.objects.all()
         uploadform = UploadFileForm()
 
-        if len(self.books) != 0:
+        if len(books) != 0:
             request.encoding = "utf-8"
 
         return render(request, self.template_name,
-                {'books':self.books, 'Uploadform':uploadform})
+                {'books':books, 'Uploadform':uploadform})
 
     #功能：上传文件，然后把文件用handle_uploaded_file处理
     def post(self, request, *args, **kwargs):
+        books = Book.objects.all()
         if request.POST['extra'] == 'add':
             uploadform = UploadFileForm(request.POST, request.FILES)
             if uploadform.is_valid():
@@ -416,7 +417,7 @@ class BooksView(TemplateView):
                     for item in book.lessons:
                         if item.name == lesson:
                             return render(request, self.template_name,
-                                    {'books':self.books,'Uploadform':uploadform,
+                                    {'books':books,'Uploadform':uploadform,
                                       'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
 
                 handle_uploaded_file(request.POST['book'],
@@ -424,7 +425,7 @@ class BooksView(TemplateView):
                         request.FILES['file'])
                 return HttpResponseRedirect('/admin/books/')
             return render(request, self.template_name,
-                    {'books':self.books, 'Uploadform':uploadform, 'Showform':'uploadform'})
+                    {'books':books, 'Uploadform':uploadform, 'Showform':'uploadform'})
 
         elif request.POST['extra'] == 'delete':
             book = request.POST['delbook']
