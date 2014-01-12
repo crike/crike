@@ -102,6 +102,10 @@ class ExamResult(models.Model):
 class LessonResult(models.Model):
     student = models.ForeignKey(Student)
     lesson = models.ForeignKey(Lesson)
+    show = models.BooleanField()
+    pick = models.BooleanField()
+    dictation = models.BooleanField()
+    fill = models.BooleanField()
 
 
 class TeachingAssistant(Profile):
