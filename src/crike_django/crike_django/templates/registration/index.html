@@ -4,6 +4,21 @@
 
 {% block header %}
     <script src="http://cdn.bootcss.com/holder/2.0/holder.js"></script>
+<script language="javascript" type="text/javascript">
+  var timer = null;
+  function playSound(mp3) {
+     //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+     $('#dummy').html("<embed autostart='true' style='float:left' height=0 width=0 src='"+mp3+"'></embed>");
+  }
+  function callback(mp3) {
+      playSound(mp3);
+  }
+  function delayPlay(mp3) {
+      clearTimeout(timer);
+      var cb = "callback('"+mp3+"')";
+      timer = setTimeout(cb, 500);
+  }
+</script>
 {% endblock %}
 {% block container %}
 <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
@@ -77,7 +92,12 @@
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
 </p>
   <div class="jumbotron">
-    <h1>Crike [kraɪk] <i class="fa fa-volume-up"></i></h1>
+    <h1>Crike [kraɪk] 
+    <a onmouseover="delayPlay('/static/audios/crike.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/static/audios/crike.mp3');" 
+        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+    </h1>
     <p>{% trans "好好学英语，不然以后就只能来做网页了" %}</p>
     <p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
   </div>
@@ -156,4 +176,5 @@
             </div><!--/span-->
   </div>
 </div>
+<span id="dummy"></span>
 {% endblock %}
