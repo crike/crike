@@ -33,7 +33,7 @@ document.onkeypress = stopRKey;
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
       <input name="question" value="{{option.name}}" hidden="true">
-      <input type="text" name="ans{{forloop.counter0}}">
+      <input type="text" name="ans{{forloop.counter0}}" autocomplete="off">
       <a onmouseover="delayPlay('/media/audios/{{ option.name }}.mp3');"
           onmouseout ="clearTimeout(timer);" 
           onclick="playSound('/media/audios/{{ option.name }}.mp3');" 
