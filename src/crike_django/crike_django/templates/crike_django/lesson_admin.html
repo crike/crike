@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="/static/index.css" rel="stylesheet" type="text/css"/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script language="javascript" type="text/javascript">
+  var timer = null;
+  function playSound(mp3) {
+     //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+     $('#dummy').html("<embed autostart='true' height=0 width=0 src='"+mp3+"'></embed>");
+  };
+  function callback(mp3) {
+      playSound(mp3);
+  };
+  function delayPlay(mp3) {
+      clearTimeout(timer);
+      var cb = "callback('"+mp3+"')";
+      timer = setTimeout(cb, 500);
+  };
+  function showForm(form) {
+    if (document.getElementById(form).style.display == 'none')
+      $('#'+form).show()
+    else
+      $('#'+form).hide()
+  };
+</script>
+<div class='jumbotron'>
+  <h1>{{book}}/{{lesson}}</h1>
+  <button onclick="showForm('RenameForm')">修改名称</button>
+  <button onclick="showForm('AddnewForm')">添加单词</button>
+  <button onclick="showForm('DeleteForm')">删除单词</button>
+  <form id="RenameForm" method="post" action="/admin/book/{{book}}/{{lesson}}/" style="display:none">
+    <input type="text" name="newname">
+    <input type="hidden" name="extra" value="rename">
+    <input type="submit" value="提交">
+  </form>
+</div>
+<!-- Cycle through entries -->
+<div class='row'>
+{% for word in words %}
+  <h2> {{ word.name }}</h2>
+  <p>
+    <form style="float: right; font-size: 14px;" method="get" action="/delete/">
+      <input type="hidden" name="id" value="{{word.id}}">
+      <input type="submit" value="修改">
+    </form>
+    <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
+    <li{display:inline}>
+    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+    </li>
+  </p>
+
+  {% for mean in word.mean %}
+  <p>
+    <li>{{mean}}</li>
+  </p>
+  {% endfor %}
+{% endfor %}
+</div>
+<span id="dummy"></span>
+{% endblock %}

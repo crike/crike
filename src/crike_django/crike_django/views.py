@@ -87,18 +87,6 @@ class WordsAdminView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
-def show_words(request, book, lesson):
-    template_name='crike_django/words_list.html'
-
-    words = []
-    for lessonob in Book.objects.filter(name=book)[0].lessons:
-        if lessonob.name == lesson:
-            words = lessonob.words
-    if len(words) != 0:
-        request.encoding = "utf-8"
-
-    return render(request, template_name, {'Words':words, 'book':book, 'lesson':lesson})
-
 def show_lessons(request, book):#TODO
     template_name='crike_django/lessons_list.html'
 
@@ -357,10 +345,18 @@ class ExamDictationView(TemplateView):
 
 # for management
 class LessonAdminView(TemplateView):
-    template_name='crike_django/lesson_view.html'
+    template_name='crike_django/lesson_admin.html'
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+    def get(self, request, book, lesson):
+        words = []
+        bookobj = Book.objects.filter(name=book)[0]
+        lessonobjs =  filter(lambda x: x.name == lesson, bookobj.lessons)
+        words = Word.objects.filter(id__in=lessonobjs[0].words)
+        if len(words) != 0:
+            request.encoding = "utf-8"
+
+        return render(request, self.template_name,
+                {'words':words, 'book':book, 'lesson':lesson})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
