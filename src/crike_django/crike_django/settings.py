@@ -172,7 +172,7 @@ LOGGING = {
     }
 }
 
-AUTH_USER_MODEL = 'model.Profile'
+# AUTH_USER_MODEL = 'model.Profile'
 
 # Registration app configurations
 # Test command:
