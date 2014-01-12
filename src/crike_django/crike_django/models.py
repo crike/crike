@@ -1,7 +1,7 @@
 #coding:utf-8
 from django.db import models
-from django.contrib.auth.models import User
 from djangotoolbox.fields import EmbeddedModelField, ListField
+from django.conf import settings
 
 '''
 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
@@ -42,11 +42,12 @@ class WebsterBook(Book):
 class Exam(models.Model):
     pass
 
+
 # This class is to keep compability with other apps
-# which use original User model.
+# which use original settings.AUTH_USER_MODEL model.
 class Profile(models.Model):
     # OneToOneField
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     location = models.CharField(max_length=140, blank=True, null=True)
     gender = models.CharField(max_length=140, blank=True, null=True)
     school = models.CharField(max_length=140, blank=True, null=True)
@@ -96,12 +97,12 @@ class Student(Profile):
 
 
 class ExamResult(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
 
 
 class LessonResult(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     lesson = models.ForeignKey(Lesson)
     show = models.BooleanField()
     pick = models.BooleanField()

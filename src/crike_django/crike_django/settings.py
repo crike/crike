@@ -172,6 +172,8 @@ LOGGING = {
     }
 }
 
+AUTH_USER_MODEL = 'model.Profile'
+
 # Registration app configurations
 # Test command:
 #   python -m smtpd -n -c DebuggingServer localhost:8025
