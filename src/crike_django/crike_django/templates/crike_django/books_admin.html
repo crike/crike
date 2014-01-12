@@ -107,9 +107,9 @@
       {% for lesson in book.lessons|dictsort:"name" %}
       <p>
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
-        <a title="开始学习" href="/study/{{book.name}}/{{lesson.name}}/show">{{lesson.name}}</a>
+        <a title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-        <button style="float: right;" onclick="location.href='/show/{{book.name}}/{{lesson.name}}/'">管理单词</button>
+        <button style="float: right;" onclick="location.href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'">管理单词</button>
       </p>
       {% endfor %}
 

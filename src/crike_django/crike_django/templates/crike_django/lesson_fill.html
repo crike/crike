@@ -29,13 +29,13 @@
 {% for word in words %}
 <div class='jumbotron'>
   <span style="float:right">返回  
-    <a href='/study/{{book}}/{{lesson}}/show'>单词学习</a>
+    <a href='/study/book/{{book}}/lesson/{{lesson}}/show'>单词学习</a>
   </span>
   <span class="current" style="float:right">
       第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
   </span>
   <strong id='feedback'>请根据释义将单词填写完整</strong>
-  <form id='FillForm' action='/study/{{book}}/{{lesson}}/fill' method='post'>
+  <form id='FillForm' action='/study/book/{{book}}/lesson/{{lesson}}/fill' method='post'>
     {% csrf_token %}
     {% if words.has_next %}
     <input name="page" value="{{words.next_page_number}}" hidden="true">

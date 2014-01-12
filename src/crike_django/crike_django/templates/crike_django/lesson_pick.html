@@ -27,7 +27,7 @@
 {% for word in words %}
 <div class='jumbotron'>
   <span style="float:right">返回  
-    <a href='/study/{{book}}/{{lesson}}/show'>单词学习</a>
+    <a href='/study/book/{{book}}/lesson/{{lesson}}/show'>单词学习</a>
   </span>
   <span class="current" style="float:right">
       第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
@@ -41,7 +41,7 @@
   <strong id='feedback'>请选择单词释义，只有一个正确哦</strong>
 </div>
 
-<form id='PickForm' action='/study/{{book}}/{{lesson}}/pick' method='post'>
+<form id='PickForm' action='/study/book/{{book}}/lesson/{{lesson}}/pick' method='post'>
   {% csrf_token %}
   <input type="submit" onClick='onSubmit(event);' value="submit" style="margin-right:20px;margin-bottom:10px;">
   <input name="question" value="{{word.name}}" hidden="true">

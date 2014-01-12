@@ -123,7 +123,7 @@ class WordDeleteView(TemplateView):
         if os.path.exists(audiofile):
             os.remove(audiofile)
         word.delete()
-        return HttpResponseRedirect("/show_all_words/")
+        return HttpResponseRedirect("/admin/words/")
 
 def delete_lesson(request, book, lesson):
     template = 'crike_django/lesson_delete.html'
@@ -203,8 +203,8 @@ class LessonPickView(TemplateView):
         print num
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
-            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
-        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/pick?page='+page)
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/pick?page='+page)
 
 
 class LessonFillView(TemplateView):
@@ -246,8 +246,8 @@ class LessonFillView(TemplateView):
         print num
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
-            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
-        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/fill?page='+page)
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill?page='+page)
 
 class LessonDictationView(TemplateView):
     template_name='crike_django/lesson_dictation.html'
@@ -287,14 +287,15 @@ class LessonDictationView(TemplateView):
         print num
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
-            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
-        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/dictation?page='+page)
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation?page='+page)
 
-class BookStudyView(TemplateView):
-    template_name='crike_django/book_study.html'
+class BooksStudyView(TemplateView):
+    template_name='crike_django/books_study.html'
 
-    def get(self, request, book):
-        uploadform = UploadFileForm()
+    def get(self, request):
+#TODO only enable the student's available books!!!
+        """
         if not book:
             book = Book.objects.first().name;#TODO get this from student infor
 
@@ -305,9 +306,13 @@ class BookStudyView(TemplateView):
         except Exception as e:
             print e
             return HttpResponseRedirect('/error/')#TODO error page
+        """
+        books = Book.objects.all()
+        return render(request, self.template_name, {'books':books})
+        
 
     def post(self, request, *args, **kwargs):
-        return HttpResponseRedirect("/admin/books/")
+        return HttpResponseRedirect("/study/books/")
 
 class ExamDictationView(TemplateView):
     template_name='crike_django/Exam_dictation.html'
@@ -347,8 +352,8 @@ class ExamDictationView(TemplateView):
         print num
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
-            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
-        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/fill?page='+page)
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill?page='+page)
 
 # for management
 class LessonAdminView(TemplateView):
@@ -378,23 +383,23 @@ class BooksAdminView(TemplateView):
         books = Book.objects.all()
         if request.POST['extra'] == 'add':
             uploadform = UploadFileForm(request.POST, request.FILES)
-            if uploadform.is_valid():
-                bookname = request.POST['book']
-                lesson = request.POST['lesson']
-                if  get_or_none(Book, name=bookname):
-                    book = Book.objects.filter(name=bookname)[0]
-                    for item in book.lessons:
-                        if item.name == lesson:
-                            return render(request, self.template_name,
-                                    {'books':books,'Uploadform':uploadform,
-                                      'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
+            if not uploadform.is_valid():
+                return render(request, self.template_name,
+                        {'books':books, 'Uploadform':uploadform, 'Showform':'uploadform'})
+                
+            bookname = request.POST['book']
+            lesson = request.POST['lesson']
+            if get_or_none(Book, name=bookname):
+                book = Book.objects.filter(name=bookname)[0]
+                if filter(lambda x: x.name == lesson, book.lessons):
+                    return render(request, self.template_name,
+                            {'books':books,'Uploadform':uploadform,
+                             'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
 
-                handle_uploaded_file(request.POST['book'],
-                        request.POST['lesson'],
-                        request.FILES['file'])
-                return HttpResponseRedirect('/admin/books/')
-            return render(request, self.template_name,
-                    {'books':books, 'Uploadform':uploadform, 'Showform':'uploadform'})
+            handle_uploaded_file(request.POST['book'],
+                    request.POST['lesson'],
+                    request.FILES['file'])
+            return HttpResponseRedirect('/admin/books/')
 
         elif request.POST['extra'] == 'delete':
             book = request.POST['delbook']
