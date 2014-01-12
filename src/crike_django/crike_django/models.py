@@ -48,6 +48,12 @@ class Profile(models.Model):
     school = models.CharField(max_length=140)
     profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
     age = models.IntegerField()
+    dob = models.DateField()
+    phone = models.CharField(max_length=30)
+    mobile = models.CharField(max_length=30)
+    status = models.BooleanField()
+    last_login_ip = models.IPAddressField()
+    last_login_date = models.DateTimeField()
 
     @property
     def is_student(self):
