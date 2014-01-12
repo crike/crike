@@ -5,8 +5,7 @@ English online teaching and testing system.
 
 Todo
 -----
-* refine urls to RESTful
-* learning process: dictation
+* refine urls to RESTful -- WIP
 * exam
 * statistics
 * add word management view with delete media files checkbox
