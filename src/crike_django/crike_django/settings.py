@@ -172,6 +172,11 @@ LOGGING = {
     }
 }
 
+'''
+AUTH_USER_MODEL is a customize model, if you
+want to implement it, you should read the full docs.
+The easiest way is to inherit from AbstractBaseUser.
+'''
 # AUTH_USER_MODEL = 'model.Profile'
 
 # Registration app configurations
