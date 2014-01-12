@@ -246,6 +246,88 @@ class LessonFillView(TemplateView):
             return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
         return HttpResponseRedirect('/study/'+book+'/'+lesson+'/fill?page='+page)
 
+class LessonDictationView(TemplateView):
+    template_name='crike_django/lesson_dictation.html'
+
+    def get(self, request, book, lesson):
+        words_list = []
+        bookob = Book.objects.filter(name=book)[0]
+        for lessonobj in bookob.lessons:
+            if lessonobj.name == lesson:
+                words_list = Word.objects.filter(id__in=lessonobj.words)
+
+        paginator = Paginator(words_list, 8)
+
+        page = request.GET.get('page')
+        try:
+            words = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            words = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            words = paginator.page(paginator.num_pages)
+
+        options = []
+        for word in words:
+            options.append(word)
+        options = sample(options, len(options))
+
+        return render(request, self.template_name,
+                {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+
+    def post(self, request, book, lesson):
+        page = request.POST.get('page')
+        num = request.POST.get('num')
+# TODO put this word into this student's strange list if num > 1, and store the num
+        print "nnnnnnnnnnnnnnnn"
+        print num
+        print "nnnnnnnnnnnnnnnn"
+        if page == '0':
+            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
+        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/dictation?page='+page)
+
+class ExamDictationView(TemplateView):
+    template_name='crike_django/Exam_dictation.html'
+
+    def get(self, request, book, lessons):
+        words_list = []
+        bookob = Book.objects.filter(name=book)[0]
+        for lessonobj in bookob.lessons:
+            if lessonobj.name in lessons:
+                words_list.append(Word.objects.filter(id__in=lessonobj.words))
+
+        paginator = Paginator(words_list, 8)
+
+        page = request.GET.get('page')
+        try:
+            words = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            words = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            words = paginator.page(paginator.num_pages)
+
+        options = []
+        for word in words:
+            options.append(word)
+        options = sample(options, len(options))
+
+        return render(request, self.template_name,
+                {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+
+    def post(self, request, book, lesson):
+        page = request.POST.get('page')
+        num = request.POST.get('num')
+# TODO put this word into this student's strange list if num > 1, and store the num
+        print "nnnnnnnnnnnnnnnn"
+        print num
+        print "nnnnnnnnnnnnnnnn"
+        if page == '0':
+            return HttpResponseRedirect('/study/'+book+'/'+lesson+'/show')
+        return HttpResponseRedirect('/study/'+book+'/'+lesson+'/fill?page='+page)
+
 
 class LessonView(TemplateView):
     template_name='crike_django/lesson_view.html'

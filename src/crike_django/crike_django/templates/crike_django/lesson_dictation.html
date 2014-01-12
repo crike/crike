@@ -1,0 +1,79 @@
+{% extends 'crike_django/lesson_base.html' %}
+
+{% block subcontent %}
+<div class='jumbotron'>
+  <span style="float:right">返回  
+    <a href='/study/{{book}}/{{lesson}}/show'>单词学习</a>
+  </span>
+  <span class="current" style="float:right">
+      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
+  </span>
+  <h1>
+    鼠标轻抚<i class="fa fa-volume-up"></i>听发音，<br>填写完整单词
+  </h1>
+</div>
+
+<form id='DictationForm' action='/study/{{book}}/{{lesson}}/dictation' method='post'>
+  {% csrf_token %}
+  {% if words.has_next %}
+  <input name="page" value="{{words.next_page_number}}" hidden="true">
+  {% else %}
+  <input name="page" value="0" hidden="true">
+  {% endif %}
+  <div class='row'>
+    {% for option in options %}
+    <div class="col-6 col-sm-6 col-lg-3">  
+      <input name="question" value="{{option.name}}" hidden="true">
+      <input type="text" name="ans{{forloop.counter0}}">
+      <a onmouseover="delayPlay('/media/audios/{{ option.name }}.mp3');"
+          onmouseout ="clearTimeout(timer);" 
+          onclick="playSound('/media/audios/{{ option.name }}.mp3');" 
+          title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a><br>
+      <input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" style="margin-bottom:10px;">
+      <strong id='feedback{{forloop.counter0}}'>Fill the blank</strong>
+    </div>
+    {% endfor %}
+  </div>
+</form>
+
+<script>
+  $('.step-links').hide();
+  var form = $('#DictationForm');
+  var ques = new Array();
+  var ans = new Array();
+  var numoftry = new Array();
+  {% for option in options %}
+  ques.push('{{option.name}}')
+  ans.push('')
+  {% endfor %}
+  for (i=0;i<{{options|length}};i++) {
+    numoftry[i] = 1;
+  }
+
+  function onSubmit(t,e) {
+    var index = parseInt(t.id.substring(3));
+    ans[index] = $(form).find( "input[name='ans"+index+"']" ).prop('value');
+
+    if (ques[index] == ans[index])
+    {
+      $('#feedback'+index).text('Good job!');
+      for (i=0;i<{{options|length}};i++) {
+        if (ques[i] != ans[i]){
+          e.preventDefault();
+          return false;
+        }
+      }
+      $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#DictationForm');
+    } else {
+      e.preventDefault();
+      $('#feedback'+index).text('不对哦，再想一想');
+      numoftry[index]++;
+    }
+  console.log(ques)
+  console.log(ans)
+  console.log(numoftry)
+  };
+</script>
+
+{% endblock %}
+
