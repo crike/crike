@@ -15,8 +15,8 @@ class TeacherInline(admin.StackedInline):
 class UserAdmin(UserAdmin):
     inlines = (TeacherInline, )
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+# admin.site.unregister(User)
+# admin.site.register(User, UserAdmin)
 
 admin.site.register(Teacher)
 admin.site.register(Student)
