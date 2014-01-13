@@ -371,8 +371,10 @@ class LessonAdminView(TemplateView):
                 word.name = request.POST['name']
                 word.mean = request.POST['mean']
                 word.phonetics = request.POST['phonetics']
-                if request.FILES['audio']:
+                try:
                     save_file(request.FILES['audio'], MEDIA_PATH+"/audios/"+word.name+".mp3")
+                except Exception as e:
+                    print(e)
                 word.save()
 
             bookobj = Book.objects.filter(name=book)[0]
