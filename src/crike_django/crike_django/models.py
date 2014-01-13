@@ -118,6 +118,9 @@ class LessonResult(models.Model):
     dictation = models.BooleanField()
     fill = models.BooleanField()
 
+    def __unicode__(self):
+        return u'User %s show %d pick %d dictation %d fill %d' % (self.user, self.show, self.pick, self.dictation, self.fill)
+
 
 class TeachingAssistant(Profile):
     pass

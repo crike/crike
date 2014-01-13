@@ -164,14 +164,18 @@ class LessonShowView(TemplateView):
     template_name='crike_django/lesson_show.html'
 
     def get(self, request, book, lesson):
+        lesson_obj = get_lessonobj(book, lesson)
         words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
         # TODO show done with progress bar
-        print "===== show done?"
+        lesson_result = LessonResult.objects.filter(user=request.user,
+                                                    lesson=lesson_obj)[0]
+        print "===== show done?", lesson_result
         return render(request, self.template_name,
-               {'words':words, 'book':book, 'lesson':lesson})
+               {'words':words, 'book':book, 'lesson':lesson,
+                'progress1': lesson_result.pick * 25})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
@@ -294,7 +298,12 @@ class BooksStudyView(TemplateView):
             return HttpResponseRedirect('/error/')#TODO error page
         """
         books = Book.objects.all()
-        return render(request, self.template_name, {'books':books})
+        book = books[0]
+        lesson_obj = book.lessons[0]
+        lesson_result = LessonResult.objects.filter(user=request.user,
+                                                    lesson=lesson_obj)[0]
+        return render(request, self.template_name, {'books':books,
+                                                    'progress1': 25})
 
 
     def post(self, request, *args, **kwargs):
