@@ -7,6 +7,13 @@ class UploadFileForm(forms.Form):
     lesson = forms.CharField(max_length=50)
     file  = forms.FileField()
 
+class AddWordForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    phonetics = forms.CharField(max_length=50, required=False)
+    mean = forms.CharField(max_length=200)
+    audio  = forms.FileField(required=False)
+    #image  = forms.FileField(required=False)
+
 class CrikeRegistrationForm(forms.Form):
     required_css_class = 'required'
 

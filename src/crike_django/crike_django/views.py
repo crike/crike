@@ -15,11 +15,47 @@ import string
 import sys
 
 # Utils
+def save_file(srcfile, dst):
+    try:
+        file = open(dst, 'wb')
+        file.write(mp3file.read())
+        file.close()
+        mp3file.close()
+    except Exception as e:
+        print(e)
+
 def get_or_none(model, **kwargs):
     try:
         return model.objects.filter(**kwargs)
     except model.DoesNotExist:
         return None
+
+def get_lessonobj(book, lesson):
+    bookobj = Book.objects.filter(name=book)[0]
+    lessonobjs = filter(lambda x: x.name == lesson, bookobj.lessons)
+    if len(lessonobjs) > 0:
+        return lessonobjs[0]
+    return None
+
+def get_words_from_lesson(book, lesson):
+    lessonobj = get_lessonobj(book, lesson)
+    if lessonobj:
+        # https://bitbucket.org/wkornewald/djangotoolbox/pull-request/3/allow-setting-an-actual-object-in-a/diff
+        return Word.objects.filter(id__in=lessonobj.words)
+    return []
+    
+def get_words_from_paginator(paginator, page):
+    try:
+        words = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        words = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        words = paginator.page(paginator.num_pages)
+
+    return words
+
 
 # TODO: Upload file的view
 # 规定具体的get/post对应事件
@@ -128,25 +164,10 @@ class LessonShowView(TemplateView):
     template_name='crike_django/lesson_show.html'
 
     def get(self, request, book, lesson):
-        words_list = []
-        bookob = Book.objects.filter(name=book)[0]
-        for lessonobj in bookob.lessons:
-            if lessonobj.name == lesson:
-                # https://bitbucket.org/wkornewald/djangotoolbox/pull-request/3/allow-setting-an-actual-object-in-a/diff
-                words_list = Word.objects.filter(id__in=lessonobj.words)
-
+        words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
-
         page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
-
+        words = get_words_from_paginator(paginator, page)
         return render(request, self.template_name,
                {'words':words, 'book':book, 'lesson':lesson})
 
@@ -157,23 +178,10 @@ class LessonPickView(TemplateView):
     template_name='crike_django/lesson_pick.html'
 
     def get(self, request, book, lesson):
-        words_list = []
-        bookob = Book.objects.filter(name=book)[0]
-        for lessonobj in bookob.lessons:
-            if lessonobj.name == lesson:
-                words_list = Word.objects.filter(id__in=lessonobj.words)
-
+        words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
-
         page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
+        words = get_words_from_paginator(paginator, page)
 
         words_list = filter(lambda x: x.name !=words[0].name, words_list)
         count = len(words_list)
@@ -181,7 +189,6 @@ class LessonPickView(TemplateView):
             options = sample(words_list, 3)
         else:
             options = sample(words_list, count)
-
         options.insert(randrange(len(options)+1), words[0])
 
         return render(request, self.template_name,
@@ -203,23 +210,10 @@ class LessonFillView(TemplateView):
     template_name='crike_django/lesson_fill.html'
 
     def get(self, request, book, lesson):
-        words_list = []
-        bookob = Book.objects.filter(name=book)[0]
-        for lessonobj in bookob.lessons:
-            if lessonobj.name == lesson:
-                words_list = Word.objects.filter(id__in=lessonobj.words)
-
+        words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
-
         page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
+        words = get_words_from_paginator(paginator, page)
 
         options = sys.modules['__builtin__'].list(words[0].name)
         options = sample(options, len(options))
@@ -245,23 +239,10 @@ class LessonDictationView(TemplateView):
     template_name='crike_django/lesson_dictation.html'
 
     def get(self, request, book, lesson):
-        words_list = []
-        bookob = Book.objects.filter(name=book)[0]
-        for lessonobj in bookob.lessons:
-            if lessonobj.name == lesson:
-                words_list = Word.objects.filter(id__in=lessonobj.words)
-
+        words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 8)
-
         page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
+        words = get_words_from_paginator(paginator, page)
 
         options = []
         for word in words:
@@ -317,16 +298,8 @@ class ExamDictationView(TemplateView):
                 words_list.append(Word.objects.filter(id__in=lessonobj.words))
 
         paginator = Paginator(words_list, 8)
-
         page = request.GET.get('page')
-        try:
-            words = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            words = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            words = paginator.page(paginator.num_pages)
+        words = get_words_from_paginator(paginator, page)
 
         options = []
         for word in words:
@@ -350,20 +323,68 @@ class ExamDictationView(TemplateView):
 # for management
 class LessonAdminView(TemplateView):
     template_name='crike_django/lesson_admin.html'
+    addwordform = AddWordForm()
 
     def get(self, request, book, lesson):
-        words = []
-        bookobj = Book.objects.filter(name=book)[0]
-        lessonobjs =  filter(lambda x: x.name == lesson, bookobj.lessons)
-        words = Word.objects.filter(id__in=lessonobjs[0].words)
+        words = get_words_from_lesson(book, lesson)
         if len(words) != 0:
             request.encoding = "utf-8"
 
         return render(request, self.template_name,
-                {'words':words, 'book':book, 'lesson':lesson})
+                {'words':words, 'book':book, 'lesson':lesson,
+                    'AddWordForm':self.addwordform})
 
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
+    def post(self, request, book, lesson):
+        if request.POST['extra'] == 'rename':
+            bookobj = Book.objects.filter(name=book)[0]
+            lessonobj = get_lessonobj(book, lesson)
+            newname = request.POST['newname']
+            if not get_lessonobj(book, newname):
+                bookobj.lessons.remove(lessonobj)
+                lessonobj.name = newname
+                bookobj.lessons.append(lessonobj)
+                bookobj.save()
+                return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+newname)
+            else:
+                words = get_words_from_lesson(book, lesson)
+                if len(words) != 0:
+                    request.encoding = "utf-8"
+                return render(request, self.template_name,
+                        {'words':words, 'book':book, 'lesson':lesson,
+                            'AddWordForm':self.addwordform, 'showform':'RenameForm',
+                            'warning':'重名了，重新起个吧'})
+
+        if request.POST['extra'] == 'addword':
+            addwordform = AddWordForm(request.POST, request.FILES)
+            if not addwordform.is_valid():
+                return render(request, self.template_name,
+                        {'words':words, 'book':book, 'lesson':lesson,
+                            'AddWordForm':addwordform, 'showform':'AddWordForm',
+                            'warning':'Double check your inputs please!'})
+
+            word = None
+            words = Word.objects.filter(name=request.POST['name'])
+            if len(words) > 0:
+                word = words[0]
+            else:
+                word = Word()
+                word.name = request.POST['name']
+                word.mean = request.POST['mean']
+                word.phonetics = request.POST['phonetics']
+                if request.FILES['audio']:
+                    save_file(request.FILES['audio'], MEDIA_PATH+"/audios/"+word.name+".mp3")
+                word.save()
+
+            bookobj = Book.objects.filter(name=book)[0]
+            lessonobj = get_lessonobj(book, lesson)
+            bookobj.lessons.remove(lessonobj)
+            lessonobj.words.append(word.id)
+            bookobj.lessons.append(lessonobj)
+            bookobj.save()
+
+
+
+        return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
 
 class BooksAdminView(TemplateView):
     template_name='crike_django/books_admin.html'
@@ -385,16 +406,17 @@ class BooksAdminView(TemplateView):
             uploadform = UploadFileForm(request.POST, request.FILES)
             if not uploadform.is_valid():
                 return render(request, self.template_name,
-                        {'books':books, 'Uploadform':uploadform, 'Showform':'uploadform'})
+                        {'books':books, 'Uploadform':uploadform,
+                         'Showform':'uploadform'})
 
-            bookname = request.POST['book']
+            book = request.POST['book']
             lesson = request.POST['lesson']
-            if get_or_none(Book, name=bookname):
-                book = Book.objects.filter(name=bookname)[0]
-                if filter(lambda x: x.name == lesson, book.lessons):
+            if get_or_none(Book, name=book):
+                if get_lessonobj(book, lesson):
                     return render(request, self.template_name,
                             {'books':books,'Uploadform':uploadform,
-                             'Showform':'uploadform', 'Uploadwarning':'Duplicated Lesson!!'})
+                             'Showform':'uploadform',
+                             'Uploadwarning':'Duplicated Lesson!!'})
 
             handle_uploaded_file(request.POST['book'],
                     request.POST['lesson'],

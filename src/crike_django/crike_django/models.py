@@ -12,8 +12,8 @@ book包含多个lesson，lesson包含多个word，user包含多个course
 
 class Word(models.Model):
     name = models.CharField(max_length=50)
-    phonetics = models.CharField(max_length=80)
-    mean = ListField(models.CharField(max_length=80))
+    phonetics = models.CharField(max_length=50)
+    mean = ListField(models.CharField(max_length=100))
     #image = ImageField()
 
 

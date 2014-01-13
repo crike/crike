@@ -18,21 +18,41 @@
       timer = setTimeout(cb, 500);
   };
   function showForm(form) {
-    if (document.getElementById(form).style.display == 'none')
-      $('#'+form).show()
-    else
-      $('#'+form).hide()
+    if (document.getElementById(form).style.display == 'none') {
+      //$('form:not(#'+form.id+')').hide();
+      $('form').hide();
+      $('#'+form).show();
+    } else {
+      $('#'+form).hide();
+    }
   };
 </script>
 <div class='jumbotron'>
-  <h1>{{book}}/{{lesson}}</h1>
+  <label>{{book}}</label>
+  <h1>{{lesson}}</h1>
   <button onclick="showForm('RenameForm')">修改名称</button>
-  <button onclick="showForm('AddnewForm')">添加单词</button>
-  <button onclick="showForm('DeleteForm')">删除单词</button>
-  <form id="RenameForm" method="post" action="/admin/book/{{book}}/{{lesson}}/" style="display:none">
+  <button onclick="showForm('AddWordForm')">添加单词</button>
+  <button onclick="showForm('DelWordForm')">删除单词</button>
+  {% if showform == "RenameForm" %}
+  <form id="RenameForm" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:block">
+  {% else %}
+  <form id="RenameForm" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:none">
+  {% endif %}
+    {% csrf_token %}
     <input type="text" name="newname">
     <input type="hidden" name="extra" value="rename">
     <input type="submit" value="提交">
+    <strong>{{warning}}</strong>
+  </form>
+  {% if showform == "AddWordForm" %}
+  <form id="AddWordForm" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:block">
+  {% else %}
+  <form id="AddWordForm" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:none">
+  {% endif %}
+    {% csrf_token %}
+    {{AddWordForm}}
+    <input type="hidden" name="extra" value="addword">
+    <input type='submit' value='提交'>
   </form>
 </div>
 <!-- Cycle through entries -->
