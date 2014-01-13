@@ -1,5 +1,5 @@
 # NOTE: This script will kill all django processes.
-pkill -f 'python manage.py'
+pkill -f 'python manage.py runserver'
 export PYTHONIOENCODING=utf-8
 python manage.py runserver 0.0.0.0:8080
 ps aux | grep --color \[m\]anage\.py
