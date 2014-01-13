@@ -43,7 +43,7 @@ def get_words_from_lesson(book, lesson):
         # https://bitbucket.org/wkornewald/djangotoolbox/pull-request/3/allow-setting-an-actual-object-in-a/diff
         return Word.objects.filter(id__in=lessonobj.words)
     return []
-    
+
 def get_words_from_paginator(paginator, page):
     try:
         words = paginator.page(page)
@@ -168,6 +168,8 @@ class LessonShowView(TemplateView):
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
+        # TODO show done with progress bar
+        print "===== show done?"
         return render(request, self.template_name,
                {'words':words, 'book':book, 'lesson':lesson})
 
@@ -199,10 +201,21 @@ class LessonPickView(TemplateView):
         num = request.POST.get('num')
 # TODO put this word into this student's strange list if num > 1, and store the num
         print "nnnnnnnnnnnnnnnn"
-        print num
+        print num, page
         print "nnnnnnnnnnnnnnnn"
+
+        # This case means success of Choice Questions.
         if page == '0':
+            user = request.user
+            profile = request.user.profile
+            lessonobj = get_lessonobj(book, lesson)
+            lesson_result = LessonResult.objects.get_or_create(user=user,
+                                                               lesson=lessonobj)[0]
+            lesson_result.pick = True
+            lesson_result.save()
+            print "user %s complete lesson %s" % (user, lesson)
             return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/pick?page='+page)
 
 
