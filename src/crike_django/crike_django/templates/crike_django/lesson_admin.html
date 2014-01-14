@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load crispy_forms_tags %}
 <link href="/static/index.css" rel="stylesheet" type="text/css"/>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script language="javascript" type="text/javascript">
@@ -50,7 +51,7 @@
   <form id="AddWordForm" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:none">
   {% endif %}
     {% csrf_token %}
-    {{AddWordForm}}
+    {{AddWordForm|crispy}}
     <input type="hidden" name="extra" value="addword">
     <input type='submit' value='提交'>
   </form>

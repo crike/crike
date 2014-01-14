@@ -391,7 +391,7 @@ class LessonAdminView(TemplateView):
             else:
                 word = Word()
                 word.name = request.POST['name']
-                word.mean = request.POST['mean']
+                word.mean.append(request.POST['mean'])
                 word.phonetics = request.POST['phonetics']
                 try:
                     save_file(request.FILES['audio'], MEDIA_PATH+"/audios/"+word.name+".mp3")
