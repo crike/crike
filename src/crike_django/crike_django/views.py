@@ -175,12 +175,20 @@ class LessonShowView(TemplateView):
         words = get_words_from_paginator(paginator, page)
         # TODO show done with progress bar
         if request.user.is_authenticated():
-            lesson_result = LessonResult.objects.filter(user=request.user,
-                                                        lesson=lesson_obj)[0]
+            try:
+                lesson_result = LessonResult.objects.filter(user=request.user,
+                                                            lesson=lesson_obj)[0]
+            except:
+                lesson_result = None
+        try:
+            pick = lesson_result.pick
+        except:
+            pick = 0
+
         print "===== show done?", lesson_result
         return render(request, self.template_name,
                {'words':words, 'book':book, 'lesson':lesson,
-                'progress1': lesson_result.pick * 25})
+                'progress1': pick * 25})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
@@ -190,7 +198,7 @@ class LessonPickView(TemplateView):
 
     def _success(self, request, book, lesson):
         user = request.user
-        profile = request.user.profile
+        # profile = request.user.profile
         lessonobj = get_lessonobj(book, lesson)
         lesson_result = LessonResult.objects.get_or_create(user=user,
                                                            lesson=lessonobj)[0]
@@ -309,10 +317,16 @@ class BooksStudyView(TemplateView):
         book = books[0]
         lesson_obj = book.lessons[0]
         if request.user.is_authenticated():
-            lesson_result = LessonResult.objects.filter(user=request.user,
-                                                        lesson=lesson_obj)[0]
+            try:
+                lesson_result = LessonResult.objects.filter(user=request.user,
+                                                            lesson=lesson_obj)[0]
+                pick = lesson_result.pick
+            except:
+                pick = 0
+        else:
+            pick = 0
         return render(request, self.template_name, {'books':books,
-                                                    'progress1': 25})
+                                                    'progress1': pick * 25})
 
 
     def post(self, request, *args, **kwargs):
