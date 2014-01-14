@@ -174,8 +174,9 @@ class LessonShowView(TemplateView):
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
         # TODO show done with progress bar
-        lesson_result = LessonResult.objects.filter(user=request.user,
-                                                    lesson=lesson_obj)[0]
+        if request.user.is_authenticated():
+            lesson_result = LessonResult.objects.filter(user=request.user,
+                                                        lesson=lesson_obj)[0]
         print "===== show done?", lesson_result
         return render(request, self.template_name,
                {'words':words, 'book':book, 'lesson':lesson,
