@@ -63,44 +63,42 @@
     <input type='submit' value='提交'>
   </form>
   {% if Showform == "DelWordForm" %}
-  <form id="DelWordForm" style="display:block" enctype="multipart/form-data" method="post" action="/admin/books/">
+  <form id="DelWordForm" style="display:block" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
   {% else %}
-  <form id="DelWordForm" style="display:none" enctype="multipart/form-data" method="post" action="/admin/books/">
+  <form id="DelWordForm" style="display:none" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
   {% endif %}
     {% csrf_token %}
     <label>请选择要删除的单词</label>
+    <input type='checkbox' name='delaudio'>同时删除音频文件<br>
     <input type='checkbox' onclick="checkall(this);">全选<br>
     {% for word in words %}
     <input type='checkbox' name='delwords' value='{{word.name}}'>{{word.name}}
     {% endfor %}
     <input type='hidden' name='extra' value='delword'>
-    <input id="deletesubmit" type="submit" disabled="true" value="delete">
+    <input id="deletesubmit" type="submit" value="delete">
     <strong>{{ warning }}</strong>
   </form>
 </div>
 <!-- Cycle through entries -->
 <div class='row'>
 {% for word in words %}
-  <h2> {{ word.name }}</h2>
-  <p>
-    <form style="float: right; font-size: 14px;" method="get" action="/delete/">
-      <input type="hidden" name="id" value="{{word.id}}">
-      <input type="submit" value="修改">
-    </form>
-    <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
-    <li{display:inline}>
-    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-        onmouseout ="clearTimeout(timer);" 
-        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
-    </li>
-  </p>
-
-  {% for mean in word.mean %}
-  <p>
-    <li>{{mean}}</li>
-  </p>
-  {% endfor %}
+  <div class="col-6 col-sm-6 col-lg-3">  
+    <h2> {{ word.name }}</h2>
+    <p>
+      <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
+      <li{display:inline}>
+      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+          onmouseout ="clearTimeout(timer);" 
+          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+          title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+      </li>
+    </p>
+    {% for mean in word.mean %}
+    <p>
+      <li>{{mean}}</li>
+    </p>
+    {% endfor %}
+  </div>
 {% endfor %}
 </div>
 <span id="dummy"></span>

@@ -18,9 +18,9 @@ import sys
 def save_file(srcfile, dst):
     try:
         file = open(dst, 'wb')
-        file.write(mp3file.read())
+        file.write(srcfile.read())
         file.close()
-        mp3file.close()
+        srcfile.close()
     except Exception as e:
         print(e)
 
@@ -416,10 +416,8 @@ class LessonAdminView(TemplateView):
                 word.name = request.POST['name']
                 word.mean.append(request.POST['mean'])
                 word.phonetics = request.POST['phonetics']
-                try:
-                    save_file(request.FILES['audio'], MEDIA_PATH+"/audios/"+word.name+".mp3")
-                except Exception as e:
-                    print(e)
+                if request.FILES.get('audio', None):
+                    save_file(request.FILES['audio'], MEDIA_ROOT+"/audios/"+word.name+".mp3")
                 word.save()
 
             bookobj = Book.objects.filter(name=book)[0]
@@ -429,6 +427,15 @@ class LessonAdminView(TemplateView):
             bookobj.lessons.append(lessonobj)
             bookobj.save()
 
+        if request.POST['extra'] == 'delword':
+            words = request.POST.getlist('delwords')
+            for word in words:
+                wordobj = Word.objects.filter(name=word)[0]
+                wordobj.delete()
+                if request.POST.get('delaudio', None):
+                    audiofile = MEDIA_ROOT+'/audios/'+word+'.mp3'
+                    if os.path.exists(audiofile):
+                        os.remove(audiofile)
 
 
         return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
