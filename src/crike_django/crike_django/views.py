@@ -159,6 +159,10 @@ def delete_lesson(request, book, lesson):
     return render(request, template, params)
 
 
+def lesson_success(request, book, lesson, tag):
+    pass
+
+
 # for learning
 class LessonShowView(TemplateView):
     template_name='crike_django/lesson_show.html'
@@ -182,6 +186,16 @@ class LessonShowView(TemplateView):
 
 class LessonPickView(TemplateView):
     template_name='crike_django/lesson_pick.html'
+
+    def _success(self, request, book, lesson):
+        user = request.user
+        profile = request.user.profile
+        lessonobj = get_lessonobj(book, lesson)
+        lesson_result = LessonResult.objects.get_or_create(user=user,
+                                                           lesson=lessonobj)[0]
+        lesson_result.pick = True
+        lesson_result.save()
+        print "user %s complete lesson %s" % (user, lesson)
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
@@ -210,14 +224,7 @@ class LessonPickView(TemplateView):
 
         # This case means success of Choice Questions.
         if page == '0':
-            user = request.user
-            profile = request.user.profile
-            lessonobj = get_lessonobj(book, lesson)
-            lesson_result = LessonResult.objects.get_or_create(user=user,
-                                                               lesson=lessonobj)[0]
-            lesson_result.pick = True
-            lesson_result.save()
-            print "user %s complete lesson %s" % (user, lesson)
+            self._success(request, book, lesson)
             return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
 
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/pick?page='+page)
@@ -300,8 +307,9 @@ class BooksStudyView(TemplateView):
         books = Book.objects.all()
         book = books[0]
         lesson_obj = book.lessons[0]
-        lesson_result = LessonResult.objects.filter(user=request.user,
-                                                    lesson=lesson_obj)[0]
+        if request.user.is_authenticated():
+            lesson_result = LessonResult.objects.filter(user=request.user,
+                                                        lesson=lesson_obj)[0]
         return render(request, self.template_name, {'books':books,
                                                     'progress1': 25})
 
