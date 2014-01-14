@@ -195,7 +195,6 @@
             <div class="modal-body">
               <form class="form" method="post" action="{% url 'registration_register' %}">
                 {% csrf_token %}
-                <!-- XXX 这个实现不好，换成给register form会好点，但crispy的响应式做得不大好 -->
                 {{ registration_form|crispy }}
                 <div class="control-group">
                   <div class="controls">
