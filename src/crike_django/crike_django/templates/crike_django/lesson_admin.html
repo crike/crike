@@ -27,6 +27,13 @@
       $('#'+form).hide();
     }
   };
+  function checkall(t) {
+    if (t.checked) {
+      $('#DelWordForm').find('input[name="delwords"]').prop('checked', true);
+    } else {
+      $('#DelWordForm').find('input[name="delwords"]').prop('checked', false);
+    }
+  };
 </script>
 <div class='jumbotron'>
   <label>{{book}}</label>
@@ -54,6 +61,21 @@
     {{AddWordForm|crispy}}
     <input type="hidden" name="extra" value="addword">
     <input type='submit' value='提交'>
+  </form>
+  {% if Showform == "DelWordForm" %}
+  <form id="DelWordForm" style="display:block" enctype="multipart/form-data" method="post" action="/admin/books/">
+  {% else %}
+  <form id="DelWordForm" style="display:none" enctype="multipart/form-data" method="post" action="/admin/books/">
+  {% endif %}
+    {% csrf_token %}
+    <label>请选择要删除的单词</label>
+    <input type='checkbox' onclick="checkall(this);">全选<br>
+    {% for word in words %}
+    <input type='checkbox' name='delwords' value='{{word.name}}'>{{word.name}}
+    {% endfor %}
+    <input type='hidden' name='extra' value='delword'>
+    <input id="deletesubmit" type="submit" disabled="true" value="delete">
+    <strong>{{ warning }}</strong>
   </form>
 </div>
 <!-- Cycle through entries -->
