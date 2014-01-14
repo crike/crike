@@ -178,6 +178,7 @@ class LessonShowView(TemplateView):
             try:
                 lesson_result = LessonResult.objects.filter(user=request.user,
                                                             lesson=lesson_obj)[0]
+                print "===== show done?", lesson_result
             except:
                 lesson_result = None
         try:
@@ -185,7 +186,6 @@ class LessonShowView(TemplateView):
         except:
             pick = 0
 
-        print "===== show done?", lesson_result
         return render(request, self.template_name,
                {'words':words, 'book':book, 'lesson':lesson,
                 'progress1': pick * 25})
