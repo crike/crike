@@ -6,21 +6,22 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script language="javascript" type="text/javascript">
       function showUploadform() {
-        if (document.getElementById("uploadform").style.display == "none") {
-          document.getElementById("deleteform").style.display="none";
-          document.getElementById("uploadform").style.display="block";
+        if (!$("#uploadform").is(":visible")) {
+          $("#deleteform").hide();
+          $(".checkbook").hide();
+          $("#uploadform").show();
         } else {
-          document.getElementById("uploadform").style.display="none";
+          $("#uploadform").hide();
         }
       };
       function showDeleteform() {
-        if (document.getElementById("deleteform").style.display == "none") {
-          document.getElementById("uploadform").style.display="none";
-          document.getElementById("deleteform").style.display="block";
+        if (!$("#deleteform").is(":visible")) {
+          $("#uploadform").hide();
+          $("#deleteform").show();
           $(".checkbook").show();
 
         } else {
-          document.getElementById("deleteform").style.display="none";
+          $("#deleteform").hide();
           $(".checkbook").hide();
         }
       };
@@ -108,9 +109,8 @@
       {% for lesson in book.lessons|dictsort:"name" %}
       <p>
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
-        <a title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">{{lesson.name}}</a>
+        <a title="修改" style="margin-left:40px;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>{{lesson.name}}</a>
         <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-        <button style="float: right;" onclick="location.href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'">修改</button>
       </p>
       {% endfor %}
 
