@@ -15,7 +15,6 @@
     <link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
     <style type="text/css">
       body {
-        padding-top: 60px;
         padding-bottom: 40px;
       }
       {% include "css/navbar_dwarf.css" %}
@@ -89,6 +88,10 @@
     </div><!-- /.navbar-xs -->
     </div><!-- /.navbar-primary -->
 
+    <div class="container_header">
+    {% block container_header %}
+    {% endblock %}
+    </div>
     <div class="container">
 
       <!-- 登录：Modal 弹出框 -->
