@@ -61,6 +61,7 @@
     {{AddWordForm|crispy}}
     <input type="hidden" name="extra" value="addword">
     <input type='submit' value='提交'>
+    <strong>{{ warning }}</strong>
   </form>
   {% if Showform == "DelWordForm" %}
   <form id="DelWordForm" style="display:block" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
@@ -69,7 +70,8 @@
   {% endif %}
     {% csrf_token %}
     <label>请选择要删除的单词</label>
-    <input type='checkbox' name='delaudio'>同时删除音频文件<br>
+    <input type='checkbox' name='delinfos'>从词库中删除
+    <input type='checkbox' name='delaudio'>删除音频文件<br>
     <input type='checkbox' onclick="checkall(this);">全选<br>
     {% for word in words %}
     <input type='checkbox' name='delwords' value='{{word.name}}'>{{word.name}}

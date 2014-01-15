@@ -392,8 +392,6 @@ class LessonAdminView(TemplateView):
                 return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+newname)
             else:
                 words = get_words_from_lesson(book, lesson)
-                if len(words) != 0:
-                    request.encoding = "utf-8"
                 return render(request, self.template_name,
                         {'words':words, 'book':book, 'lesson':lesson,
                             'AddWordForm':self.addwordform, 'showform':'RenameForm',
@@ -406,6 +404,13 @@ class LessonAdminView(TemplateView):
                         {'words':words, 'book':book, 'lesson':lesson,
                             'AddWordForm':addwordform, 'showform':'AddWordForm',
                             'warning':'Double check your inputs please!'})
+
+            words = get_words_from_lesson(book, lesson)
+            if len(words) > 0 and len(words.filter(name=request.POST['name'])) > 0:
+                return render(request, self.template_name,
+                        {'words':words, 'book':book, 'lesson':lesson,
+                            'AddWordForm':self.addwordform, 'showform':'AddWordForm',
+                            'warning':'已经存在，可以使用修改功能哦'})
 
             word = None
             words = Word.objects.filter(name=request.POST['name'])
@@ -435,7 +440,8 @@ class LessonAdminView(TemplateView):
             for word in words:
                 wordobj = Word.objects.filter(name=word)[0]
                 lessonobj.words.remove(wordobj.id)
-                wordobj.delete()
+                if request.POST.get('delinfos', None):
+                    wordobj.delete()
                 if request.POST.get('delaudio', None):
                     audiofile = MEDIA_ROOT+'/audios/'+word+'.mp3'
                     if os.path.exists(audiofile):
