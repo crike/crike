@@ -160,12 +160,19 @@ def delete_lesson(request, book, lesson):
 
 
 def lesson_success(request, book, lesson, tag):
-    pass
+    user = request.user
+    # profile = request.user.profile
+    lessonobj = get_lessonobj(book, lesson)
+    lesson_result = LessonResult.objects.get_or_create(user=user,
+                                                       lesson=lessonobj)[0]
+    lesson_result['tag'] = True
+    lesson_result.save()
+    print "user %s complete lesson %s" % (user, lesson)
 
 
 # for learning
 class LessonShowView(TemplateView):
-    template_name='crike_django/lesson_show.html'
+    template_name = 'crike_django/lesson_show.html'
 
     def get(self, request, book, lesson):
         lesson_obj = get_lessonobj(book, lesson)
@@ -174,21 +181,14 @@ class LessonShowView(TemplateView):
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
         # TODO show done with progress bar
-        if request.user.is_authenticated():
-            try:
-                lesson_result = LessonResult.objects.filter(user=request.user,
-                                                            lesson=lesson_obj)[0]
-                print "===== show done?", lesson_result
-            except:
-                lesson_result = None
-        try:
-            pick = lesson_result.pick
-        except:
-            pick = 0
+
+        lesson_result = LessonResult.objects.get_or_create(user=request.user,
+                                                           lesson=lesson_obj)[0]
+        pick = lesson_result.pick
 
         return render(request, self.template_name,
-               {'words':words, 'book':book, 'lesson':lesson,
-                'progress1': pick * 25})
+               {'words': words, 'book': book, 'lesson': lesson,
+                'progress1': pick * 25, 'lesson_result': lesson_result})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
