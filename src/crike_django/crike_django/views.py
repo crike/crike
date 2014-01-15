@@ -165,9 +165,9 @@ def lesson_success(request, book, lesson, tag):
     lessonobj = get_lessonobj(book, lesson)
     lesson_result = LessonResult.objects.get_or_create(user=user,
                                                        lesson=lessonobj)[0]
-    setattr(lesson_result, tag, True)
+    setattr(lesson_result, tag, 25)
     lesson_result.save()
-    print "user %s complete lesson %s part %s" % (user, lesson, tag)
+    print "user %s complete lesson %s part %s %d" % (user, lesson, tag, 25)
 
 
 # for learning
@@ -180,15 +180,15 @@ class LessonShowView(TemplateView):
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
-        # TODO show done with progress bar
 
         lesson_result = LessonResult.objects.get_or_create(user=request.user,
                                                            lesson=lesson_obj)[0]
         pick = lesson_result.pick
+        print 'Show with LessonResult: ', lesson_result
 
         return render(request, self.template_name,
                {'words': words, 'book': book, 'lesson': lesson,
-                'progress1': pick * 25, 'lesson_result': lesson_result})
+                'lesson_result': lesson_result})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
@@ -235,6 +235,9 @@ class LessonPickView(TemplateView):
 class LessonFillView(TemplateView):
     template_name='crike_django/lesson_fill.html'
 
+    def _success(self, request, book, lesson):
+        lesson_success(request, book, lesson, 'fill')
+
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
@@ -258,11 +261,15 @@ class LessonFillView(TemplateView):
         print num
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
+            self._success(request, book, lesson)
             return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill?page='+page)
 
 class LessonDictationView(TemplateView):
     template_name='crike_django/lesson_dictation.html'
+
+    def _success(self, request, book, lesson):
+        lesson_success(request, book, lesson, 'dictation')
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
@@ -286,6 +293,7 @@ class LessonDictationView(TemplateView):
         print num
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
+            self._success(request, book, lesson)
             return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation?page='+page)
 
@@ -310,16 +318,13 @@ class BooksStudyView(TemplateView):
         book = books[0]
         lesson_obj = book.lessons[0]
         if request.user.is_authenticated():
-            try:
-                lesson_result = LessonResult.objects.filter(user=request.user,
-                                                            lesson=lesson_obj)[0]
-                pick = lesson_result.pick
-            except:
-                pick = 0
+            lesson_result = LessonResult.objects.get_or_create(user=request.user,
+                                                               lesson=lesson_obj)[0]
         else:
-            pick = 0
-        return render(request, self.template_name, {'books':books,
-                                                    'progress1': pick * 25})
+            lesson_result = None
+
+        return render(request, self.template_name, {'books': books,
+                                                    'lesson_result': lesson_result})
 
 
     def post(self, request, *args, **kwargs):

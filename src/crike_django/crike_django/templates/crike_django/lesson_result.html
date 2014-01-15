@@ -1,11 +1,14 @@
 <div class="progress">
-  <div id='pb1' class="progress-bar progress-bar-success" style="width: {{ progress1 }}%">
+  <div id='pb1' class="progress-bar progress-bar-success" style="width: {{ lesson_result.pick }}%">
     <span class="sr-only">35% Complete (success)</span>
   </div>
-  <div id='pb2' class="progress-bar progress-bar-warning" style="width: {{ progress2 }}">
+  <div id='pb2' class="progress-bar progress-bar-warning" style="width: {{ lesson_result.dictation }}">
     <span class="sr-only">20% Complete (warning)</span>
   </div>
-  <div id='pb3' class="progress-bar progress-bar-danger" style="width: {{ progress3 }}%">
+  <div id='pb3' class="progress-bar progress-bar-danger" style="width: {{ lesson_result.show }}%">
+    <span class="sr-only">10% Complete (danger)</span>
+  </div>
+  <div id='pb3' class="progress-bar progress-bar-danger" style="width: {{ lesson_result.fill }}%">
     <span class="sr-only">10% Complete (danger)</span>
   </div>
 </div>
