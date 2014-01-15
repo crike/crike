@@ -5,6 +5,9 @@
 <link href="/static/index.css" rel="stylesheet" type="text/css"/>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script language="javascript" type="text/javascript">
+  $(document).ready ( function(){
+    $('#UpdWordForm').find('input[id="id_name"]').prop('readonly', true);
+  });
   var timer = null;
   function playSound(mp3) {
      //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
@@ -34,6 +37,16 @@
       $('#DelWordForm').find('input[name="delwords"]').prop('checked', false);
     }
   };
+  function radioOn(name) {
+    phonetics = $('#'+name+'div').find('li[id="id_phonetics"]').text().replace('[','').replace(']','');
+    var means = [];
+    $('#'+name+'div').find('li[id="id_mean"]').each(function() { means.push($(this).text()) });
+    mean = means.join("\n");
+    $('#UpdWordForm').find('input[id="id_name"]').prop('value', name);
+    $('#UpdWordForm').find('input[id="id_phonetics"]').prop('value', phonetics);
+    //waste a lot of time on .text(), that will not change the textarea once modified the content, use .val() !!!!
+    $('#UpdWordForm').find('textarea[id="id_mean"]').val(mean);
+  };
 </script>
 <div class='jumbotron'>
   <label>{{book}}</label>
@@ -41,6 +54,7 @@
   <button onclick="showForm('RenameForm')">修改名称</button>
   <button onclick="showForm('AddWordForm')">添加单词</button>
   <button onclick="showForm('DelWordForm')">删除单词</button>
+  <button onclick="showForm('UpdWordForm')">修改单词</button>
   {% if showform == "RenameForm" %}
   <form id="RenameForm" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:block">
   {% else %}
@@ -64,9 +78,9 @@
     <strong>{{ warning }}</strong>
   </form>
   {% if Showform == "DelWordForm" %}
-  <form id="DelWordForm" style="display:block" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
+  <form id="DelWordForm" style="display:block" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
   {% else %}
-  <form id="DelWordForm" style="display:none" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
+  <form id="DelWordForm" style="display:none" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/">
   {% endif %}
     {% csrf_token %}
     <label>请选择要删除的单词</label>
@@ -80,15 +94,29 @@
     <input id="deletesubmit" type="submit" value="delete">
     <strong>{{ warning }}</strong>
   </form>
+  {% if showform == "UpdWordForm" %}
+  <form id="UpdWordForm" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:block">
+  {% else %}
+  <form id="UpdWordForm" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:none">
+  {% endif %}
+    {% for word in words %}
+    <input type='radio' name="updword" onclick='radioOn("{{word.name}}")'>{{word.name}}
+    {% endfor %}
+    {% csrf_token %}
+    {{AddWordForm|crispy}}
+    <input type="hidden" name="extra" value="updword">
+    <input type='submit' value='提交'>
+    <strong>{{ warning }}</strong>
+  </form>
 </div>
 <!-- Cycle through entries -->
 <div class='row'>
 {% for word in words %}
-  <div class="col-6 col-sm-6 col-lg-3">  
+  <div id='{{word.name}}div'class="col-6 col-sm-6 col-lg-3">  
     <h2> {{ word.name }}</h2>
     <p>
-      <li{display:inline}><strong> [{{ word.phonetics }}] </strong></li>
-      <li{display:inline}>
+      <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
+      <li style='display:inline'>
       <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
           onmouseout ="clearTimeout(timer);" 
           onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
@@ -97,7 +125,7 @@
     </p>
     {% for mean in word.mean %}
     <p>
-      <li>{{mean}}</li>
+      <li id='id_mean'>{{mean}}</li>
     </p>
     {% endfor %}
   </div>

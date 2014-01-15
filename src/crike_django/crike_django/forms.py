@@ -10,7 +10,7 @@ class UploadFileForm(forms.Form):
 class AddWordForm(forms.Form):
     name = forms.CharField(max_length=50)
     phonetics = forms.CharField(max_length=50, required=False)
-    mean = forms.CharField(max_length=200, required=False)
+    mean = forms.CharField(widget=forms.Textarea, required=False)
     audio  = forms.FileField(required=False)
     #image  = forms.FileField(required=False)
 

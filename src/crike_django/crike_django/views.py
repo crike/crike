@@ -419,7 +419,7 @@ class LessonAdminView(TemplateView):
             else:
                 word = Word()
                 word.name = request.POST['name']
-                word.mean.append(request.POST['mean'])
+                word.mean = request.POST['mean'].replace('\r','').split('\n')
                 word.phonetics = request.POST['phonetics']
                 if request.FILES.get('audio', None):
                     save_file(request.FILES['audio'], MEDIA_ROOT+"/audios/"+word.name+".mp3")
@@ -448,6 +448,26 @@ class LessonAdminView(TemplateView):
                         os.remove(audiofile)
             bookobj.lessons.append(lessonobj)
             bookobj.save()
+
+        if request.POST['extra'] == 'updword':
+            words = get_words_from_lesson(book, lesson)
+            addwordform = AddWordForm(request.POST, request.FILES)
+            if not addwordform.is_valid():
+                return render(request, self.template_name,
+                        {'words':words, 'book':book, 'lesson':lesson,
+                            'AddWordForm':addwordform, 'showform':'UpdWordForm',
+                            'warning':'Double check your inputs please!'})
+
+            words = Word.objects.filter(name=request.POST['name'])
+            word = words[0]
+            word.mean = request.POST['mean'].replace('\r','').split('\n')
+            word.phonetics = request.POST['phonetics']
+            if request.FILES.get('audio', None):
+                audiofile = MEDIA_ROOT+'/audios/'+word.name+'.mp3'
+                if os.path.exists(audiofile):
+                    os.remove(audiofile)
+                save_file(request.FILES['audio'], MEDIA_ROOT+"/audios/"+word.name+".mp3")
+            word.save()
 
 
         return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
