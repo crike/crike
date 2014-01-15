@@ -165,9 +165,9 @@ def lesson_success(request, book, lesson, tag):
     lessonobj = get_lessonobj(book, lesson)
     lesson_result = LessonResult.objects.get_or_create(user=user,
                                                        lesson=lessonobj)[0]
-    lesson_result['tag'] = True
+    setattr(lesson_result, tag, True)
     lesson_result.save()
-    print "user %s complete lesson %s" % (user, lesson)
+    print "user %s complete lesson %s part %s" % (user, lesson, tag)
 
 
 # for learning
@@ -194,17 +194,10 @@ class LessonShowView(TemplateView):
         return HttpResponse("Not implement yet")
 
 class LessonPickView(TemplateView):
-    template_name='crike_django/lesson_pick.html'
+    template_name = 'crike_django/lesson_pick.html'
 
     def _success(self, request, book, lesson):
-        user = request.user
-        # profile = request.user.profile
-        lessonobj = get_lessonobj(book, lesson)
-        lesson_result = LessonResult.objects.get_or_create(user=user,
-                                                           lesson=lessonobj)[0]
-        lesson_result.pick = True
-        lesson_result.save()
-        print "user %s complete lesson %s" % (user, lesson)
+        lesson_success(request, book, lesson, 'pick')
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
