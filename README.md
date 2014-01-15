@@ -6,11 +6,10 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful -- WIP
+* enable single word info audio image download and show
+* images (youdao has pics or optimize result from search engine), enable single image download and upload
 * exam
 * statistics
-* add word management view with delete media files checkbox
-* enable word info manual modification and single word info download
-* images (youdao has pics or optimize result from search engine), enable single image download and upload
 * redis
 * Rewrite a registration module for django-registration doens't support custom user.
 * naming, ICON in browser tab
