@@ -429,13 +429,19 @@ class LessonAdminView(TemplateView):
 
         if request.POST['extra'] == 'delword':
             words = request.POST.getlist('delwords')
+            bookobj = Book.objects.filter(name=book)[0]
+            lessonobj = get_lessonobj(book, lesson)
+            bookobj.lessons.remove(lessonobj)
             for word in words:
                 wordobj = Word.objects.filter(name=word)[0]
+                lessonobj.words.remove(wordobj.id)
                 wordobj.delete()
                 if request.POST.get('delaudio', None):
                     audiofile = MEDIA_ROOT+'/audios/'+word+'.mp3'
                     if os.path.exists(audiofile):
                         os.remove(audiofile)
+            bookobj.lessons.append(lessonobj)
+            bookobj.save()
 
 
         return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
