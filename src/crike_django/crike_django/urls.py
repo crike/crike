@@ -5,6 +5,7 @@ from django.views.generic import *
 from django.conf.urls.static import static
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
+from django.contrib.auth.decorators import login_required
 
 
 from registration.forms import RegistrationFormTermsOfService
@@ -45,7 +46,7 @@ urlpatterns = patterns('',
     url(r'^admin/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/?$', LessonAdminView.as_view()),
 
 # Study process for students
-    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/show/?$', LessonShowView.as_view(), name='lesson_show_view'),
+    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/show/?$', login_required(LessonShowView.as_view()), name='lesson_show_view'),
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/pick/?$', LessonPickView.as_view(), name='lesson_pick_view'),
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/fill/?$', LessonFillView.as_view(), name='lesson_fill_view'),
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/dictation/?$', LessonDictationView.as_view(), name='lesson_dictation_view'),
