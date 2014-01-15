@@ -47,8 +47,8 @@ urlpatterns = patterns('',
 
 # Study process for students
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/show/?$', login_required(LessonShowView.as_view()), name='lesson_show_view'),
-    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/pick/?$', LessonPickView.as_view(), name='lesson_pick_view'),
-    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/fill/?$', LessonFillView.as_view(), name='lesson_fill_view'),
-    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/dictation/?$', LessonDictationView.as_view(), name='lesson_dictation_view'),
+    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/pick/?$', login_required(LessonPickView.as_view()), name='lesson_pick_view'),
+    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/fill/?$', login_required(LessonFillView.as_view()), name='lesson_fill_view'),
+    url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/dictation/?$', login_required(LessonDictationView.as_view()), name='lesson_dictation_view'),
     url(r'^study/books/$', BooksStudyView.as_view(), name='books_study_view'),
 )#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
