@@ -2,7 +2,7 @@
 from django.views.generic import *
 from django.http import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 
 # Imaginary function to handle an uploaded file.
@@ -76,7 +76,7 @@ class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
+        return redirect('home')
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
@@ -85,7 +85,7 @@ class TeacherView(TemplateView):
     template_name = 'crike_django/teacher_view.html'
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
+        return redirect('home')
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")

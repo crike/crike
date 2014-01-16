@@ -65,7 +65,8 @@
           </ul>
           {% if user.is_authenticated %}
           <ul class="nav navbar-nav pull-right">
-            <li><a href="{% url "home" %}" data-toggle="tooltip" data-placement="bottom" title="用户信息">
+            <li><a href="{% if user.student %}{% url "student" %}{% elif user.teacher %}{% url "teacher" %}{% endif %}"
+                   data-toggle="tooltip" data-placement="bottom" title="用户信息">
               <i class="fa fa-user fa-lg"></i>
               {% if user.student %}学生{% endif %}
               <strong>{{ user.username }}</strong>
