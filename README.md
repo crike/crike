@@ -11,11 +11,13 @@ Todo
 * exam
 * statistics
 * redis
-* Rewrite a registration module for django-registration doens't support custom user.
-* naming, ICON in browser tab
+* rewrite a registration module for django-registration doens't support custom user.
+* naming, ICON in browser tab.
+* word answered recording for users and lessons.
+* user history, how many lessons have been done and show the next step users should do.
 * release
 
-Requirements
+需求
 -----
 
 1 教学
