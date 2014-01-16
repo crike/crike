@@ -16,6 +16,11 @@ class Word(models.Model):
     mean = ListField(models.CharField(max_length=100))
     #image = ImageField()
 
+class WordStat(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    word = models.ForeignKey(Word)
+    mistake_num = models.IntegerField(default=0)
+    correct_num = models.IntegerField(default=0)
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50)
