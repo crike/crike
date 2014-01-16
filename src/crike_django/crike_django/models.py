@@ -79,18 +79,11 @@ class Profile(models.Model):
 
     def __unicode__(self):
         return u'Profile of user: %s' % self.user
+    
+    class Meta:
+        abstract = True
 
 
-
-from registration.signals import user_registered
-
-
-def user_registered_callback(sender, user, request, **kwargs):
-    profile = Profile(user=user)
-    profile.is_human = bool(request.POST["is_human"])
-    profile.save()
-
-user_registered.connect(user_registered_callback)
 
 # These fields use multi-table inheritance. See below urls for more details.
 #   https://docs.djangoproject.com/en/1.5/topics/db/models/#multi-table-inheritance
@@ -103,6 +96,7 @@ class Teacher(Profile):
 
 class Student(Profile):
     edu_stage = models.CharField(max_length=140, blank=True, null=True)
+    grade = models.IntegerField(blank=True, null=True)
 
 
 class ExamResult(models.Model):

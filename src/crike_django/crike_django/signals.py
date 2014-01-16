@@ -16,4 +16,21 @@ def create_profile(sender, instance, request, **kwargs):
     except KeyError:
         Profile(user = instance).save() #Default create just a profile
 
-user_registered.connect(create_profile)
+
+# This callback is called by a registration signal.
+# XXX move this function to a meaningful file.
+def register_with_profile(sender, user, request, **kwargs):
+    profile = Profile(user=user)
+    profile.is_human = bool(request.POST["is_human"])
+    profile.save()
+
+
+# This callback is called by a registration signal.
+# XXX move this function to a meaningful file.
+def register_with_student_profile(sender, user, request, **kwargs):
+    profile = Student(user=user)
+    profile.save()
+
+
+# Now a registered user is always a student.
+user_registered.connect(register_with_student_profile)
