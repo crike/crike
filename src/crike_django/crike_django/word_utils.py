@@ -243,7 +243,7 @@ def handle_uploaded_file(bookname, lessonname, words_file):
         os.makedirs(PATH)
 
     lesson = Lesson.objects.create(name=lessonname)
-    words = words_file.read().split()
+    words = words_file.read().replace('\r','').split('\n')
     tempwords = words[:]
 
     thread1 = download_thread_with_engine(tempwords, download_from_iciba)
