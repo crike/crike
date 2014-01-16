@@ -134,61 +134,6 @@
       </div><!-- /.modal -->
 
       <!-- 注册：Modal 弹出框 -->
-      <div class="modal fade" id="OldregisterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="myModalLabel">注册</h4>
-            </div>
-            <div class="modal-body">
-              <form class="form-inline" method="post" action="{% url 'registration_register' %}">
-                {% csrf_token %}
-                <!-- XXX 这个实现不好，换成给register form会好点，但crispy的响应式做得不大好 -->
-                <div id="div_id_username" class="required">
-                  <label for="id_username" class="control-label  requiredField">用户名<span class="asteriskField">*</span></label>
-                  <div class="input-group ">
-                    <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-                    <input class="form-control" id="id_username" maxlength="30" name="username" type="text" />
-                  </div>
-                </div>
-                <div id="div_id_email" class="required">
-                  <label for="id_email" class="control-label  requiredField">邮箱<span class="asteriskField">*</span></label>
-                  <div class="input-group ">
-                    <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-                    <input class="form-control" id="id_email" name="email" type="text" />
-                  </div>
-                </div>
-                <div id="div_id_password1" class="required">
-                  <label for="id_password1" class="control-label  requiredField">密码<span class="asteriskField">*</span></label>
-                  <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-                    <input class="form-control" id="id_password1" name="password1" type="password" />
-                  </div>
-                </div>
-                <div id="div_id_password2" class="required">
-                  <label for="id_password2" class="control-label  requiredField">密码（再次输入）<span class="asteriskField">*</span></label>
-                  <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-                    <input class="form-control" id="id_password2" name="password2" type="password" />
-                  </div>
-                </div>
-                <div class="control-group">
-                  <div class="controls">
-                    <button type="submit" class="btn">注册</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <!-- <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div> -->
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-
-      <!-- 注册：Modal 弹出框 -->
       <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
