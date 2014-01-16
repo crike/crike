@@ -113,10 +113,10 @@ class ExamResult(models.Model):
 class LessonResult(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     lesson = models.ForeignKey(Lesson)
-    show = models.IntegerField()
-    pick = models.IntegerField()
-    dictation = models.IntegerField()
-    fill = models.IntegerField()
+    show = models.IntegerField(default=0)
+    pick = models.IntegerField(default=0)
+    dictation = models.IntegerField(default=0)
+    fill = models.IntegerField(default=0)
 
     def __unicode__(self):
         return u'User %s show %d pick %d dictation %d fill %d' % (self.user, self.show, self.pick, self.dictation, self.fill)
