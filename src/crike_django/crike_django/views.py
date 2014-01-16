@@ -197,6 +197,18 @@ class LessonPickView(TemplateView):
     def _success(self, request, book, lesson):
         lesson_success(request, book, lesson, 'pick')
 
+    def _counter(self, request, book, lesson):
+        page = request.POST.get('page')
+        num = request.POST.get('num')
+        words_list = get_words_from_lesson(book, lesson)
+        paginator = Paginator(words_list, 1)
+        word = get_words_from_paginator(paginator, page)[0]
+
+        word_stat, ret = WordStat.objects.get_or_create(user=request.user, word=word)
+        word_stat.correct_num += 1
+        word_stat.mistake_num += int(num)
+        word_stat.save()
+
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
@@ -221,6 +233,8 @@ class LessonPickView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         print num, page
         print "nnnnnnnnnnnnnnnn"
+
+        self._counter(request, book, lesson)
 
         # This case means success of Choice Questions.
         if page == '0':
