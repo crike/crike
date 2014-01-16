@@ -315,6 +315,8 @@ class BooksStudyView(TemplateView):
             return HttpResponseRedirect('/error/')#TODO error page
         """
         books = Book.objects.all()
+        if len(books) == 0:
+           return render(request, self.template_name,{})
         book = books[0]
         lesson_obj = book.lessons[0]
         if request.user.is_authenticated():
@@ -352,7 +354,7 @@ class ExamDictationView(TemplateView):
         return render(request, self.template_name,
                 {'words':words, 'book':book, 'lesson':lesson, 'options':options})
 
-    def post(self, request, book, lesson):
+    def post(self, request, book, lessons):
         page = request.POST.get('page')
         num = request.POST.get('num')
 # TODO put this word into this student's strange list if num > 1, and store the num
