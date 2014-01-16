@@ -47,7 +47,6 @@ class Exam(models.Model):
 # which use original settings.AUTH_USER_MODEL model.
 class Profile(models.Model):
     # OneToOneField
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     location = models.CharField(max_length=140, blank=True, null=True)
     gender = models.CharField(max_length=140, blank=True, null=True)
     school = models.CharField(max_length=140, blank=True, null=True)
@@ -91,10 +90,12 @@ class Profile(models.Model):
 # Another related work for more performance:
 #   http://onlypython.group.iteye.com/group/wiki/1519-expansion-django-user-model-by-non-profile-way
 class Teacher(Profile):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="teacher")
     ori_school = models.CharField(max_length=140, blank=True, null=True)
 
 
 class Student(Profile):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="student")
     edu_stage = models.CharField(max_length=140, blank=True, null=True)
     grade = models.IntegerField(blank=True, null=True)
 
@@ -124,3 +125,39 @@ class TeachingAssistant(Profile):
 # A lesson should be corresponding to several courses.
 class Course(models.Model):
     pass
+
+
+from registration.signals import user_registered
+#from models import Profile, Teacher, Student
+
+def create_profile(sender, instance, request, **kwargs):
+
+    try:
+        user_type = request.POST['usertype'].lower()
+        if user_type == "teacher": #user .lower for case insensitive comparison
+            Teacher(user = instance).save()
+        elif user_type == "student":
+            Student(user = instance).save()
+        else:
+            Profile(user = instance).save() #Default create - might want to raise error instead
+    except KeyError:
+        Profile(user = instance).save() #Default create just a profile
+
+
+# This callback is called by a registration signal.
+# XXX move this function to a meaningful file.
+def register_with_profile(sender, user, request, **kwargs):
+    profile = Profile(user=user)
+    profile.is_human = bool(request.POST["is_human"])
+    profile.save()
+
+
+# This callback is called by a registration signal.
+# XXX move this function to a meaningful file.
+def register_with_student_profile(sender, user, request, **kwargs):
+    profile = Student(user=user)
+    profile.save()
+
+
+# Now a registered user is always a student.
+user_registered.connect(register_with_student_profile)
