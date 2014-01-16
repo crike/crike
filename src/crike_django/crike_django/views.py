@@ -67,9 +67,7 @@ class HomeView(TemplateView):
         books = Book.objects.all()
         registration_form = CrikeRegistrationForm
         # import pdb; pdb.set_trace()
-        return render(request, self.template_name,
-                      {'books':books,
-                       'registration_form':registration_form})
+        return render(request, self.template_name, {'books':books})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
