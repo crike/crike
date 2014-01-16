@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet"> -->
     <style type="text/css">
@@ -66,7 +66,9 @@
           {% if user.is_authenticated %}
           <ul class="nav navbar-nav pull-right">
             <li><a href="{% url "home" %}" data-toggle="tooltip" data-placement="bottom" title="用户信息">
-              <i class="fa fa-user fa-lg"></i> <strong>{{ user.username }}</strong>
+              <i class="fa fa-user fa-lg"></i>
+              {% if user.student %}学生{% endif %}
+              <strong>{{ user.username }}</strong>
             </a></li>
             <li class="divider-vertical"></li>
             <li><a href="{% url "django.contrib.auth.views.password_change" %}" data-toggle="tooltip" data-placement="bottom" title="修改密码">
