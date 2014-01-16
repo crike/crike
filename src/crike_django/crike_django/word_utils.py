@@ -75,12 +75,14 @@ def download_from_youdao(word):
 
 
     else:
-        print(content)
         print('[youdao] '+word.name+' download failed!')
     
 def download_from_iciba(word):
     BASE_URL = 'http://www.iciba.com/'+word.name
     content = get_content_from_url(BASE_URL)
+    index = content.find("net_means_label")
+    if index != -1:
+        content = content[:index]
 
     phonetics_list = re.findall(
             "\[</strong><strong lang=\"EN-US\" xml:lang=\"EN-US\">(.+?)</strong><strong>\]", content, re.M | re.S)
@@ -95,7 +97,9 @@ def download_from_iciba(word):
         mean_span_list = re.findall('<span class=\"label_list\">(.+?)</span>', content, re.M | re.S)
         for mean_span in mean_span_list:
             label_list = re.findall('<label>(.+?)</label>', mean_span, re.M | re.S)
-            labels = pos_list.pop()+' '
+            labels = ''
+            if len(pos_list) > 0:
+                labels = pos_list.pop()+' '
             for label in label_list:
                 labels += label
             mean_list.append(labels)
@@ -107,7 +111,6 @@ def download_from_iciba(word):
             audio_list = re.findall('asplay\(\'(http://res.+?\.mp3)\'\)', content, re.M | re.S)
             download_audio_from_iciba(audio_list[0], word)
     else:
-        print(content)
         print('[iciba] '+word.name+' download failed!')
 
 def get_data_from_req(req):
@@ -190,6 +193,24 @@ def download_thread_single_engine(word, engine):
             process.terminate()
             break
 
+def get_word_from_queue(words,engine):
+    words_lock.acquire()
+    wordname = None
+    for word in words:
+       if len(Word.objects.filter(name=word)) > 0:
+           words.remove(word)
+           continue
+# youdao can't download phrase, iciba can!!!
+       if engine == download_from_youdao and word.find(' ') != -1:
+           continue
+       else:
+           words.remove(word)
+           wordname = word
+           break
+
+    words_lock.release()
+    return wordname
+
 class download_thread_with_engine(threading.Thread):
     def __init__(self, words, engine):
         threading.Thread.__init__(self)
@@ -197,29 +218,13 @@ class download_thread_with_engine(threading.Thread):
         self.engine = engine
 
     def run(self):
-        words_lock.acquire()
-        num = len(self.words)
-        print self.words
+        wordname = get_word_from_queue(self.words,self.engine)
+        while wordname:
+            word = Word.objects.create(name=wordname)
+            print('Start downloading "%s"' % wordname)
+            download_thread_single_engine(word, self.engine)
+            wordname = get_word_from_queue(self.words,self.engine)
 
-        while num > 0:
-            wordname = self.words.pop()
-            words_lock.release()
-            if len(Word.objects.filter(name=wordname)) > 0:
-                words_lock.acquire()
-                num = len(self.words)
-                continue
-
-            if len(Word.objects.filter(name=wordname)) > 0:
-                word = Word.objects.get(name=wordname)[0]
-            else:
-                word = Word.objects.create(name=wordname)
-                print('Start downloading "%s"' % wordname)
-                download_thread_single_engine(word, self.engine)
-
-            words_lock.acquire()
-            num = len(self.words)
-
-        words_lock.release()
 
 def install_proxy():
     if use_proxy == False:
@@ -244,6 +249,8 @@ def handle_uploaded_file(bookname, lessonname, words_file):
 
     lesson = Lesson.objects.create(name=lessonname)
     words = words_file.read().replace('\r','').split('\n')
+    if '' in words:
+        words.remove('')
     tempwords = words[:]
 
     thread1 = download_thread_with_engine(tempwords, download_from_iciba)
