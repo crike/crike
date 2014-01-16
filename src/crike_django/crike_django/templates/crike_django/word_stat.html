@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br/>
+{% for word_stat in word_stats %}
+  <p>{{word_stat.word.name}}:{{ word_stat.mistake_num }}</p>
+{% endfor %}
+
+{% endblock %}

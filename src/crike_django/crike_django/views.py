@@ -112,6 +112,13 @@ def play_audio(request, name):
    #    else:
    #        return HttpResponse(None)
 
+class WordStatView(TemplateView):
+    template_name = 'crike_django/word_stat.html'
+    
+    def get(self, request, *args, **kwargs):
+        word_stats = WordStat.objects.filter(user=request.user)
+        return render(request, self.template_name, {'word_stats':word_stats})
+
 class WordsAdminView(TemplateView):
     template_name = 'crike_django/words_admin.html'
 
