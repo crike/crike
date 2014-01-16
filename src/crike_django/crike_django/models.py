@@ -126,5 +126,7 @@ class TeachingAssistant(Profile):
     pass
 
 
+# Course: CET4, CET6, Grade One, etc.
+# A lesson should be corresponding to several courses.
 class Course(models.Model):
     pass
