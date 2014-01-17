@@ -101,6 +101,14 @@ class Student(Profile):
     grade = models.IntegerField(blank=True, null=True)
 
 
+# Record events like `lesson done`, `book done`, etc.
+class EventRecorder(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    done_lesson = models.ForeignKey(Lesson, blank=True, null=True)
+    done_book = models.ForeignKey(Book, blank=True, null=True)
+    done_exam = models.ForeignKey(Exam, blank=True, null=True)
+
+
 class StatBase(models.Model):
     date = models.DateField(auto_now_add=True)
     time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
