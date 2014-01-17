@@ -170,7 +170,7 @@ def lesson_success(request, book, lesson, tag):
     user = request.user
     # profile = request.user.profile
     lessonobj = get_lessonobj(book, lesson)
-    lesson_result = LessonResult.objects.get_or_create(user=user,
+    lesson_result = LessonStat.objects.get_or_create(user=user,
                                                        lesson=lessonobj)[0]
     setattr(lesson_result, tag, 25)
     lesson_result.save()
@@ -188,10 +188,10 @@ class LessonShowView(TemplateView):
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
 
-        lesson_result = LessonResult.objects.get_or_create(user=request.user,
+        lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                            lesson=lesson_obj)[0]
         pick = lesson_result.pick
-        print 'Show with LessonResult: ', lesson_result
+        print 'Show with LessonStat: ', lesson_result
 
         return render(request, self.template_name,
                {'words': words, 'book': book, 'lesson': lesson,
@@ -347,7 +347,7 @@ class BooksStudyView(TemplateView):
 
         for book in books:
             for lesson in book.lessons:
-                lesson_result = LessonResult.objects.get_or_create(user=request.user,
+                lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                                    lesson=lesson)[0]
                 # XXX this result should never save
                 lesson.result = lesson_result

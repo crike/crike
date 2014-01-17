@@ -108,12 +108,20 @@ class Student(Profile):
     grade = models.IntegerField(blank=True, null=True)
 
 
+# A student would have many stats. Each stat is corresponding to a date.
+class StudentStat(models.Model):
+    student = models.ForeignKey(Student)
+    mistake_time = models.IntegerField(default=0)
+    correct_time = models.IntegerField(default=0)
+    date = models.DateField(auto_now_add=True)
+
+
 class ExamResult(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
 
 
-class LessonResult(models.Model):
+class LessonStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     lesson = models.ForeignKey(Lesson)
     show = models.IntegerField(default=0)
