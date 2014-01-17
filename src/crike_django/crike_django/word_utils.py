@@ -35,11 +35,16 @@ def get_content_from_url(url):
     content = ''
 
     while attempts < 5:
+        url_lock.acquire()
         try:
             content = urlopen(url).read().decode('utf-8', 'ignore')
+            time.sleep(0.5)
+            url_lock.release()
             break
         except Exception as e:
             attempts += 1
+            time.sleep(0.5)
+            url_lock.release()
             print(e)
 
     return content
@@ -117,15 +122,15 @@ def get_data_from_req(req):
     attempts = 0
     binary = ''
     while attempts < 5:
-        download_lock.acquire()
+        data_lock.acquire()
         try:
             binary = urlopen(req)
-            time.sleep(2) # be nice to web host
-            download_lock.release()
+            time.sleep(0.5) # be nice to web host
+            data_lock.release()
             break
         except Exception as e:
-            time.sleep(2) # be nice to web host
-            download_lock.release()
+            time.sleep(0.5) # be nice to web host
+            data_lock.release()
             attempts += 1
             print("Attempts: "+str(attempts))
             print(e)
@@ -197,13 +202,13 @@ def get_word_from_queue(words,engine):
     words_lock.acquire()
     wordname = None
     for word in words:
-       if len(Word.objects.filter(name=word)) > 0:
+        if len(Word.objects.filter(name=word)) > 0:
            words.remove(word)
            continue
 # youdao can't download phrase, iciba can!!!
-       if engine == download_from_youdao and word.find(' ') != -1:
+        if engine == download_from_youdao and word.find(' ') != -1:
            continue
-       else:
+        else:
            words.remove(word)
            wordname = word
            break
@@ -238,7 +243,8 @@ PATH = MEDIA_ROOT + '/audios/'
 use_proxy = False
 http_proxy = "http://localhost:8086"
 words_lock = threading.Lock()
-download_lock = threading.Lock()
+url_lock = threading.Lock()
+data_lock = threading.Lock()
 
 def handle_uploaded_file(bookname, lessonname, words_file):
     if use_proxy == True:
