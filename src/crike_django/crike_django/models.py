@@ -116,7 +116,7 @@ class StudentStat(models.Model):
     date = models.DateField(auto_now_add=True)
 
 
-class ExamResult(models.Model):
+class ExamStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
 
