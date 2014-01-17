@@ -14,16 +14,20 @@ class Word(models.Model):
     name = models.CharField(max_length=50)
     phonetics = models.CharField(max_length=50)
     mean = ListField(models.CharField(max_length=100))
-
-class WordStat(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    word = models.ForeignKey(Word)
-    mistake_num = models.IntegerField(default=0)
-    correct_num = models.IntegerField(default=0)
+    
+    def __unicode__(self):
+        return self.name
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50)
     words = ListField(models.ForeignKey('Word'))
+
+class WordStat(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    word = models.ForeignKey(Word)
+    lesson = models.ForeignKey(Lesson, blank=True, null=True)
+    mistake_num = models.IntegerField(default=0)
+    correct_num = models.IntegerField(default=0)
 
 
 class Book(models.Model):

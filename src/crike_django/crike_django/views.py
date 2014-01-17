@@ -46,6 +46,8 @@ def get_words_from_lesson(book, lesson):
 
 def get_words_from_paginator(paginator, page):
     try:
+        if page is -1:
+            return paginator.page(paginator.num_pages)
         words = paginator.page(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
@@ -205,16 +207,19 @@ class LessonPickView(TemplateView):
         lesson_success(request, book, lesson, 'pick')
 
     def _counter(self, request, book, lesson):
-        page = request.POST.get('page')
+        page = int(request.POST.get('page')) - 1
         num = request.POST.get('num')
         words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
         word = get_words_from_paginator(paginator, page)[0]
 
-        word_stat, ret = WordStat.objects.get_or_create(user=request.user, word=word)
+        word_stat, ret = WordStat.objects.get_or_create(user=request.user,
+                                                        word=word,
+                                                        lesson=get_lessonobj(book, lesson))
         word_stat.correct_num += 1
-        word_stat.mistake_num += int(num)
+        word_stat.mistake_num += (int(num) - 1)
         word_stat.save()
+        print word, request.user, lesson
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
