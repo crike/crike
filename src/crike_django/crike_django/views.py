@@ -335,17 +335,19 @@ class BooksStudyView(TemplateView):
         """
         books = Book.objects.all()
         if len(books) == 0:
-           return render(request, self.template_name,{})
-        book = books[0]
-        lesson_obj = book.lessons[0]
-        if request.user.is_authenticated():
-            lesson_result = LessonResult.objects.get_or_create(user=request.user,
-                                                               lesson=lesson_obj)[0]
-        else:
-            lesson_result = None
+            return render(request, self.template_name,{})
 
-        return render(request, self.template_name, {'books': books,
-                                                    'lesson_result': lesson_result})
+        if not request.user.is_authenticated():
+            return render(request, self.template_name, {'books': books})
+
+        for book in books:
+            for lesson in book.lessons:
+                lesson_result = LessonResult.objects.get_or_create(user=request.user,
+                                                                   lesson=lesson)[0]
+                # XXX this result should never save
+                lesson.result = lesson_result
+
+        return render(request, self.template_name, {'books': books})
 
 
     def post(self, request, *args, **kwargs):
