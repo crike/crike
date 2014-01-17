@@ -22,13 +22,6 @@ class Lesson(models.Model):
     name = models.CharField(max_length=50)
     words = ListField(models.ForeignKey('Word'))
 
-class WordStat(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    word = models.ForeignKey(Word)
-    lesson = models.ForeignKey(Lesson, blank=True, null=True)
-    mistake_num = models.IntegerField(default=0)
-    correct_num = models.IntegerField(default=0)
-
 
 class Book(models.Model):
     name = models.CharField(max_length=50)
@@ -108,6 +101,16 @@ class Student(Profile):
     grade = models.IntegerField(blank=True, null=True)
 
 
+class StatBase(models.Model):
+    date = models.DateField(auto_now_add=True)
+    time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    time_modified = models.DateTimeField(auto_now_add=True)
+    time_deleted = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        return str(self.time_added)
+
+
 # A student would have many stats. Each stat is corresponding to a date.
 class StudentStat(models.Model):
     student = models.ForeignKey(Student)
@@ -119,6 +122,14 @@ class StudentStat(models.Model):
 class ExamStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
+
+
+class WordStat(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    word = models.ForeignKey(Word)
+    lesson = models.ForeignKey(Lesson, blank=True, null=True)
+    mistake_num = models.IntegerField(default=0)
+    correct_num = models.IntegerField(default=0)
 
 
 class LessonStat(models.Model):
