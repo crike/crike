@@ -14,7 +14,6 @@ class Word(models.Model):
     name = models.CharField(max_length=50)
     phonetics = models.CharField(max_length=50)
     mean = ListField(models.CharField(max_length=100))
-    #image = ImageField()
 
 class WordStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)

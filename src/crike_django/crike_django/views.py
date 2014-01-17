@@ -104,13 +104,13 @@ def play_audio(request, name):
     else:
         return HttpResponse(None)
 
-   #def display_image(request, name):
-   #    path = STATIC_ROOT+'/images/'+name
-   #    if os.path.exists(path):
-   #        file = open(path, 'rb')
-   #        return HttpResponse(file.read(), content_type='image/jpeg')
-   #    else:
-   #        return HttpResponse(None)
+def show_image(request, name, num):
+   path = MEDIA_ROOT+'/images/'+name+'/'+num
+   if os.path.exists(path):
+       file = open(path, 'rb')
+       return HttpResponse(file.read(), content_type='image/jpeg')
+   else:
+       return HttpResponse(None)
 
 class WordStatView(TemplateView):
     template_name = 'crike_django/word_stat.html'

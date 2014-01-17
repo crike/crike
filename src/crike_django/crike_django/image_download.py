@@ -120,9 +120,10 @@ def download_thru_googleapi(query, path):
                 continue
  
             # Remove file-system path characters from name.
-            title = image_info['titleNoFormatting'].replace('/', '').replace('\\', '').replace(' ','_').replace('|','')
+            # title = image_info['titleNoFormatting'].replace('/', '').replace('\\', '').replace(' ','_').replace('|','')
+            title = os.listdir(BASE_PATH)
  
-            file = open(os.path.join(BASE_PATH, 'google_%s.jpg') % title, 'w')
+            file = open(os.path.join(BASE_PATH, '%d.jpg') % title, 'w')
             try:
                 Image.open(StringIO(image_r.content)).save(file, 'JPEG')
             except IOError, e:
@@ -161,20 +162,20 @@ def get_dir_len(path):
 
 
 def download_thread_single_engine(wordname, engine):
-    lastlen = get_dir_len('images/'+wordname)
+    lastlen = get_dir_len(os.path.join(IMG_PATH, wordname))
     count = 0
 
-    process = Process(target=engine, args=(wordname, 'images'))
+    process = Process(target=engine, args=(wordname, IMG_PATH))
     while not isinstance(process, Process):
         print("Process init failed")
-        process = Process(target=engine, args=(wordname, 'images'))
+        process = Process(target=engine, args=(wordname, IMG_PATH))
     process.start()
     time.sleep(1)
 
     while process.is_alive():
         print str(process)+ ' ' + wordname + ' ' + str(count)
         time.sleep(10)
-        currentlen = get_dir_len('images/'+wordname)
+        currentlen = get_dir_len(os.path.join(IMG_PATH, wordname))
 
         if currentlen == lastlen:
             count += 1
@@ -203,9 +204,10 @@ class download_thread(threading.Thread):
             words_lock.acquire()
             wordname = self.words.pop()
             words_lock.release()
+            BASE_PATH = os.path.join(IMG_PATH, wordname)
             if not wordname.isalpha():
                 continue
-            elif os.path.exists('images/'+wordname) and len(os.listdir('images/'+wordname)) > pics_per_word:
+            elif os.path.exists(BASE_PATH) and len(os.listdir(BASE_PATH)) > pics_per_word:
                 continue
         
             print('Start downloading "%s"' % wordname)
@@ -256,6 +258,7 @@ def get_file():
 
     return filename
 
+IMG_PATH = 'media/images'
 http_proxy = "http://localhost:8086"
 use_proxy = False
 http_proxys = {'http':http_proxy}
