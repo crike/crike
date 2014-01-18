@@ -38,7 +38,7 @@ document.onkeypress = stopRKey;
           onmouseout ="clearTimeout(timer);" 
           onclick="playSound('/media/audios/{{ option.name }}.mp3');" 
           title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a><br>
-      <input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" style="margin-bottom:10px;">
+      <input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:5px">
       <strong id='feedback{{forloop.counter0}}'>Fill the blank</strong>
     </div>
     {% endfor %}

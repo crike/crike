@@ -43,7 +43,7 @@
 
 <form id='PickForm' action='/study/book/{{book}}/lesson/{{lesson}}/pick' method='post'>
   {% csrf_token %}
-  <input type="submit" onClick='onSubmit(event);' value="submit" style="margin-right:20px;margin-bottom:10px;">
+  <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
   <input name="question" value="{{word.name}}" hidden="true">
   {% if words.has_next %}
   <input name="page" value="{{words.next_page_number}}" hidden="true">
