@@ -7,11 +7,12 @@
 <script language="javascript" type="text/javascript">
   $(document).ready ( function(){
     $('#UpdWordForm').find('input[id="id_name"]').prop('readonly', true);
+    //$('#UpdWordForm').find('input[id^="id_image*"]').prop('onchange', 'imgchanged(this)');
   });
   var timer = null;
   function playSound(mp3) {
-     //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
-     $('#dummy').html("<embed autostart='true' height=0 width=0 src='"+mp3+"'></embed>");
+     $('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+     //$('#dummy').html("<embed autostart='true' height=0 width=0 src='"+mp3+"'></embed>");
   };
   function callback(mp3) {
       playSound(mp3);
@@ -46,6 +47,15 @@
     $('#UpdWordForm').find('input[id="id_phonetics"]').prop('value', phonetics);
     //waste a lot of time on .text(), that will not change the textarea once modified the content, use .val() !!!!
     $('#UpdWordForm').find('textarea[id="id_mean"]').val(mean);
+  };
+  function imgchanged(input,id) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+          $('#img_'+id).attr('src', e.target.result);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
   };
 </script>
 <div class='jumbotron'>
@@ -85,7 +95,8 @@
     {% csrf_token %}
     <label>请选择要删除的单词</label>
     <input type='checkbox' name='delinfos'>从词库中删除
-    <input type='checkbox' name='delaudio'>删除音频文件<br>
+    <input type='checkbox' name='delaudio'>删除音频
+    <input type='checkbox' name='delimage'>删除图片<br>
     <input type='checkbox' onclick="checkall(this);">全选<br>
     {% for word in words %}
     <input type='checkbox' name='delwords' value='{{word.name}}'>{{word.name}}

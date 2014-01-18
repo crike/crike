@@ -13,6 +13,7 @@ from word_utils import *
 from random import sample, randrange, choice
 import string
 import sys
+import shutil
 
 # Utils
 def save_file(srcfile, dst):
@@ -449,6 +450,15 @@ class LessonAdminView(TemplateView):
                 word.phonetics = request.POST['phonetics']
                 if request.FILES.get('audio', None):
                     save_file(request.FILES['audio'], MEDIA_ROOT+"/audios/"+word.name+".mp3")
+                imagepath = MEDIA_ROOT+"/images/"+word.name
+                if not os.path.exists(imagepath):
+                    os.makedirs(imagepath)
+                if request.FILES.get('image0', None):
+                    save_file(request.FILES['image0'], imagepath+"/0.jpg")
+                if request.FILES.get('image1', None):
+                    save_file(request.FILES['image1'], imagepath+"/1.jpg")
+                if request.FILES.get('image2', None):
+                    save_file(request.FILES['image2'], imagepath+"/2.jpg")
                 word.save()
 
             bookobj = Book.objects.filter(name=book)[0]
@@ -472,6 +482,10 @@ class LessonAdminView(TemplateView):
                     audiofile = MEDIA_ROOT+'/audios/'+word+'.mp3'
                     if os.path.exists(audiofile):
                         os.remove(audiofile)
+                if request.POST.get('delimage', None):
+                    imagepath = MEDIA_ROOT+'/images/'+word
+                    if os.path.exists(imagepath):
+                        shutil.rmtree(imagepath)
             bookobj.lessons.append(lessonobj)
             bookobj.save()
 
@@ -488,12 +502,30 @@ class LessonAdminView(TemplateView):
             word = words[0]
             word.mean = request.POST['mean'].replace('\r','').split('\n')
             word.phonetics = request.POST['phonetics']
+            word.save()
             if request.FILES.get('audio', None):
                 audiofile = MEDIA_ROOT+'/audios/'+word.name+'.mp3'
                 if os.path.exists(audiofile):
                     os.remove(audiofile)
-                save_file(request.FILES['audio'], MEDIA_ROOT+"/audios/"+word.name+".mp3")
-            word.save()
+                save_file(request.FILES['audio'], audiofile)
+            imagepath = MEDIA_ROOT+"/images/"+word.name
+            if not os.path.exists(imagepath):
+                os.makedirs(imagepath)
+            if request.FILES.get('image0', None):
+                imagefile = imagepath+'/0.jpg'
+                if os.path.exists(imagefile):
+                    os.remove(imagefile)
+                save_file(request.FILES['image0'], imagefile)
+            if request.FILES.get('image1', None):
+                imagefile = imagepath+'/1.jpg'
+                if os.path.exists(imagefile):
+                    os.remove(imagefile)
+                save_file(request.FILES['image1'], imagefile)
+            if request.FILES.get('image2', None):
+                imagefile = imagepath+'/2.jpg'
+                if os.path.exists(imagefile):
+                    os.remove(imagefile)
+                save_file(request.FILES['image2'], imagefile)
 
 
         return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
