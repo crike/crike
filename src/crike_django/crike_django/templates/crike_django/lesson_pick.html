@@ -22,6 +22,9 @@
       $('input[name="answer"]').prop('checked', false);
     }
   };
+  function onPick(pin) {
+    $(pin).find("input:radio").prop('checked',true);
+  }
 </script>
 
 {% for word in words %}
@@ -53,10 +56,12 @@
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <input type="radio" name="answer" value="{{option.name}}">
+      <div class="pin" style="width:100%" onclick='onPick(this)'>
+        <input type="radio" name="answer" value="{{option.name}}">
         {% for m in option.mean %}
         <li style="font-size:150%">{{m}}</li>
         {% endfor %}
+      </div>
     </div>
     {% endfor %}
   </div>

@@ -108,7 +108,7 @@
       {% for lesson in book.lessons|dictsort:"name" %}
       <div class="col-6 col-sm-6 col-lg-2">  
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
-        <a class="pin"title="修改" style="margin-left:10px;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
+        <a class="pin" title="修改" style="width:100%;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
           {{lesson.name}}
           <code style="color:sienna;float:right;">sum:{{lesson.words|length}}</code>
         </a>

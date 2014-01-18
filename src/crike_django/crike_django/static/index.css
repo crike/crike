@@ -15,7 +15,6 @@ ul {
   list-style : none;
 }
 
-a:hover {box-shadow: 0 4px 8px rgba(34, 25, 25, 0.4)}
 /*input[type=submit] {
   background-color : whitesmoke;
   border-color : silver;
@@ -54,3 +53,5 @@ a:hover {box-shadow: 0 4px 8px rgba(34, 25, 25, 0.4)}
 			color: #333;
 	margin: 0;
 }
+
+.pin:hover {box-shadow: 0 4px 8px rgba(34, 25, 25, 0.4)}
