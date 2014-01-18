@@ -110,28 +110,51 @@
   </form>
 </div>
 <!-- Cycle through entries -->
-<div class='row'>
 {% for word in words %}
-  <div id='{{word.name}}div'class="col-6 col-sm-6 col-lg-3">  
-    <div class="pin">
-      <h2> {{ word.name }}</h2>
-      <p>
-        <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
-        <li style='display:inline'>
-        <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-            onmouseout ="clearTimeout(timer);" 
-            onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-            title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
-        </li>
-      </p>
+<div id='{{word.name}}div'>  
+  <h2> {{ word.name }}</h2>
+  <div class='row'>
+    <div class="col-lg-8">
+      <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
+      <li style='display:inline'>
+      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+          onmouseout ="clearTimeout(timer);" 
+          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+          title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+      </li>
       {% for mean in word.mean %}
-      <p>
-        <li id='id_mean'>{{mean}}</li>
-      </p>
+      <li id='id_mean'>{{mean}}</li>
       {% endfor %}
     </div>
+    <div class="col-lg-4">
+      <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
+          <li data-target="#carousel-example-captions" data-slide-to="1" class=""></li>
+          <li data-target="#carousel-example-captions" data-slide-to="2" class=""></li>
+        </ol>
+        <div class="carousel-inner" style="height:200px">
+          <div class="item active">
+            <!-- data-src="holder.js/900x500/auto/#777:#777" -->
+            <img alt="900x500" src="/media/images/{{word.name}}/0.jpg">
+          </div>
+          <div class="item">
+            <img alt="900x500" src="/media/images/{{word.name}}/1.jpg">
+          </div>
+          <div class="item">
+            <img alt="900x500" src="/media/images/{{word.name}}/2.jpg">
+          </div>
+        </div>
+        <a class="left carousel-control" href="#carousel-example-captions" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-captions" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      </div>
+    </div>
   </div>
-{% endfor %}
 </div>
+{% endfor %}
 <span id="dummy"></span>
 {% endblock %}
