@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <link href="/static/index.css" rel="stylesheet" type="text/css"/>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script language="javascript" type="text/javascript">
-    </script>
-    <div class="jumbotron">
-      <h1>Crike -- 课程选择</h1>
-      <a title="返回" href="/">返回首页</a>
-    </div>
+  <link href="/static/index.css" rel="stylesheet" type="text/css"/>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript">
+  </script>
+  <div class="jumbotron">
+    <h1>Crike -- 课程选择</h1>
+    <a title="返回" href="/">返回首页</a>
+  </div>
 <!-- Cycle through entries -->
-    <div class='row'>
-      {% for book in books %}
-      <h2>
-        {{ book.name }}
-      </h2>
-      {% for lesson in book.lessons|dictsort:"name" %}
-      <div class="col-6 col-sm-6 col-lg-3">  
-        <p>
-          <a title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">{{lesson.name}}</a>
-          <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-          <div>{% include 'crike_django/lesson_result.html' %}</div>
-          <button style="float: right;" onclick="location.href='#'">学习状态</button>
-        </p>
-      </div>
-      {% endfor %}
-      {% endfor %}
-
+  {% for book in books %}
+  <div class='row'>
+    <h2>
+      {{ book.name }}
+    </h2>
+    {% for lesson in book.lessons|dictsort:"name" %}
+    <div class="col-6 col-sm-6 col-lg-3">  
+      <p>
+        <a title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">{{lesson.name}}</a>
+        <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
+        <div>{% include 'crike_django/lesson_result.html' %}</div>
+        <button style="float: right;" onclick="location.href='#'">学习状态</button>
+      </p>
     </div>
-    <span id="dummy"></span>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <span id="dummy"></span>
 {% endblock %}
