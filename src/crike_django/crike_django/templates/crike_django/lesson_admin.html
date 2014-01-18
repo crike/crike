@@ -51,10 +51,10 @@
 <div class='jumbotron'>
   <label>{{book}}</label>
   <h1>{{lesson}}</h1>
-  <button onclick="showForm('RenameForm')">修改名称</button>
-  <button onclick="showForm('AddWordForm')">添加单词</button>
-  <button onclick="showForm('DelWordForm')">删除单词</button>
-  <button onclick="showForm('UpdWordForm')">修改单词</button>
+  <button class="btn btn-primary btn-lg" onclick="showForm('RenameForm' )">修改名称</button>
+  <button class="btn btn-success btn-lg" onclick="showForm('AddWordForm')">添加单词</button>
+  <button class="btn btn-danger btn-lg"  onclick="showForm('DelWordForm')">删除单词</button>
+  <button class="btn btn-info btn-lg"    onclick="showForm('UpdWordForm')">修改单词</button>
   {% if showform == "RenameForm" %}
   <form id="RenameForm" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:block">
   {% else %}

@@ -70,8 +70,8 @@
     </script>
     <div class="jumbotron">
       <h1>Crike -- 课程管理</h1>
-      <button onclick="showUploadform();">添加课程</button>
-      <button onclick="showDeleteform();">删除课程</button>
+      <button class="btn btn-success btn-lg" onclick="showUploadform();">添加课程</button>
+      <button class="btn btn-danger  btn-lg" onclick="showDeleteform();">删除课程</button>
       {% if Showform == "uploadform" %}
       <form id='uploadform' style="display: block" enctype="multipart/form-data" method="post" action="/admin/books/">
       {% else %}
