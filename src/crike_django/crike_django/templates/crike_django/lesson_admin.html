@@ -54,7 +54,7 @@
   <button class="btn btn-primary btn-lg" onclick="showForm('RenameForm' )">修改名称</button>
   <button class="btn btn-success btn-lg" onclick="showForm('AddWordForm')">添加单词</button>
   <button class="btn btn-danger btn-lg"  onclick="showForm('DelWordForm')">删除单词</button>
-  <button class="btn btn-info btn-lg"    onclick="showForm('UpdWordForm')">修改单词</button>
+  <button class="btn btn-warning btn-lg" onclick="showForm('UpdWordForm')">修改单词</button>
   {% if showform == "RenameForm" %}
   <form id="RenameForm" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:block">
   {% else %}
@@ -113,21 +113,23 @@
 <div class='row'>
 {% for word in words %}
   <div id='{{word.name}}div'class="col-6 col-sm-6 col-lg-3">  
-    <h2> {{ word.name }}</h2>
-    <p>
-      <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
-      <li style='display:inline'>
-      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-          onmouseout ="clearTimeout(timer);" 
-          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-          title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
-      </li>
-    </p>
-    {% for mean in word.mean %}
-    <p>
-      <li id='id_mean'>{{mean}}</li>
-    </p>
-    {% endfor %}
+    <div class="pin">
+      <h2> {{ word.name }}</h2>
+      <p>
+        <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
+        <li style='display:inline'>
+        <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+            onmouseout ="clearTimeout(timer);" 
+            onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+            title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+        </li>
+      </p>
+      {% for mean in word.mean %}
+      <p>
+        <li id='id_mean'>{{mean}}</li>
+      </p>
+      {% endfor %}
+    </div>
   </div>
 {% endfor %}
 </div>

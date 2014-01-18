@@ -30,7 +30,6 @@
         var v = cb.value;
         if (cb.checked) { 
           $(cb).clone().attr({id:v+'inform',class:'checkbookinform',style:'display:none'}).prependTo('#deleteform');
-          console.log($('#deleteform').html());
           $("."+v+"lesson").show();
           $("#checkall"+v).show();
           $(".checkbook").prop('disabled', true);
@@ -96,8 +95,8 @@
       </form>
     </div>
 <!-- Cycle through entries -->
-    <div class='row'>
     {% for book in books %}
+    <div class='row'>
       <h2>
         <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
         {{ book.name }}
@@ -107,14 +106,15 @@
         </div>
       </h2>
       {% for lesson in book.lessons|dictsort:"name" %}
-      <p>
+      <div class="col-6 col-sm-6 col-lg-2">  
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
-        <a title="修改" style="margin-left:40px;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>{{lesson.name}}</a>
-        <code style="color:sienna;margin-left:20px;">sum:{{lesson.words|length}}</code>
-      </p>
+        <a class="pin"title="修改" style="margin-left:10px;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
+          {{lesson.name}}
+          <code style="color:sienna;float:right;">sum:{{lesson.words|length}}</code>
+        </a>
+      </div>
       {% endfor %}
-
-    {% endfor %}
     </div>
+    {% endfor %}
     <span id="dummy"></span>
 {% endblock %}
