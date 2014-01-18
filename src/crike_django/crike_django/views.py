@@ -575,10 +575,9 @@ class BooksAdminView(TemplateView):
                 for lessonobj in bookob.lessons:
                     if lessonobj.name == lesson:
                         bookob.lessons.remove(lessonobj)
+            bookob.save()
             if len(bookob.lessons) == 0:
                 bookob.delete()
-            else:
-                bookob.save()
 
         return HttpResponseRedirect("/admin/books/")
 

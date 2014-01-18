@@ -10,6 +10,7 @@ from multiprocessing import Process
 from PIL import Image
 from StringIO import StringIO
 from requests.exceptions import ConnectionError
+from crike_django.settings import MEDIA_ROOT
  
 try: 
     input = raw_input
@@ -231,6 +232,27 @@ class download_thread(threading.Thread):
             wordname = get_word_from_queue(self.words)
 
 
+def download_images(words):
+    thread1 = download_thread(words)
+    thread1.daemon = True
+    thread1.start()
+    print('Image Thread 1 started!')
+
+    thread2 = download_thread(words)
+    thread2.daemon = True
+    thread2.start()
+    print('Image Thread 2 started!')
+
+    thread3 = download_thread(words)
+    thread3.daemon = True
+    thread3.start()
+    print('Image Thread 3 started!')
+            
+    thread4 = download_thread(words)
+    thread4.daemon = True
+    thread4.start()
+    print('Image Thread 4 started!')
+
 def main():
     """For images downloading to filesystem, then manually filter them"""
     if use_proxy == True:
@@ -241,7 +263,6 @@ def main():
     thread1 = download_thread(words)
     thread1.start()
     print('Thread 1 started!')
-    time.sleep(2)
     thread2 = download_thread(words)
     thread2.start()
     print('Thread 2 started!')
@@ -251,7 +272,7 @@ def main():
     thread2.join()
     print('Thread 2 Done!')
 
-            
+
 
 def get_file():
     filename = input("Input a file name: ")
@@ -266,7 +287,7 @@ def get_file():
 
     return filename
 
-IMG_PATH = 'media/images'
+IMG_PATH = MEDIA_ROOT + '/images'
 http_proxy = "http://localhost:8086"
 use_proxy = False
 http_proxys = {'http':http_proxy}

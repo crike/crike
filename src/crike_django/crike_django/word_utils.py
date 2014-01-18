@@ -13,6 +13,7 @@ from multiprocessing import Process
 from crike_django.models import Word, Lesson, Book
 from crike_django.settings import MEDIA_ROOT
 from string import capitalize
+from image_download import download_images
 
 try: 
     input = raw_input
@@ -257,6 +258,10 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     words = words_file.read().replace('\r','').split('\n')
     if '' in words:
         words.remove('')
+
+    wordsforimage = words[:]
+    download_images(wordsforimage)
+
     tempwords = words[:]
 
     thread1 = download_thread_with_engine(tempwords, download_from_iciba)

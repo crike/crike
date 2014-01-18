@@ -28,18 +28,6 @@ class Book(models.Model):
     lessons = ListField(EmbeddedModelField('Lesson'))
 
 
-class CET4Book(Book):
-    pass
-
-
-class CET6Book(Book):
-    pass
-
-
-class WebsterBook(Book):
-    pass
-
-
 class Exam(models.Model):
     pass
 
