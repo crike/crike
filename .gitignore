@@ -1,4 +1,5 @@
 
+*.swp
 nohup.out
 *.jpg
 *.mp3
