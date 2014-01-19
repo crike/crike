@@ -48,7 +48,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计 <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="{% url 'word_stat' %}">学习历史</a></li>
+                <li><a href="{% url 'user_history' %}">学习历史</a></li>
                 <li><a href="{% url 'word_stat' %}">常错词</a></li>
               </ul>
             </li>
@@ -190,5 +190,7 @@
     <![endif]-->
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script> -->
 
+    {% block body_footer %}
+    {% endblock %}
   </body>
 </html>

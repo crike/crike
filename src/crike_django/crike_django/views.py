@@ -115,6 +115,13 @@ def show_image(request, name, num):
    else:
        return HttpResponse(None)
 
+class UserHistoryView(TemplateView):
+    template_name = 'crike_django/user_history.html'
+    
+    def get(self, request, *args, **kwargs):
+        user_history = WordEventRecorder.objects.filter(user=request.user)
+        return render(request, self.template_name, {'user_history':user_history})
+
 class WordStatView(TemplateView):
     template_name = 'crike_django/word_stat.html'
     

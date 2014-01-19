@@ -89,14 +89,6 @@ class Student(Profile):
     grade = models.IntegerField(blank=True, null=True)
 
 
-# Record events like `lesson done`, `book done`, etc.
-class EventRecorder(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    done_lesson = models.ForeignKey(Lesson, blank=True, null=True)
-    done_book = models.ForeignKey(Book, blank=True, null=True)
-    done_exam = models.ForeignKey(Exam, blank=True, null=True)
-
-
 class StatBase(models.Model):
     date = models.DateField(auto_now_add=True)
     time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
@@ -105,6 +97,35 @@ class StatBase(models.Model):
 
     def __unicode__(self):
         return str(self.time_added)
+
+    class Meta:
+        abstract = True
+
+
+class RecorderBase(models.Model):
+    date = models.DateField(auto_now_add=True)
+
+    def __unicode__(self):
+        return str(self.date)
+
+    class Meta:
+        abstract = True
+
+
+# Record events like `someone answered a question about a word`, etc.
+class WordEventRecorder(RecorderBase):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    word = models.ForeignKey(Lesson, blank=True, null=True)
+    mistakes = models.IntegerField(default=0)
+    done_exam = models.ForeignKey(Exam, blank=True, null=True)
+
+
+# Record events like `lesson done`, `book done`, etc.
+class EventRecorder(RecorderBase):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    done_lesson = models.ForeignKey(Lesson, blank=True, null=True)
+    done_book = models.ForeignKey(Book, blank=True, null=True)
+    done_exam = models.ForeignKey(Exam, blank=True, null=True)
 
 
 # A student would have many stats. Each stat is corresponding to a date.
