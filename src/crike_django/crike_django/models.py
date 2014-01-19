@@ -119,7 +119,7 @@ class WordEventRecorder(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True)
     mistake_num = models.IntegerField(default=0)
     correct_num = models.IntegerField(default=0)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 
 # Record events like `lesson done`, `book done`, etc.

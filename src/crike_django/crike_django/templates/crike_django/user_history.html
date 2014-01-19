@@ -55,6 +55,7 @@
 
 {% block body_footer%}
 <script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.min.js"></script>
+<script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.time.min.js"></script>
 	<script type="text/javascript">
 
 	$(function() {
@@ -66,14 +67,14 @@
 		var i = 0;
 		{% for h in user_history %}
 			i++;
-			accuracy.push([i, {{h}}]);
-			liveness.push([i, {{h}}]);
+			accuracy.push(['{{h.date|date:"U"}}', {{h.correct_num}}]);
+			liveness.push(['{{h.date|date:"U"}}', {{h.mistake_num}}]);
 		{% endfor %}
 		//}
 
 		var plot = $.plot("#placeholder", [
-			{ data: sin, label: "正确率(x)"},
-			{ data: cos, label: "活跃度(x)"}
+			{ data: accuracy, label: "正确次数(x)"},
+			{ data: liveness, label: "错误次数(x)"}
 		], {
 			series: {
 				lines: {
@@ -87,10 +88,14 @@
 				hoverable: true,
 				clickable: true
 			},
-			yaxis: {
-				min: -1.2,
-				max: 1.2
+			xaxis: {
+				mode: "time",
+				timeformat: "%m/%d/%h"
 			}
+			//yaxis: {
+				//min: 0,
+				//max: 3
+			//}
 		});
 
 		$("<div id='user_history_tooltip'></div>").css({
