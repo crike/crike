@@ -11,6 +11,7 @@ from PIL import Image
 from StringIO import StringIO
 from requests.exceptions import ConnectionError
 from crike_django.settings import MEDIA_ROOT
+import urllib
  
 try: 
     input = raw_input
@@ -73,22 +74,14 @@ class download_from_bing_thread(threading.Thread):
                 continue
             imgurl = urls[0]
 
+            fname = os.path.join(BASE_PATH, '%s.jpg') % x
             try:
-                image_r = requests.get(imgurl)
-            except ConnectionError, e:
-                print 'could not download %s' % imgurl
-                continue
-
-            file = open(os.path.join(BASE_PATH, '%s.jpg') % x, 'w')
-            try:
-                Image.open(StringIO(image_r.content)).save(file, 'JPEG')
+                urllib.urlretrieve(imgurl, fname)
                 x += 1
             except IOError, e:
                 # Throw away some gifs...blegh.
                 print 'could not save %s' % imgurl
                 continue
-            finally:
-                file.close()
      
             # Be nice to web host and they'll be nice back :)
             time.sleep(1.5)
