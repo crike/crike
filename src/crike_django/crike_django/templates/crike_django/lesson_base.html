@@ -39,20 +39,5 @@
 
 {% block subcontent %}{% endblock %}
 
-<div class="pagination" style="font-size:150%;float:left,bottom;">
-  <span class="step-links">
-    {% if words.has_previous %}
-        <a href="?page={{ words.previous_page_number }}">上一个</a>
-    {% endif %}
-
-    <span class="current">
-        第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
-    </span>
-
-    {% if words.has_next %}
-        <a href="?page={{ words.next_page_number }}">下一个</a>
-    {% endif %}
-  </span>
-</div>
 <span id="dummy"></span>
 {% endblock %}

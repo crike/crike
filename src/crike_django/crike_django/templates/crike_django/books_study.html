@@ -17,7 +17,7 @@
     </h2>
     {% for lesson in book.lessons|dictsort:"name" %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <a class="pin vertical-shadow" style="width:100%" title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">
+      <a class="pin" style="width:100%" title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">
         {{lesson.name}}
         <code style="color:sienna;margin-left:10px;">sum:{{lesson.words|length}}</code>
         <div>{% include 'crike_django/lesson_result.html' %}</div>

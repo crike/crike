@@ -44,22 +44,26 @@
     {% endif %}
     <input name="question" value="{{word.name}}" hidden="true">
     <h1>
-      <input type="text" style="border: none; border-bottom: 1px solid black;" size="15" autocomplete="off" name='answer'><br>
-      {% for opt in options %}
-      <strong id='options'>{{opt}}</strong>
-      {% endfor %}
+      <input type="text" style="border: none; border-bottom: 1px solid black;" size="15" autocomplete="off" name='answer'>
+    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
     </h1>
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
   </form>
 </div>
 
 <div class='row'>
-  <div class="col-md-4 col-lg-8">
-  {% for m in word.mean %}
-  <li style="font-size:150%">{{m}}</li>
-  {% endfor %}
+  <div class="col-md-6 col-lg-6">
+    <div class='pin' style="width:100%">
+    {% for m in word.mean %}
+    <li style="font-size:150%">{{m}}</li>
+    {% endfor %}
+    </div>
   </div>
-  <div class="col-md-4 col-lg-4">
+  <div class="col-md-6 col-lg-6">
+    <div class='pin' style="width:100%">
     <!-- Carousel
     ================================================== -->
       <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
@@ -87,6 +91,7 @@
           <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
       </div>
+    </div>
   </div>
 </div>
 
