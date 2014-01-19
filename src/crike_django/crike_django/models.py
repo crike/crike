@@ -113,11 +113,13 @@ class RecorderBase(models.Model):
 
 
 # Record events like `someone answered a question about a word`, etc.
-class WordEventRecorder(RecorderBase):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    word = models.ForeignKey(Lesson, blank=True, null=True)
-    mistakes = models.IntegerField(default=0)
-    done_exam = models.ForeignKey(Exam, blank=True, null=True)
+class WordEventRecorder(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='word_event_user')
+    word = models.ForeignKey(Lesson, blank=True, null=True, related_name='word_event_word')
+    lesson = models.ForeignKey(Lesson, blank=True, null=True)
+    mistake_num = models.IntegerField(default=0)
+    correct_num = models.IntegerField(default=0)
+    date = models.DateField(auto_now_add=True)
 
 
 # Record events like `lesson done`, `book done`, etc.
@@ -131,8 +133,8 @@ class EventRecorder(RecorderBase):
 # A student would have many stats. Each stat is corresponding to a date.
 class StudentStat(models.Model):
     student = models.ForeignKey(Student)
-    mistake_time = models.IntegerField(default=0)
-    correct_time = models.IntegerField(default=0)
+    mistake_num = models.IntegerField(default=0)
+    correct_num = models.IntegerField(default=0)
     date = models.DateField(auto_now_add=True)
 
 
