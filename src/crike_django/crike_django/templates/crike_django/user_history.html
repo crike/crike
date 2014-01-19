@@ -59,17 +59,21 @@
 
 	$(function() {
 
-		var sin = [],
-			cos = [];
+		var accuracy = [],
+			liveness = [];
 
-		for (var i = 0; i < 14; i += 0.5) {
-			sin.push([i, Math.sin(i)]);
-			cos.push([i, Math.cos(i)]);
-		}
+		//for (var i = 0; i < 14; i += 0.5) {
+		var i = 0;
+		{% for h in user_history %}
+			i++;
+			accuracy.push([i, {{h}}]);
+			liveness.push([i, {{h}}]);
+		{% endfor %}
+		//}
 
 		var plot = $.plot("#placeholder", [
-			{ data: sin, label: "sin(x)"},
-			{ data: cos, label: "cos(x)"}
+			{ data: sin, label: "正确率(x)"},
+			{ data: cos, label: "活跃度(x)"}
 		], {
 			series: {
 				lines: {
