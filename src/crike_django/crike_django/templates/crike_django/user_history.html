@@ -64,11 +64,13 @@
 			liveness = [];
 
 		//for (var i = 0; i < 14; i += 0.5) {
+			//accuracy.push(['{{h.date|date:"U"}}', {{h.correct_num}}]);
+			//liveness.push(['{{h.date|date:"U"}}', {{h.mistake_num}}]);
 		var i = 0;
 		{% for h in user_history %}
-			i++;
-			accuracy.push(['{{h.date|date:"U"}}', {{h.correct_num}}]);
-			liveness.push(['{{h.date|date:"U"}}', {{h.mistake_num}}]);
+		i++;
+		accuracy.push([i, {{h.correct_num}}]);
+		liveness.push([i, {{h.mistake_num}}]);
 		{% endfor %}
 		//}
 
@@ -90,7 +92,13 @@
 			},
 			xaxis: {
 				mode: "time",
-				timeformat: "%m/%d/%h"
+				timeformat: "%m/%d/%h",
+				ticks: [
+				        //'{{h.date|date:"U"}}'
+				        {% for h in user_history %}
+				        [{{forloop.counter}}, '{{h.word}}'],
+				        {% endfor %}
+				       ]
 			}
 			//yaxis: {
 				//min: 0,
