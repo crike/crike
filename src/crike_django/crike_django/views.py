@@ -228,12 +228,14 @@ class LessonPickView(TemplateView):
         word_stat.mistake_num += (int(num) - 1)
         word_stat.save()
 
+        '''
         wer = WordEventRecorder.objects.create(user=request.user,
                                                word=word,
                                                lesson=get_lessonobj(book,lesson),
                                                correct_num=1,
                                                mistake_num=int(num))
         wer.save()
+        '''
 
         print word, request.user, lesson
 

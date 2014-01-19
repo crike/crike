@@ -115,7 +115,7 @@ class RecorderBase(models.Model):
 # Record events like `someone answered a question about a word`, etc.
 class WordEventRecorder(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='word_event_user')
-    word = models.ForeignKey(Lesson, blank=True, null=True, related_name='word_event_word')
+    word = models.ForeignKey(Word, blank=True, null=True, related_name='word_event_word')
     lesson = models.ForeignKey(Lesson, blank=True, null=True)
     mistake_num = models.IntegerField(default=0)
     correct_num = models.IntegerField(default=0)
