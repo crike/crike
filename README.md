@@ -16,6 +16,7 @@ Todo
 * word answered recording for users and lessons.
 * user history, how many lessons have been done and show the next step users should do.
 * use canvas / jquery flot to draw statistic pictures
+* use bookblock to flip the words
 * release
 
 需求
