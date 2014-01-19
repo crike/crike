@@ -2,6 +2,22 @@
 {% load staticfiles %}
 
 {% block subcontent %}
+<script>
+  var gotimer = null;
+  $(document).ready(function (){
+    $('.step-links').hide()
+  });
+  function readyGo() {
+    $('#notice').hide()
+    $('.step-links').show()
+  };
+  function delayGo() {
+      clearTimeout(gotimer);
+      var cb = "readyGo()";
+      gotimer = setTimeout(cb, 500);
+  };
+</script>
+<label id="notice" style="font-size:200%;float:right;margin-top:5%">所有内容都学完才可以走哦</label>
 <div class='jumbotron'>
   <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
     <input type="submit" class="btn btn-primary btn-lg" value="选择">
@@ -14,9 +30,9 @@
   </form>
   {% for word in words %}
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
-    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-        onmouseout ="clearTimeout(timer);" 
-        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
+        onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
+        onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
   </h1>
   {% endfor %}
