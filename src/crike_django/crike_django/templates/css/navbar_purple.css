@@ -5,5 +5,6 @@
 .navbar-primary .navbar .nav li > a .caret, .tnav .navbar .nav li > a:hover .caret {border-top-color: #fff; border-bottom-color: #fff;}
 .navbar-primary .navbar .nav > li.dropdown.open.active > a:hover,
 .navbar-primary .navbar .nav > li.dropdown.open > a {color: #fff; background-color: #fff; color: #89b908; border-color: #000;}
-.navbar-primary .navbar .nav > li.dropdown.open.active > a:hover .caret, .tnav .navbar    .nav > li.dropdown.open > a .caret {border-top-color: #fff;}
+.navbar-primary .navbar .nav > li.dropdown.open.active > a:hover .caret, .tnav .navbar    .nav > li.dropdown.open > a .caret {border-top-color: #3a485d;}
+.navbar-primary .navbar .nav > li.dropdown.open a.dropdown-toggle .caret {border-top-color: #3a485d;}
 .navbar-primary .navbar .navbar-brand {color:#fff;}
