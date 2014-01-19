@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
@@ -92,7 +94,7 @@
     </div><!-- /.navbar-xs -->
     </div><!-- /.navbar-primary -->
 
-    <div class="container_header" style="margin:32px 0;">
+    <div class="container_header" style="margin:52px 0;">
     {% block container_header %}
     {% endblock %}
     </div>
@@ -189,6 +191,10 @@
     <![endif]-->
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script> -->
 
+<!--[if lt IE 9]>
+  <script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+  <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->  
     {% block body_footer %}
     {% endblock %}
   </body>
