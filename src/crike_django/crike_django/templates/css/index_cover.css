@@ -13,3 +13,39 @@ color: #fff!important;
 .index_cover h1 {
 	text-shadow: 12px 9px 0 #882F78,9px 8px 0 rgba(0,0,0,0.15);
 }
+
+.nextdoor-bottom {
+background: #2c3747;
+font-family: 'Proxima Nova',sans-serif;
+font-size: 15px;
+position: absolute;
+bottom: 0;
+text-transform: uppercase;
+width: 100%;
+}
+
+.nextdoor-bottom .nextdoor-row {
+min-width: 1000px;
+max-width: 1200px;
+position: relative;
+margin: 0 auto;
+}
+
+.nextdoor-bottom .nextdoor-row a.nextdoor-item1 {
+width: 21.6%;
+}
+
+.nextdoor-bottom .nextdoor-row a {
+padding: 30px 0;
+display: inline-block;
+float: left;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+text-align: center;
+text-decoration: none;
+}
+
+#homepage-signup-callout-container .nextdoor-bottom a {
+color: #fff!important;
+}

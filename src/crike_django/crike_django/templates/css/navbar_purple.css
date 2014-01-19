@@ -1,6 +1,5 @@
-.navbar-primary .navbar { background:#9f58b5; border-bottom:none; }
-.navbar-primary .navbar .nav > li > a {color: #501762;}
-.navbar-primary .navbar .nav > li > a {color: #501762;}
+.navbar-primary .navbar { background: #2c3747; border-bottom:none; }
+.navbar-primary .navbar .nav > li > a {color: #ffffff;}
 .navbar-primary .navbar .nav > li > a:hover {color: #fff; background-color: #8e49a3;}
 .navbar-primary .navbar .nav .active > a,.navbar .nav .active > a:hover {color:    #fff;background-color: #501762;}
 .navbar-primary .navbar .nav li > a .caret, .tnav .navbar .nav li > a:hover .caret {border-top-color: #fff;border-bottom-color: #fff;}

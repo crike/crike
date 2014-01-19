@@ -3,7 +3,8 @@
 {% load staticfiles %}
 
 {% block header %}
-    <script src="http://cdn.bootcss.com/holder/2.0/holder.js"></script>
+<style type="text/css">{% include "css/index_cover.css" %}</style>
+<script src="http://cdn.bootcss.com/holder/2.0/holder.js"></script>
 <script language="javascript" type="text/javascript">
   var timer = null;
   function playSound(mp3) {
@@ -33,7 +34,31 @@
     <p>{% trans "好好学英语，不然以后就只能来做网页了" %}</p>
     <p><a class="btn btn-primary btn-lg" role="button" href="">Learn more</a></p>
     </div>
+
   </div>
+
+      <div class="nextdoor-bottom">
+        <div class="nextdoor-row">
+            <a class="nextdoor-item1" href="#search-khan-academy">
+                Search Khan Academy
+            </a>
+            <a class="nextdoor-item2" href="#library-section">
+                Browse our library
+            </a>
+            <a class="nextdoor-item3" href="#mission-statement">
+                What's Khan Academy all about?
+            </a>
+            <a class="nextdoor-item4" href="#stories-section">
+                What our users are saying
+            </a>
+        </div>
+      </div>
+
+
+{% endblock %}
+
+{% block content %}
+
 
     <!-- Carousel
     ================================================== -->
