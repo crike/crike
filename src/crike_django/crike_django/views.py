@@ -108,12 +108,12 @@ def play_audio(request, name):
         return HttpResponse(None)
 
 def show_image(request, name, num):
-   path = MEDIA_ROOT+'/images/'+name+'/'+num
-   if os.path.exists(path):
-       file = open(path, 'rb')
-       return HttpResponse(file.read(), content_type='image/jpeg')
-   else:
-       return HttpResponse(None)
+    path = MEDIA_ROOT+'/images/'+name+'/'+num
+    if os.path.exists(path):
+        file = open(path, 'rb')
+        return HttpResponse(file.read(), content_type='image/jpeg')
+    else:
+        return HttpResponse(None)
 
 class UserHistoryView(TemplateView):
     template_name = 'crike_django/user_history.html'
