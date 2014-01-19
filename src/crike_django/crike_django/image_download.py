@@ -163,8 +163,6 @@ def download_controller(wordname, engine):
         print str(thread)+ ' ' + wordname + ' ' + str(count)
         time.sleep(10)
         currentlen = get_dir_len(os.path.join(IMG_PATH, wordname))
-        if currentlen >= pics_per_word:
-            break
 
         if currentlen == lastlen:
             count += 1
