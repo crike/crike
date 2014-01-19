@@ -45,10 +45,11 @@
     <input name="question" value="{{word.name}}" hidden="true">
     <h1>
       <input type="text" style="border: none; border-bottom: 1px solid black;" size="15" autocomplete="off" name='answer'>
-    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-        onmouseout ="clearTimeout(timer);" 
-        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+          onmouseout ="clearTimeout(timer);" 
+          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+          title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a><br>
+        <strong>[{{word.phonetics}}]</strong>
     </h1>
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
   </form>
