@@ -1,6 +1,11 @@
 #coding:utf-8
 
 from __future__ import division
+from random import sample, randrange, choice
+import string
+import sys
+import shutil
+
 
 from django.views.generic import *
 from django.http import *
@@ -8,15 +13,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 
+
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
 from crike_django.forms import *
 from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
 from word_utils import *
-from random import sample, randrange, choice
-import string
-import sys
-import shutil
+
 
 # Utils
 def save_file(srcfile, dst):
