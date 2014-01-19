@@ -21,18 +21,18 @@
   };
 </script>
 
-<div class="pagination" style="font-size:150%;float:right;margin-right:20px">
+<div class="pagination" style="font-size:300%;float:right;margin-top:5%;margin-right:10px">
   <span class="step-links">
     {% if words.has_previous %}
-        <a href="?page={{ words.previous_page_number }}">上一个</a>
+    <a href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
     {% endif %}
 
     <span class="current">
-        第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
+        {{ words.number }}/{{ words.paginator.num_pages }}
     </span>
 
     {% if words.has_next %}
-        <a href="?page={{ words.next_page_number }}">下一个</a>
+    <a href="?page={{ words.next_page_number }}"><i class="fa fa-arrow-circle-right"></i></a>
     {% endif %}
   </span>
 </div>
