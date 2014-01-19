@@ -3,6 +3,15 @@
 
 {% block subcontent %}
 <div class='jumbotron'>
+  <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
+    <input type="submit" class="btn btn-primary btn-lg" value="选释义">
+  </form>
+  <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/fill">
+    <input type="submit" class="btn btn-danger btn-lg" value="填单词">
+  </form>
+  <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/dictation">
+    <input type="submit" class="btn btn-success btn-lg" value="听写">
+  </form>
   {% for word in words %}
   <h1><strong style='font-size:150%'>{{word.name|capfirst}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
@@ -10,22 +19,13 @@
         onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
   </h1>
-  <form style="float: right; margin-left:10px; font-size: 20px;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/dictation">
-    <input type="submit" class="btn btn-success btn-lg" value="听写">
-  </form>
-  <form style="float: right; margin-left:10px; font-size: 20px;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/fill">
-    <input type="submit" class="btn btn-danger btn-lg" value="填单词">
-  </form>
-  <form style="float: right; margin-left:10px; font-size:20px;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
-    <input type="submit" class="btn btn-primary btn-lg" value="选释义">
-  </form>
   {% endfor %}
 </div>
 <div class='row'>
   {% for word in words %}
   <div class="col-md-8 col-lg-8">
     {% for mean in word.mean %}
-    <li style='margin-left:50px;font-size:200%'>{{mean}}</li>
+    <li style='font-size:200%'>{{mean}}</li>
     {% endfor %}
   </div>
   <div class="col-md-4 col-lg-4">
