@@ -9,3 +9,7 @@ border-bottom: 1px solid #ddd;
 position: relative;
 color: #fff!important;
 }
+
+.index_cover h1 {
+	text-shadow: 12px 9px 0 #882F78,9px 8px 0 rgba(0,0,0,0.15);
+}
