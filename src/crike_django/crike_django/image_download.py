@@ -3,13 +3,9 @@ import os
 import time
 import json
 import re
-import requests
 import urllib2
 import threading
 from multiprocessing import Process
-from PIL import Image
-from StringIO import StringIO
-from requests.exceptions import ConnectionError
 from crike_django.settings import MEDIA_ROOT
 import urllib
  
@@ -108,34 +104,23 @@ class download_from_google_thread(threading.Thread):
             if len(os.listdir(BASE_PATH)) >= pics_per_word:
                 break
 
-            r = requests.get(BASE_URL % start, verify=False)
-            for image_info in json.loads(r.text)['responseData']['results']:
+            content = get_content_from_url(BASE_URL % start)
+            for image_info in json.loads(content.text)['responseData']['results']:
                 urllist =  re.findall('http.+\.[j|J][p|P][g|G]', image_info['unescapedUrl'])
                 if len(urllist) == 0:
                     continue
                 url = urllist[0]
-                try:
-                    image_r = requests.get(url)
-                    if image_r.content == 0:
-                        print 'could not download %s' % url
-                        continue
-                except ConnectionError, e:
-                    print 'could not download %s' % url
-                    continue
-     
                 # Remove file-system path characters from name.
                 # title = image_info['titleNoFormatting'].replace('/', '').replace('\\', '').replace(' ','_').replace('|','')
                 title = os.listdir(BASE_PATH)
      
-                file = open(os.path.join(BASE_PATH, '%s.jpg') % title, 'w')
+                fname = os.path.join(BASE_PATH, '%s.jpg') % title
                 try:
-                    Image.open(StringIO(image_r.content)).save(file, 'JPEG')
+                    urllib.urlretrieve(url, fname)
                 except IOError, e:
                     # Throw away some gifs...blegh.
                     print 'could not save %s' % url
                     continue
-                finally:
-                    file.close()
      
             print start
             start += 4 # 4 images per page.
@@ -178,6 +163,8 @@ def download_controller(wordname, engine):
         print str(thread)+ ' ' + wordname + ' ' + str(count)
         time.sleep(10)
         currentlen = get_dir_len(os.path.join(IMG_PATH, wordname))
+        if currentlen >= pics_per_word:
+            break
 
         if currentlen == lastlen:
             count += 1
