@@ -119,7 +119,8 @@
 					var x = item.datapoint[0].toFixed(2),
 						y = item.datapoint[1].toFixed(2);
 
-					$("#user_history_tooltip").html(item.series.label + " of " + x + " = " + y)
+					var d = new Date(x * 1000);
+					$("#user_history_tooltip").html(item.series.label + " of " + d + " = " + y)
 						.css({top: item.pageY+5, left: item.pageX+5})
 						.fadeIn(200);
 				} else {
