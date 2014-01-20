@@ -51,11 +51,23 @@
 	      </div>
 	    </div>
 
+<hr/>
+<input type="text" value="75" class="dial" data-width="150" data-fgColor="#66CC66"
+ data-skin="tron" data-thickness=".1" data-angleOffset="180">
+
 {% endblock %}
 
 {% block body_footer%}
+<script src="http://cdn.jsdelivr.net/jquery.knob/1.2.2/jquery.knob.min.js"></script>
 <script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.min.js"></script>
 <script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.time.min.js"></script>
+
+<script>
+$(function() {
+    $(".dial").knob({readOnly:true});
+});
+</script>
+
 	<script type="text/javascript">
 
 	$(function() {
