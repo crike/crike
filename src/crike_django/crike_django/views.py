@@ -294,14 +294,16 @@ class LessonFillView(TemplateView):
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
 
+        """
         options = sys.modules['__builtin__'].list(words[0].name)
         options = sample(options, len(options))
         options.insert(randrange(len(options)+1), choice(string.letters).lower())
         options.insert(randrange(len(options)+1), choice(string.letters).lower())
         options.insert(randrange(len(options)+1), choice(string.letters).lower())
+        """
 
         return render(request, self.template_name,
-                {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+                {'words':words, 'book':book, 'lesson':lesson})
 
     def post(self, request, book, lesson):
         page = request.POST.get('page')
