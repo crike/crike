@@ -39,12 +39,12 @@ def get_content_from_url(url):
         url_lock.acquire()
         try:
             content = urlopen(url).read().decode('utf-8', 'ignore')
-            time.sleep(0.5)
+            time.sleep(1)
             url_lock.release()
             break
         except Exception as e:
             attempts += 1
-            time.sleep(0.5)
+            time.sleep(1)
             url_lock.release()
             print(e)
 
@@ -117,6 +117,7 @@ def download_from_iciba(word):
             audio_list = re.findall('asplay\(\'(http://res.+?\.mp3)\'\)', content, re.M | re.S)
             download_audio_from_iciba(audio_list[0], word)
     else:
+        print content
         print('[iciba] '+word.name+' download failed!')
 
 def get_data_from_req(req):
@@ -176,10 +177,16 @@ def download_audio_from_iciba(url, word):
         print(e)
 
 def download_word(wordname):
-    word = Word.objects.create(name=wordname)
+    words = Word.objects.filter(name=wordname)
+    word = None
+    if len(words) > 0:
+        word = words[0]
+    else:
+        word = Word.objects.create(name=wordname)
+    print('Start downloading "%s"' % wordname)
     download_from_iciba(word)
     #download_audio_from_google(word)
-    return word
+    word.save()
 
 def download_thread_single_engine(word, engine):
     count = 0

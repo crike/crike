@@ -48,6 +48,7 @@ urlpatterns = patterns('',
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
     url(r'^media/audios/(?P<name>.*?)/?$', views.play_audio),
     url(r'^media/images/(?P<name>.*?)/(?P<num>.*?)/?$', views.show_image),
+    url(r'^admin/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/word/(?P<word>.*?)/?$', views.retrieve_word),
     url(r'^admin/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/?$', LessonAdminView.as_view()),
 
 # Study process for students

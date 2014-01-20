@@ -5,6 +5,7 @@ from random import sample, randrange, choice
 import string
 import sys
 import shutil
+import os
 
 
 from django.views.generic import *
@@ -18,7 +19,8 @@ from django.http import HttpResponseRedirect
 from crike_django.models import *
 from crike_django.forms import *
 from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
-from word_utils import *
+from word_utils import download_word, handle_uploaded_file
+from image_download import download_images_single
 
 
 # Utils
@@ -120,6 +122,14 @@ def show_image(request, name, num):
         return HttpResponse(file.read(), content_type='image/jpeg')
     else:
         return HttpResponse(None)
+
+def retrieve_word(request, book, lesson, word):
+    path = MEDIA_ROOT+'/images/'+word
+    download_word(word)
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    download_images_single(word)
+    return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
 
 class UserHistoryView(TemplateView):
     template_name = 'crike_django/user_history.html'

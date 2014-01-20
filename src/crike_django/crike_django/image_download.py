@@ -209,6 +209,8 @@ class download_thread(threading.Thread):
             """
             wordname = get_word_from_queue(self.words)
 
+def download_images_single(word):
+    download_controller(word, download_from_bing_thread)
 
 def download_images(words):
     thread1 = download_thread(words)

@@ -123,7 +123,11 @@
 <!-- Cycle through entries -->
 {% for word in words %}
 <div id='{{word.name}}div'>  
-  <h2> {{ word.name }}</h2>
+  <h2> {{ word.name }} 
+    <button class="btn btn-success" style="float:right" onclick="$(this).hide();location.href='/admin/book/{{book}}/lesson/{{lesson}}/word/{{word.name}}'">
+      重新获取
+    </button>
+  </h2>
   <div class='row'>
     <div class="col-lg-8">
       <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
