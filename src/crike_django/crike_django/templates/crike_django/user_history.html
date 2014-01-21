@@ -52,8 +52,33 @@
 	    </div>
 
 <hr/>
-<input type="text" value="75" class="dial" data-width="150" data-fgColor="#66CC66"
- data-skin="tron" data-thickness=".1" data-angleOffset="180">
+
+<div class="row">
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail" style="text-align:center;">
+
+      <div class="caption">
+        <h3>Henry的故事</h3>
+        <input type="text" value="75" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
+        <p>last progress</p>
+        <p>11天前</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="thumbnail" style="text-align:center;">
+
+      <div class="caption">
+        <h3>Hanmeimei</h3>
+        <input type="text" value="33" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
+        <p>last progress</p>
+        <p>2天前</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 {% endblock %}
 
@@ -64,7 +89,13 @@
 
 <script>
 $(function() {
-    $(".dial").knob({readOnly:true});
+    $(".dial").knob({
+    	readOnly:true,
+        'draw': function () {
+        	$(this.i).val(this.cv + '%')
+        }
+    });
+    $(".knob").knob();
 });
 </script>
 
