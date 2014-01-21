@@ -110,7 +110,7 @@
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
         <a class="pin" title="修改" style="width:100%;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
           {{lesson.name}}
-          <code style="color:sienna;float:right;">sum:{{lesson.words|length}}</code>
+          <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
         </a>
       </div>
       {% endfor %}
