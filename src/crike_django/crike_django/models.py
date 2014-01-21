@@ -150,6 +150,7 @@ class WordStat(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True)
     mistake_num = models.IntegerField(default=0)
     correct_num = models.IntegerField(default=0)
+    tag = models.CharField(max_length=140, blank=True, null=True)
 
 
 class LessonStat(models.Model):

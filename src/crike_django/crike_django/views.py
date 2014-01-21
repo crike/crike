@@ -212,7 +212,8 @@ def word_event_recorder(request, book, lesson, tag):
 
     word_stat, ret = WordStat.objects.get_or_create(user=request.user,
                                                     word=word,
-                                                    lesson=get_lessonobj(book, lesson))
+                                                    lesson=get_lessonobj(book, lesson),
+                                                    tag=tag)
     word_stat.correct_num += 1
     word_stat.mistake_num += (int(num) - 1)
     word_stat.save()
@@ -231,6 +232,12 @@ def word_event_recorder(request, book, lesson, tag):
 # for learning
 class LessonShowView(TemplateView):
     template_name = 'crike_django/lesson_show.html'
+
+    def _success(self, request, book, lesson):
+        lesson_success(request, book, lesson, 'show')
+
+    def _record(self, request, book, lesson):
+        word_event_recorder(request, book, lesson, 'show')
 
     def get(self, request, book, lesson):
         lesson_obj = get_lessonobj(book, lesson)
@@ -308,6 +315,9 @@ class LessonFillView(TemplateView):
     def _success(self, request, book, lesson):
         lesson_success(request, book, lesson, 'fill')
 
+    def _record(self, request, book, lesson):
+        word_event_recorder(request, book, lesson, 'fill')
+
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
         paginator = Paginator(words_list, 1)
@@ -342,6 +352,9 @@ class LessonDictationView(TemplateView):
 
     def _success(self, request, book, lesson):
         lesson_success(request, book, lesson, 'dictation')
+
+    def _record(self, request, book, lesson):
+        word_event_recorder(request, book, lesson, 'dictation')
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
