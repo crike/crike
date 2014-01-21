@@ -203,6 +203,31 @@ def lesson_success(request, book, lesson, tag):
     print "user %s complete lesson %s part %s %d" % (user, lesson, tag, 25)
 
 
+def word_event_recorder(request, book, lesson, tag):
+    page = int(request.POST.get('page')) - 1
+    num = request.POST.get('num')
+    words_list = get_words_from_lesson(book, lesson)
+    paginator = Paginator(words_list, 1)
+    word = get_words_from_paginator(paginator, page)[0]
+
+    word_stat, ret = WordStat.objects.get_or_create(user=request.user,
+                                                    word=word,
+                                                    lesson=get_lessonobj(book, lesson))
+    word_stat.correct_num += 1
+    word_stat.mistake_num += (int(num) - 1)
+    word_stat.save()
+
+    wer = WordEventRecorder.objects.create(user=request.user,
+                                           word=word,
+                                           lesson=get_lessonobj(book,lesson),
+                                           correct_num=1,
+                                           mistake_num=int(num),
+                                           tag=tag)
+    wer.save()
+
+    print word, request.user, lesson
+
+
 # for learning
 class LessonShowView(TemplateView):
     template_name = 'crike_django/lesson_show.html'
@@ -239,30 +264,8 @@ class LessonPickView(TemplateView):
     def _success(self, request, book, lesson):
         lesson_success(request, book, lesson, 'pick')
 
-    def _counter(self, request, book, lesson):
-        page = int(request.POST.get('page')) - 1
-        num = request.POST.get('num')
-        words_list = get_words_from_lesson(book, lesson)
-        paginator = Paginator(words_list, 1)
-        word = get_words_from_paginator(paginator, page)[0]
-
-        word_stat, ret = WordStat.objects.get_or_create(user=request.user,
-                                                        word=word,
-                                                        lesson=get_lessonobj(book, lesson))
-        word_stat.correct_num += 1
-        word_stat.mistake_num += (int(num) - 1)
-        word_stat.save()
-
-
-        wer = WordEventRecorder.objects.create(user=request.user,
-                                               word=word,
-                                               lesson=get_lessonobj(book,lesson),
-                                               correct_num=1,
-                                               mistake_num=int(num))
-        wer.save()
-
-
-        print word, request.user, lesson
+    def _record(self, request, book, lesson):
+        word_event_recorder(request, book, lesson, 'pick')
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
@@ -289,7 +292,7 @@ class LessonPickView(TemplateView):
         print num, page
         print "nnnnnnnnnnnnnnnn"
 
-        self._counter(request, book, lesson)
+        self._record(request, book, lesson)
 
         # This case means success of Choice Questions.
         if page == '0':

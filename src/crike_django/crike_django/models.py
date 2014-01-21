@@ -120,6 +120,7 @@ class WordEventRecorder(models.Model):
     mistake_num = models.IntegerField(default=0)
     correct_num = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
+    tag = models.CharField(max_length=140, blank=True, null=True)
 
 
 # Record events like `lesson done`, `book done`, etc.
