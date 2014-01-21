@@ -6,7 +6,6 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful -- WIP
-* 至少听一遍发音才能进入下一个单词学习，有提示信息
 * 支持方向键翻页
 * page 导航颜色，风格改进（箭头），放在显眼的位置（单词下方）
 * pad上支持滑动翻页
@@ -19,7 +18,6 @@ Todo
 * 每次登陆提示先学习常错的单词，每个常错词只重新学习两次，但不从错词单中删除
 * 加入积分系统，主要针对考试，教师可以消除积分，积分换奖品提示等
 * 考试和学习结束时根据成绩播放掌声或成功画面
-* enable single word info audio image download and show
 * exam
 * statistics
 * redis
