@@ -1,4 +1,4 @@
-.index_cover {
+.index_container {
 background-size: cover;
 background-image: url('https://www.kastatic.org/images/homepage-bg-leaves.png');
 background-repeat: no-repeat;
@@ -8,10 +8,20 @@ max-width: inherit;
 border-bottom: 1px solid #ddd;
 position: relative;
 color: #fff!important;
+max-height: 635px;
 }
 
-.index_cover h1 {
-	text-shadow: 12px 9px 0 #882F78,9px 8px 0 rgba(0,0,0,0.15);
+#index_cover {
+margin: 0;
+padding: 30px;
+border: 0;
+font: inherit;
+vertical-align: baseline;
+}
+
+#index_cover h1 {
+font-size: 48px;
+text-shadow: 12px 9px 0 #882F78,9px 8px 0 rgba(0,0,0,0.15);
 }
 
 .nextdoor-bottom {
