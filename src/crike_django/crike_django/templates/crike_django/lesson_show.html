@@ -4,12 +4,24 @@
 {% block subcontent %}
 <script>
   var gotimer = null;
+  var done = false;
   $(document).ready(function (){
     $('.step-links').hide()
+    $("body").keydown(function(e) {
+      if (done) {
+        if(e.which == 37) { // left
+            window.location = document.getElementById('page_prev').href;
+        }
+        else if(e.which == 39) { // right
+            window.location = document.getElementById('page_next').href;
+        }
+      }
+    });
   });
   function readyGo() {
     $('#notice').hide()
     $('.step-links').show()
+    done = true;
     console.log("{{done}}")
     if ("{{done}}" == "True") {
       $('#gototest').show()

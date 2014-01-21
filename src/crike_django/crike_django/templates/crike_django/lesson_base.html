@@ -21,10 +21,10 @@
   };
 </script>
 
-<div class="pagination" style="font-size:300%;float:right;margin-top:5%;margin-right:10px">
+<div class="pagination" style="font-size:500%;float:right;margin-top:5%;margin-right:10px">
   <span class="step-links">
     {% if words.has_previous %}
-    <a href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
+    <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
     {% endif %}
 
     <span class="current">
@@ -32,7 +32,7 @@
     </span>
 
     {% if words.has_next %}
-    <a href="?page={{ words.next_page_number }}"><i class="fa fa-arrow-circle-right"></i></a>
+    <a id="page_next" href="?page={{ words.next_page_number }}"><i class="fa fa-arrow-circle-right"></i></a>
     {% endif %}
   </span>
 </div>
