@@ -10,7 +10,6 @@ Todo
 * page 导航颜色，风格改进（箭头），放在显眼的位置（单词下方）
 * pad上支持滑动翻页
 * h1灰色背景改为活泼的图片或颜色，网页背景改变
-* 自测环节改为渐进式的，不需要按钮，不能跳跃阶段
 * 加入中间休息环节，播放轻松音乐和休息提示
 * 时间控制：单词展示和考试
 * 单词学习和自测环节加入换页前的短暂反馈，笑脸，对号
@@ -20,6 +19,7 @@ Todo
 * 考试和学习结束时根据成绩播放掌声或成功画面
 * exam
 * statistics
+* 禁止通过修改browser地址栏直接进入某页面，禁止刷新清零错误次数
 * redis
 * rewrite a registration module for django-registration doens't support custom user.
 * naming, ICON in browser tab.
