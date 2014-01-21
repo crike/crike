@@ -10,10 +10,14 @@
     $("body").keydown(function(e) {
       if (done) {
         if(e.which == 37) { // left
-            window.location = document.getElementById('page_prev').href;
+            var elem = document.getElementById('page_prev');
+            if (elem != null)
+              window.location = elem.href;
         }
         else if(e.which == 39) { // right
-            window.location = document.getElementById('page_next').href;
+            var elem = document.getElementById('page_next');
+            if (elem != null)
+              window.location = elem.href;
         }
       }
     });
