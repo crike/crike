@@ -298,7 +298,7 @@ class LessonPickView(TemplateView):
         # This case means success of Choice Questions.
         if page == '0':
             self._success(request, book, lesson)
-            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill')
 
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/pick?page='+page)
 
@@ -335,7 +335,7 @@ class LessonFillView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
             self._success(request, book, lesson)
-            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation')
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill?page='+page)
 
 class LessonDictationView(TemplateView):
@@ -367,7 +367,7 @@ class LessonDictationView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
             self._success(request, book, lesson)
-            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')#TODO goto a result show page
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation?page='+page)
 
 class BooksStudyView(TemplateView):
