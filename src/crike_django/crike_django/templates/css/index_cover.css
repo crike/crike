@@ -20,8 +20,12 @@ vertical-align: baseline;
 }
 
 #index_cover h1 {
-font-size: 48px;
+font-size: 60px;
 text-shadow: 12px 9px 0 #882F78,9px 8px 0 rgba(0,0,0,0.15);
+}
+
+#index_cover p {
+font-size: 24px;
 }
 
 .nextdoor-bottom {
