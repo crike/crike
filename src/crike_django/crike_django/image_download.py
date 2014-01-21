@@ -57,7 +57,6 @@ class download_from_bing_thread(threading.Thread):
         if not os.path.exists(BASE_PATH):
             os.makedirs(BASE_PATH)
      
-        x = 0
         for imginfo in imginfos:
             if threadstop == self.query or len(os.listdir(BASE_PATH)) >= pics_per_word:
                 break
@@ -69,11 +68,13 @@ class download_from_bing_thread(threading.Thread):
             if len(urls) == 0:
                 continue
             imgurl = urls[0]
-
-            fname = os.path.join(BASE_PATH, '%s.jpg') % x
+            
+            title = get_dir_len(BASE_PATH)
+            fname = os.path.join(BASE_PATH, '%s.jpg') % title
             try:
                 urllib.urlretrieve(imgurl, fname)
-                x += 1
+                if not is_file_valid(fname):
+                    os.remove(fname)
             except IOError, e:
                 # Throw away some gifs...blegh.
                 print 'could not save %s' % imgurl
@@ -112,11 +113,12 @@ class download_from_google_thread(threading.Thread):
                 url = urllist[0]
                 # Remove file-system path characters from name.
                 # title = image_info['titleNoFormatting'].replace('/', '').replace('\\', '').replace(' ','_').replace('|','')
-                title = os.listdir(BASE_PATH)
-     
+                title = get_dir_len(BASE_PATH)
                 fname = os.path.join(BASE_PATH, '%s.jpg') % title
                 try:
                     urllib.urlretrieve(url, fname)
+                    if not is_file_valid(fname):
+                        os.remove(fname)
                 except IOError, e:
                     # Throw away some gifs...blegh.
                     print 'could not save %s' % url
@@ -131,6 +133,10 @@ class download_from_google_thread(threading.Thread):
 
 def is_file_valid(file):
     try:
+        if type(file) == unicode:
+            if os.path.getsize(file) < 10000:
+                return False
+            file = open(file,"rb")
         first_char = file.read(1) #get the first character
         if not first_char:
             print "file is empty" #first character is the empty string..
@@ -144,8 +150,12 @@ def is_file_valid(file):
 
 
 def get_dir_len(path):
+    count = 0;
     if os.path.exists(path):
-        return len(os.listdir(path))
+        for item in os.listdir(path):
+            if is_file_valid(path+'/'+item):
+                count += 1
+        return count
     else:
         return 0
 
@@ -180,7 +190,7 @@ def get_word_from_queue(words):
     wordname = None
     for word in words:
         BASE_PATH = os.path.join(IMG_PATH, word)
-        if os.path.exists(BASE_PATH) and len(os.listdir(BASE_PATH)) >= pics_per_word:
+        if get_dir_len(BASE_PATH) >= pics_per_word:
             words.remove(word)
             continue
         else:
@@ -211,6 +221,10 @@ class download_thread(threading.Thread):
 
 def download_images_single(word):
     download_controller(word, download_from_bing_thread)
+    currentlen = get_dir_len(os.path.join(IMG_PATH, word))
+    if currentlen < pics_per_word:
+        print('Try another engine')
+        download_controller(word, download_from_google_thread)
 
 def download_images(words):
     thread1 = download_thread(words)
