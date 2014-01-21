@@ -10,6 +10,10 @@
   function readyGo() {
     $('#notice').hide()
     $('.step-links').show()
+    console.log("{{done}}")
+    if ("{{done}}" == "True") {
+      $('#gototest').show()
+    }
   };
   function delayGo() {
       clearTimeout(gotimer);
@@ -19,21 +23,15 @@
 </script>
 <label id="notice" style="font-size:200%;float:right;margin-top:5%">所有内容都学完才可以走哦</label>
 <div class='jumbotron'>
-  <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
-    <input type="submit" class="btn btn-primary btn-lg" value="选择">
-  </form>
-  <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/fill">
-    <input type="submit" class="btn btn-danger btn-lg" value="填空">
-  </form>
-  <form style="display:inline;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/dictation">
-    <input type="submit" class="btn btn-success btn-lg" value="听写">
-  </form>
   {% for word in words %}
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
         onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
         onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+    <form id="gototest" style="display:none;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
+      <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
+    </form>
   </h1>
   {% endfor %}
 </div>

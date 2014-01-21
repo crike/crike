@@ -218,6 +218,14 @@ class LessonShowView(TemplateView):
                                                            lesson=lesson_obj)[0]
         pick = lesson_result.pick
         print 'Show with LessonStat: ', lesson_result
+        if page:
+            print "nnnnnnnnn"
+            print "word %s done!" % words_list[eval(page)-2]
+            print "nnnnnnnnn"
+            if eval(page) == len(words_list):
+                return render(request, self.template_name,
+                        {'words': words, 'book': book, 'lesson': lesson, 'done':'True',
+                        'lesson_result': lesson_result})
 
         return render(request, self.template_name,
                {'words': words, 'book': book, 'lesson': lesson,
@@ -259,6 +267,9 @@ class LessonPickView(TemplateView):
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
+        print "nnnnnnnnn"
+        print "word %s done!" % words_list[len(words_list)-1]
+        print "nnnnnnnnn"
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
