@@ -252,8 +252,9 @@ class LessonShowView(TemplateView):
         print "word %s show!" % words[0]
         print "nnnnnnnnn"
 
+        self._record(request, book, lesson)
         lesson_result = LessonStat.objects.get_or_create(user=request.user,
-                                                           lesson=lesson_obj)[0]
+                                                         lesson=lesson_obj)[0]
         pick = lesson_result.pick
         print 'Show with LessonStat: ', lesson_result
         if page and eval(page) == len(words_list):
@@ -345,6 +346,7 @@ class LessonFillView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         print num
         print "nnnnnnnnnnnnnnnn"
+        self._record(request, book, lesson)
         if page == '0':
             self._success(request, book, lesson)
             return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation')
@@ -380,6 +382,7 @@ class LessonDictationView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         print num
         print "nnnnnnnnnnnnnnnn"
+        self._record(request, book, lesson)
         if page == '0':
             self._success(request, book, lesson)
             return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')#TODO goto a result show page
