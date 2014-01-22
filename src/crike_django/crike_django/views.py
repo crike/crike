@@ -68,8 +68,18 @@ def get_words_from_paginator(paginator, page):
     return words
 
 
-# TODO: Upload file的view
-# 规定具体的get/post对应事件
+class IndexView(TemplateView):
+    template_name = 'registration/index.html'
+
+    def get(self, request, *args, **kwargs):
+        books = Book.objects.all()
+        registration_form = CrikeRegistrationForm
+        # import pdb; pdb.set_trace()
+        return render(request, self.template_name, {'books':books})
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse("Not implement yet")
+
 
 class HomeView(TemplateView):
     template_name = 'registration/index.html'
@@ -82,6 +92,7 @@ class HomeView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
+
 
 class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'
