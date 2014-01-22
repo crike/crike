@@ -3,6 +3,128 @@
 {% load staticfiles %}
 
 {% block header %}
+<style type="text/css">{% include "css/index_cover.css" %}</style>
+<script src="http://cdn.bootcss.com/holder/2.0/holder.js"></script>
+<script language="javascript" type="text/javascript">
+  var timer = null;
+  function playSound(mp3) {
+     //$('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+     $('#dummy').html("<embed autostart='true' style='float:left' height=0 width=0 src='"+mp3+"'></embed>");
+  }
+  function callback(mp3) {
+      playSound(mp3);
+  }
+  function delayPlay(mp3) {
+      clearTimeout(timer);
+      var cb = "callback('"+mp3+"')";
+      timer = setTimeout(cb, 500);
+  }
+</script>
 {% endblock %}
-{% block container %}
+{% block container_header %}
+<div class="index_container">
+  <div id="index_cover">
+    <div style="margin: 10% 30%;">
+    <h1>Crike [kraɪk] 
+    <a onmouseover="delayPlay('/media/audios/crike.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/meida/audios/crike.mp3');" 
+        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+    </h1>
+    <p>{% trans "好好学英语，不然以后就只能来做网页了" %}</p>
+    <p><a class="btn btn-primary btn-lg" role="button" href="">Learn more</a></p>
+    </div>
+
+  </div>
+
+      <div class="nextdoor-bottom">
+        <div class="nextdoor-row">
+            <a class="nextdoor-item1" href="#search-crike">在Crike中搜索</a>
+            <a class="nextdoor-item2" href="#library-section">浏览Crike资源库</a>
+            <a class="nextdoor-item3" href="#mission-statement">认识Crike的各方各面</a>
+            <a class="nextdoor-item4" href="#stories-section">提出建议与讨论</a>
+        </div>
+      </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<hr/>
+
+    <!-- Carousel
+    ================================================== -->
+      <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
+          <li data-target="#carousel-example-captions" data-slide-to="1" class=""></li>
+          <li data-target="#carousel-example-captions" data-slide-to="2" class=""></li>
+        </ol>
+        <div class="carousel-inner" style="height:750px">
+          <div class="item active">
+            <!-- data-src="holder.js/900x500/auto/#777:#777" -->
+            <!--img alt="900x500" src="{% static 'images/pupils/pupils (1).jpg' %}"-->
+            <img alt="900x500" src="{% static 'images/learning-English-1.jpg' %}">
+            <div class="carousel-caption">
+              <h3>第一幅</h3>
+              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            </div>
+          </div>
+          <div class="item">
+            <img alt="900x500" src="{% static 'images/pupils/pupils (2).jpg' %}">
+            <div class="carousel-caption">
+              <h3>第二幅</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </div>
+          <div class="item">
+            <img alt="900x500" src="{% static 'images/pupils/pupils (3).jpg' %}">
+            <div class="carousel-caption">
+              <h3>第三幅</h3>
+              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+            </div>
+          </div>
+        </div>
+        <a class="left carousel-control" href="#carousel-example-captions" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-captions" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      </div>
+
+  <div class="row">
+            <div class="col-6 col-sm-6 col-lg-4">
+              <h2>植物</h2>
+              <p>植物是生命的主要形态之一，并包含了如乔木、灌木、藤类、青草、蕨类及绿藻等熟悉的生物。种子植物、苔藓植物、蕨类植物和拟蕨类等植物，据估计现存大约有 350000个物种。 </p>
+              <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            </div><!--/span-->
+            <div class="col-6 col-sm-6 col-lg-4">
+              <h2>人体</h2>
+              <p>人体即一个人的身体，主要组成部分有头、颈、躯干、双臂及双腿。在一般生物学或医学而言，人体除包括以上各部分，亦包括呼吸、心血管、神经系统和其他内脏，而每部分皆由细胞构成。 </p>
+              <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            </div><!--/span-->
+            <div class="col-6 col-sm-6 col-lg-4">
+              <h2>名著</h2>
+              <p>中国的巨著有红楼梦、西游记、水浒传、三国演义等。西方巨著有很多，有不同的作者，不同的题材。 一般认为，荷马的史诗、但丁的《神曲》、莎士比亚的戏剧是西方最伟大的文学巨著。 </p>
+              <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            </div><!--/span-->
+            <div class="col-6 col-sm-6 col-lg-4">
+              <h2>生活</h2>
+              <p>生活是物质生活和精神生活的总称。物质生活是人生活上的基本需要，精神生活则是人们在得到了物质生活后，所追求的另一种精神寄托。 </p>
+              <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            </div><!--/span-->
+            <div class="col-6 col-sm-6 col-lg-4">
+              <h2>动物</h2>
+              <p>动物是多细胞真核生命体中的一大类群，称之为动物界。动物身体的基本形态会在它们发育时变得固定，通常是早在其胚胎发育时，但也有些会在其稍后的生命中有个变态的过程。大多数动物是能动的－它们能自发且独立地移动。绝大多数动物是捕食者－它们依靠其他生命体（如植物）作为其食粮。但也有少部分动物属于分解者——以已经死亡的生物体（有机质）作为食粮（例如蚯蚓）。 </p>
+              <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            </div><!--/span-->
+            <div class="col-6 col-sm-6 col-lg-4">
+              <h2>数学</h2>
+              <p>数学（Mathematics）是利用符号语言研究数量[1]、结构[2]、变化[3][4]以及空间[1]等概念的一门学科，属于形式科学的一种。借助语言阐述关系（如数量、结构、前后变化等关系）的学科，透过抽象化和逻辑推理的使用，由计数、计算、量度和对物体形状及运动的观察中产生。数学家们拓展这些概念，为了公式化新的猜想以及从选定的公理及定义中建立起严谨推导出的定理。[5]（注意：公式不仅仅涉及到数量的关系，也涉及到性质的关系）。 </p>
+              <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+            </div><!--/span-->
+  </div>
+<span id="dummy"></span>
 {% endblock %}

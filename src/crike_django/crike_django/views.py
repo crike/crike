@@ -69,7 +69,7 @@ def get_words_from_paginator(paginator, page):
 
 
 class IndexView(TemplateView):
-    template_name = 'registration/index.html'
+    template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
@@ -80,7 +80,7 @@ class IndexView(TemplateView):
 
 
 class HomeView(TemplateView):
-    template_name = 'registration/index.html'
+    template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
