@@ -73,8 +73,6 @@ class IndexView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
-        registration_form = CrikeRegistrationForm
-        # import pdb; pdb.set_trace()
         return render(request, self.template_name, {'books':books})
 
     def post(self, request, *args, **kwargs):
@@ -86,14 +84,12 @@ class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
-        registration_form = CrikeRegistrationForm
-        # import pdb; pdb.set_trace()
         return render(request, self.template_name, {'books':books})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
-
+# Also HomeView.
 class StudentView(TemplateView):
     template_name = 'crike_django/student_view.html'
 
