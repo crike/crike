@@ -32,6 +32,9 @@
             if (elem != null)
               window.location = elem.href;
         }
+      } else {
+        if(e.which == 39)
+         alert("所有内容都学完才可以走哦");
       }
     });
   });
@@ -50,10 +53,10 @@
       gotimer = setTimeout(cb, 500);
   };
 </script>
-<label id="notice" style="font-size:200%;float:right;margin-top:5%">所有内容都学完才可以走哦</label>
+<label id="notice" style="float:top;">学完后按左右方向键翻页</label>
 <div class='jumbotron'>
   {% for word in words %}
-  <div id="counter" style='font-size:150%'></div>
+  <div id="counter" style='float:right;font-size:150%'></div>
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
         onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
