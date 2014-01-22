@@ -133,7 +133,7 @@ class download_from_google_thread(threading.Thread):
 
 def is_file_valid(file):
     try:
-        if type(file) == unicode:
+        if type(file) == unicode or type(file) == str:
             if os.path.getsize(file) < 10000:
                 return False
             file = open(file,"rb")
