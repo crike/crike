@@ -80,7 +80,7 @@ class IndexView(TemplateView):
 
 
 class HomeView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'home.html'
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
