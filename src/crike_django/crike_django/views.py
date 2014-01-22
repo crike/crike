@@ -204,8 +204,11 @@ def lesson_success(request, book, lesson, tag):
 
 
 def word_event_recorder(request, book, lesson, tag):
-    page = int(request.POST.get('page')) - 1
-    num = request.POST.get('num')
+    try:
+        page = int(request.POST.get('page')) - 1
+    except:
+        page = 0
+    num = request.POST.get('num', 1)
     words_list = get_words_from_lesson(book, lesson)
     paginator = Paginator(words_list, 1)
     word = get_words_from_paginator(paginator, page)[0]

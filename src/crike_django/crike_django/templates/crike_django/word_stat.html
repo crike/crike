@@ -17,6 +17,7 @@
                     <th>课程名</th>
                     <th>正确次数</th>
                     <th>错误次数</th>
+                    <th>标签</th>
                     <th>正确率</th>
                   </tr>
                 </thead>
@@ -27,6 +28,7 @@
                     <td>{{ word_stat.lesson.name }}</td>
                     <td>{{ word_stat.correct_num }}</td>
                     <td>{{ word_stat.mistake_num }}</td>
+                    <td>{{ word_stat.tag }}</td>
                     <td>{{ word_stat.accuracy }}</td>
                   </tr>
                 {% endfor %}
