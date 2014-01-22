@@ -21,20 +21,17 @@
   $(document).ready(function (){
     $('.step-links').hide()
     $("body").keydown(function(e) {
-      if (done) {
-        if(e.which == 37) { // left
-            var elem = document.getElementById('page_prev');
-            if (elem != null)
-              window.location = elem.href;
-        }
-        else if(e.which == 39) { // right
-            var elem = document.getElementById('page_next');
-            if (elem != null)
-              window.location = elem.href;
-        }
-      } else {
-        if(e.which == 39)
-         alert("所有内容都学完才可以走哦");
+      if (e.which == 39) { // right
+        if (done) {
+          var elem = document.getElementById('page_next');
+          if (elem != null)
+          window.location = elem.href;
+        } else
+          alert("所有内容都学完才可以走哦");
+      }else if(e.which == 37) { // left
+          var elem = document.getElementById('page_prev');
+          if (elem != null)
+            window.location = elem.href;
       }
     });
   });
