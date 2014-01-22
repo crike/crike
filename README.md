@@ -6,7 +6,7 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful -- WIP
-* page 导航颜色，放在显眼的位置（单词下方）
+* page 导航颜色，弹出框提示
 * pad上支持滑动翻页
 * h1灰色背景改为活泼的图片或颜色，网页背景改变
 * 加入中间休息环节，播放轻松音乐和休息提示
