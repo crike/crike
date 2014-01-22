@@ -242,6 +242,9 @@ class LessonShowView(TemplateView):
     def get(self, request, book, lesson):
         lesson_obj = get_lessonobj(book, lesson)
         words_list = get_words_from_lesson(book, lesson)
+        if len(words_list) == 0:
+            return render(request, self.template_name,
+                   {'book': book, 'lesson': lesson})
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
