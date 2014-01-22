@@ -2,7 +2,20 @@
 {% load staticfiles %}
 
 {% block subcontent %}
-<script>
+<script type="text/javascript">
+  $(function(){
+    $('#counter').countdown({
+       image: "{% static 'countdown/img/digits.png' %}",
+       startTime: '03:00',
+       timerEnd: function(){ 
+         alert("Time's up!");
+         var elem = document.getElementById('page_next');
+         if (elem != null)
+           window.location = elem.href;
+       },
+       format: 'mm:ss'
+    });
+  });
   var gotimer = null;
   var done = false;
   $(document).ready(function (){
@@ -40,6 +53,7 @@
 <label id="notice" style="font-size:200%;float:right;margin-top:5%">所有内容都学完才可以走哦</label>
 <div class='jumbotron'>
   {% for word in words %}
+  <div id="counter" style='font-size:150%'></div>
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
         onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
@@ -94,4 +108,9 @@
   {% endfor %}
 </div>
 <span id="dummy"></span>
+{% endblock %}
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8">
+</script>
 {% endblock %}
