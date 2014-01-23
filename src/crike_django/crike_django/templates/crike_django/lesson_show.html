@@ -63,9 +63,9 @@
       <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
     </form>
   </h1>
-  <div class="pagination bubbleInfo" style="font-size:200%">
-    <div class="popup pin" style="font-size:40%;width:180%" >学完后按左右方向键翻页</div>
-    <span class="step-links trigger">
+  <div class="pagination bubbleInfo">
+    <div class="popup pin" style="font-size:80%;width:180%" >学完后按左右方向键翻页</div>
+    <span class="step-links trigger" style="font-size:200%">
       {% if words.has_previous %}
       <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
       {% endif %}
