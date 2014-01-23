@@ -72,6 +72,7 @@
                    data-toggle="tooltip" data-placement="bottom" title="用户信息">
               <i class="fa fa-user fa-lg"></i>
               {% if user.student %}学生{% endif %}
+              {% if user.teacher %}教师{% endif %}
               <strong>{{ user.username }}</strong>
             </a></li>
             <li class="divider-vertical"></li>
