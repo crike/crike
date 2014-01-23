@@ -2,6 +2,7 @@
 {% load staticfiles %}
 
 {% block subcontent %}
+<link href="{% static 'bubbleinfo/bubbleinfo.css' %}" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
   $(function(){
     $('#counter').countdown({
@@ -19,7 +20,7 @@
   var gotimer = null;
   var done = false;
   $(document).ready(function (){
-    $('.step-links').hide()
+    $('.step-links').find('a[id=page_next]').hide()
     $("body").keydown(function(e) {
       if (e.which == 39) { // right
         if (done) {
@@ -36,8 +37,7 @@
     });
   });
   function readyGo() {
-    $('#notice').hide()
-    $('.step-links').show()
+    $('.step-links').find('a[id=page_next]').show()
     done = true;
     console.log("{{done}}")
     if ("{{done}}" == "True") {
@@ -50,11 +50,11 @@
       gotimer = setTimeout(cb, 500);
   };
 </script>
-<label id="notice" style="float:top;">学完后按左右方向键翻页</label>
 <div class='jumbotron'>
   {% for word in words %}
   <div id="counter" style='float:right;font-size:150%'></div>
-  <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
+  <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
+    [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
         onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
         onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
@@ -63,8 +63,25 @@
       <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
     </form>
   </h1>
+  <div class="pagination bubbleInfo" style="font-size:200%">
+    <div class="popup pin" style="font-size:40%;width:180%" >学完后按左右方向键翻页</div>
+    <span class="step-links trigger">
+      {% if words.has_previous %}
+      <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
+      {% endif %}
+
+      <span class="current">
+          {{ words.number }}/{{ words.paginator.num_pages }}
+      </span>
+
+      {% if words.has_next %}
+      <a id="page_next" href="?page={{ words.next_page_number }}"><i class="fa fa-arrow-circle-right"></i></a>
+      {% endif %}
+    </span>
+  </div>
   {% endfor %}
 </div>
+
 <div class='row'>
   {% for word in words %}
   <div class="col-md-6 col-lg-6">
@@ -111,6 +128,6 @@
 {% endblock %}
 
 {% block body_footer %}
-<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8">
-</script>
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'bubbleinfo/jquery.bubbleinfo.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}

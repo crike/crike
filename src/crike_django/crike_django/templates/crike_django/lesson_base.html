@@ -21,22 +21,6 @@
   };
 </script>
 
-<div class="pagination" style="font-size:200%">
-  <span class="step-links">
-    {% if words.has_previous %}
-    <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
-    {% endif %}
-
-    <span class="current">
-        {{ words.number }}/{{ words.paginator.num_pages }}
-    </span>
-
-    {% if words.has_next %}
-    <a id="page_next" href="?page={{ words.next_page_number }}"><i class="fa fa-arrow-circle-right"></i></a>
-    {% endif %}
-  </span>
-</div>
-
 {% block subcontent %}{% endblock %}
 
 <span id="dummy"></span>
