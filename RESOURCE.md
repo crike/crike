@@ -32,6 +32,12 @@ jquery
  https://github.com/brandonaaron/mousewheel
  handle the mouse wheel, very useful when using iframe..
 
+* count down timer
+ http://www.smashingapps.com/2012/12/04/16-cool-countdown-timer-scripts-for-your-projects.html
+
+* popup bubble
+ http://jqueryfordesigners.com/coda-popup-bubbles/
+
 div + css
 =====
 
