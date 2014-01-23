@@ -13,6 +13,7 @@ from django.http import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
+from django.db.models import F
 
 
 # Imaginary function to handle an uploaded file.
@@ -84,7 +85,15 @@ class HomeView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         books = Book.objects.all()
-        return render(request, self.template_name, {'books':books})
+        todos = []
+        for book in books:
+            for lesson in book.lessons:
+                stat = lesson.lessonstat_set.get_or_create(user=request.user)[0]
+                if stat.percent < 100:
+                    lesson.stat = stat
+                    todos.append({'book':book, 'lesson':lesson})
+
+        return render(request, self.template_name, {'todos': todos})
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")

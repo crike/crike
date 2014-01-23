@@ -160,6 +160,7 @@ class LessonStat(models.Model):
     pick = models.IntegerField(default=0)
     dictation = models.IntegerField(default=0)
     fill = models.IntegerField(default=0)
+    percent = models.IntegerField(default=0)
 
     def __unicode__(self):
         return u'User %s show %d pick %d dictation %d fill %d' % (self.user, self.show, self.pick, self.dictation, self.fill)
