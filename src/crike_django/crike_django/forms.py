@@ -1,3 +1,4 @@
+#coding:utf8
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -21,19 +22,19 @@ class CrikeRegistrationForm(forms.Form):
 
     username = forms.RegexField(regex=r'^[\w.@+-]+$',
                                 max_length=30,
-                                label=_("Username"),
+                                label=_("用户名"),
                                 error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
-    email = forms.EmailField(label=_("E-mail"))
+    email = forms.EmailField(label=_("邮箱"))
     password1 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password"))
+                                label=_("密码"))
     password2 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password (again)"))
-    is_human = forms.NullBooleanField(label=_("Are you human?"))
+                                label=_("密码 (重复)"))
+    is_human = forms.NullBooleanField(label=_("你是人类吗？"), required=False)
     school = forms.CharField(max_length=50,
-                             label=_("School"))
-    dob = forms.DateField(label=_("Birth (example: 1999-2-19)"))
-    phone = forms.CharField(label=_("Phone"))
-    gender = forms.CharField(label=_("Gender"))
+                             label=_("学校"), required=False)
+    dob = forms.DateField(label=_("生日 (例子: 1999-2-19)"), required=False)
+    phone = forms.CharField(label=_("手机"), required=False)
+    gender = forms.CharField(label=_("性别"), required=False)
 
     def clean_username(self):
         existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
