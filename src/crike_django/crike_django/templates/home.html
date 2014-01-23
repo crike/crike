@@ -13,28 +13,20 @@ text-align:center;
 {% block container %}
 <hr/>
 <div class="row">
+  {% for book in books %}
+  {% for lesson in book.lessons|dictsort:"name" %}
   <div class="col-sm-6 col-md-3">
-    <a href="#" class="thumbnail">
-
+    <a title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show" class="thumbnail">
       <div class="caption">
-        <h3>Henry的故事</h3>
+        <h3>{{ book.name }}:{{ lesson.name }}</h3>
         <input type="text" value="75" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
         <p>last progress</p>
         <p>11天前</p>
       </div>
     </a>
   </div>
-  <div class="col-sm-6 col-md-3">
-    <div class="thumbnail">
-
-      <div class="caption">
-        <h3>Hanmeimei</h3>
-        <input type="text" value="33" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
-        <p>last progress</p>
-        <p>2天前</p>
-      </div>
-    </div>
-  </div>
+  {% endfor %}
+  {% endfor %}
 </div>
 
 {% endblock %}
