@@ -18,11 +18,11 @@
     });
   });
   var gotimer = null;
-  var done = false;
+  var ready = false;
   $(document).ready(function (){
     $("body").keydown(function(e) {
       if (e.which == 39) { // right
-        if (done) {
+        if (ready) {
           var elem = document.getElementById('page_next');
           if (elem != null)
             window.location = elem.href;
@@ -37,11 +37,12 @@
   });
   function readyGo() {
     {% if words.has_next %}
-    $('.step-links').find('a[id=page_next]').prop('href', "?page={{ words.next_page_number }}")
+    $('.step-links').find('a[id=page_next]').prop('href', "?page={{ words.next_page_number }}");
     {% endif %}
-    done = true;
+    ready = true;
+    $('.pagination').attr('class', 'pagination');
     if ("{{done}}" == "True") {
-      $('#gototest').show()
+      $('#gototest').show();
     }
   };
   function delayGo() {
