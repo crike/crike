@@ -20,13 +20,12 @@
   var gotimer = null;
   var done = false;
   $(document).ready(function (){
-    $('.step-links').find('a[id=page_next]').hide()
     $("body").keydown(function(e) {
       if (e.which == 39) { // right
         if (done) {
           var elem = document.getElementById('page_next');
           if (elem != null)
-          window.location = elem.href;
+            window.location = elem.href;
         } else
           alert("所有内容都学完才可以走哦");
       }else if(e.which == 37) { // left
@@ -37,9 +36,10 @@
     });
   });
   function readyGo() {
-    $('.step-links').find('a[id=page_next]').show()
+    {% if words.has_next %}
+    $('.step-links').find('a[id=page_next]').prop('href', "?page={{ words.next_page_number }}")
+    {% endif %}
     done = true;
-    console.log("{{done}}")
     if ("{{done}}" == "True") {
       $('#gototest').show()
     }
@@ -75,7 +75,7 @@
       </span>
 
       {% if words.has_next %}
-      <a id="page_next" href="?page={{ words.next_page_number }}"><i class="fa fa-arrow-circle-right"></i></a>
+      <a id="page_next" href="#"><i class="fa fa-arrow-circle-right"></i></a>
       {% endif %}
     </span>
   </div>
@@ -124,7 +124,6 @@
   </div>
   {% endfor %}
 </div>
-<span id="dummy"></span>
 {% endblock %}
 
 {% block body_footer %}
