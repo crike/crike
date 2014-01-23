@@ -131,10 +131,13 @@ def show_image(request, name, num):
         return HttpResponse(None)
 
 def retrieve_word(request, book, lesson, word):
-    path = MEDIA_ROOT+'/images/'+word
+    mp3path = MEDIA_ROOT+'/audios/'+word+".mp3"
+    imgpath = MEDIA_ROOT+'/images/'+word
+    if os.path.exists(mp3path):
+        os.remove(mp3path)
     download_word(word)
-    if os.path.exists(path):
-        shutil.rmtree(path)
+    if os.path.exists(imgpath):
+        shutil.rmtree(imgpath)
     download_images_single(word)
     return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
 

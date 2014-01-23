@@ -106,6 +106,8 @@ class download_from_google_thread(threading.Thread):
                 break
 
             content = get_content_from_url(BASE_URL % start)
+            if type(content) == unicode or type(content) == str:
+                continue
             for image_info in json.loads(content.text)['responseData']['results']:
                 urllist =  re.findall('http.+\.[j|J][p|P][g|G]', image_info['unescapedUrl'])
                 if len(urllist) == 0:
