@@ -124,7 +124,7 @@
 {% for word in words %}
 <div id='{{word.name}}div'>  
   <h2> {{ word.name }} 
-    <button class="btn btn-success" style="float:right" onclick="$(this).hide();location.href='/admin/book/{{book}}/lesson/{{lesson}}/word/{{word.name}}'">
+    <button class="btn btn-success retrieve" style="float:right" onclick="$('.retrieve').attr('disabled',true);location.href='/admin/book/{{book}}/lesson/{{lesson}}/word/{{word.name}}'">
       重新获取
     </button>
   </h2>
