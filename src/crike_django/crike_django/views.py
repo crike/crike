@@ -170,6 +170,11 @@ class WordStatView(TemplateView):
             stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / (stat.correct_num + stat.mistake_num))
         return render(request, self.template_name, {'word_stats':word_stats})
 
+    def delete(self, request, *args, **kwargs):
+        WordStat.objects.filter(user=request.user).delete()
+        # Fill the view with a success message
+        return render(request, self.template_name)
+
 class WordsAdminView(TemplateView):
     template_name = 'crike_django/words_admin.html'
 
