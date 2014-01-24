@@ -1,4 +1,5 @@
 {% extends 'crike_django/lesson_base.html' %}
+{% load staticfiles %}
 
 {% block subcontent %}
 <script>
@@ -6,8 +7,26 @@
     $('.step-links').hide();
     $('#FillForm').find( "input[name='answer']" ).focus();
   });
-  var numoftry = 0;
 
+  $(function(){
+    var form = $('#FillForm');
+    $('#counter').countdown({
+       image: "{% static 'countdown/img/digits.png' %}",
+       startTime: '01:00',
+       timerEnd: function(){ 
+        $('#popup')
+        .html("<label style='font-size:300%'>时间到.. <i class='fa fa-frown-o'/></label>")
+        .show()
+        $('#overlay').show()
+        $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
+        $('<input>').attr({name:'ret', value:'false', hidden:'true'}).appendTo(form);
+        setTimeout( function () { $(form).submit(); }, 1000);
+       },
+       format: 'mm:ss'
+    });
+  });
+ 
+  var numoftry = 0;
   function onSubmit(e) {
 
     numoftry++;
@@ -44,13 +63,8 @@
 
 {% for word in words %}
 <div class='jumbotron'>
-  <span style="float:right">返回  
-    <a href='/study/book/{{book}}/lesson/{{lesson}}/show'>单词学习</a>
-  </span>
-  <span class="current" style="float:right">
-      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
-  </span>
   <strong id='feedback'>请根据释义将单词填写完整</strong>
+  <div id="counter" style='float:right;font-size:150%'></div>
   <form id='FillForm' action='/study/book/{{book}}/lesson/{{lesson}}/fill' method='post'>
     {% csrf_token %}
     {% if words.has_next %}
@@ -66,6 +80,9 @@
           onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
           title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a><br>
         <strong>[{{word.phonetics}}]</strong>
+      <span class="current" style="float:right">
+          {{ words.number }} / {{ words.paginator.num_pages }}
+      </span>
     </h1>
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
   </form>
@@ -113,6 +130,11 @@
 </div>
 
 {% endfor %}
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
 
 {% endblock %}
 
