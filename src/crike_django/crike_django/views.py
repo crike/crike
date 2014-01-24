@@ -79,6 +79,9 @@ class IndexView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
+def lesson_stat_update(stat):
+    stat.percent = stat.pick + stat.show + stat.dictation + stat.fill
+    stat.save()
 
 class HomeView(TemplateView):
     template_name = 'home.html'
@@ -89,6 +92,7 @@ class HomeView(TemplateView):
         for book in books:
             for lesson in book.lessons:
                 stat = lesson.lessonstat_set.get_or_create(user=request.user)[0]
+                lesson_stat_update(stat)
                 if stat.percent < 100:
                     lesson.stat = stat
                     todos.append({'book':book, 'lesson':lesson})
