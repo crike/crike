@@ -2,7 +2,10 @@
 
 {% block subcontent %}
 <script>
-  $('.step-links').hide();
+  $(document).ready(function () {
+    $('.step-links').hide();
+    $('#FillForm').find( "input[name='answer']" ).focus();
+  });
   var numoftry = 0;
 
   function onSubmit(e) {
@@ -12,19 +15,32 @@
     var form = $('#FillForm');
     var ques = $(form).find( "input[name='question']" ).prop('value');
     var ans = $(form).find( "input[name='answer']" ).prop('value');
-    console.log(ans)
-    console.log(ques)
 
     if (ques == ans)
     {
-      $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#FillForm');
-    } else {
       e.preventDefault();
-      $('#feedback').text('不对哦，再想一想');
-      $('input[name="answer"]').prop('checked', false);
+      $('#popup')
+      .html("<label style='font-size:300%'><i class='fa fa-check'/i> 你真棒 <i class='fa fa-smile-o'/></label>")
+      .show()
+      $('#overlay').show()
+      $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
+      setTimeout( function () { $(form).submit(); }, 2000);
+    } else {
+      var showtimer = null;
+      var cb = "$('#popup').hide();$('#overlay').hide()"
+      e.preventDefault();
+      $('#popup')
+      .html("<label style='font-size:300%'><i class='fa fa-times'></i> 不对哦，再想一想 <i class='fa fa-frown-o'/></label>")
+      .show()
+      $('#overlay').show()
+      shotimer = setTimeout(cb, 2000)
+      $('input[name="answer"]').prop('value', '');
     }
   };
 </script>
+
+<div id='overlay'></div>
+<div id='popup'></div>
 
 {% for word in words %}
 <div class='jumbotron'>
