@@ -14,6 +14,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.db.models import F
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Imaginary function to handle an uploaded file.
@@ -161,14 +162,20 @@ class UserHistoryView(TemplateView):
         user_history = WordEventRecorder.objects.filter(user=request.user)
         return render(request, self.template_name, {'user_history':user_history})
 
+@csrf_exempt
+def word_stat_delete(request):
+    WordStat.objects.filter(user=request.user).delete()
+    return HttpResponse('delete ok..')
+
 class WordStatView(TemplateView):
     template_name = 'crike_django/word_stat.html'
-    
+
     def get(self, request, *args, **kwargs):
         word_stats = WordStat.objects.filter(user=request.user)
         for stat in word_stats:
             stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / (stat.correct_num + stat.mistake_num))
         return render(request, self.template_name, {'word_stats':word_stats})
+
 
     def delete(self, request, *args, **kwargs):
         WordStat.objects.filter(user=request.user).delete()
