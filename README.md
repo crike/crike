@@ -20,9 +20,6 @@ Todo
 * 禁止通过修改browser地址栏直接进入某页面，禁止刷新清零错误次数
 * redis
 * naming, ICON in browser tab.
-* word answered recording for users and lessons.
-* user history, how many lessons have been done and show the next step users should do.
-* use bookblock to flip the words
 * beautify
 * release
 
