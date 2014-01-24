@@ -37,7 +37,9 @@
   });
   function readyGo() {
     {% if words.has_next %}
-    $('.step-links').find('a[id=page_next]').prop('href', "?page={{ words.next_page_number }}");
+    $('.step-links').find('a[id=page_next]')
+      .prop('href', "?page={{ words.next_page_number }}")
+      .find('i').attr('class',"fa fa-arrow-circle-right");
     {% endif %}
     ready = true;
     $('.pagination').attr('class', 'pagination');
@@ -65,7 +67,7 @@
     </form>
   </h1>
   <div class="pagination bubbleInfo">
-    <div class="popup pin" style="font-size:80%;width:180%" >学完后按左右方向键翻页</div>
+    <div class="popup pin" style="font-size:80%;width:200px" ><i class="fa fa-minus-square"></i> 未完成全部内容</div>
     <span class="step-links trigger" style="font-size:200%">
       {% if words.has_previous %}
       <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
@@ -76,7 +78,7 @@
       </span>
 
       {% if words.has_next %}
-      <a id="page_next" href="#"><i class="fa fa-arrow-circle-right"></i></a>
+      <a id="page_next" href="#"><i class="fa fa-times-circle"></i></a>
       {% endif %}
     </span>
   </div>
