@@ -232,16 +232,20 @@ def word_event_recorder(request, book, lesson, tag):
     except:
         page = 0
     num = request.POST.get('num', 1)
+    ret = request.POST.get('ret', True)
     words_list = get_words_from_lesson(book, lesson)
     paginator = Paginator(words_list, 1)
     word = get_words_from_paginator(paginator, page)[0]
 
-    word_stat, ret = WordStat.objects.get_or_create(user=request.user,
+    word_stat, retval = WordStat.objects.get_or_create(user=request.user,
                                                     word=word,
                                                     lesson=get_lessonobj(book, lesson),
                                                     tag=tag)
-    word_stat.correct_num += 1
-    word_stat.mistake_num += (int(num) - 1)
+    if ret is True:
+        word_stat.correct_num += 1
+        word_stat.mistake_num += (int(num) - 1)
+    else:
+        word_stat.mistake_num += int(num)
     word_stat.save()
 
     wer = WordEventRecorder.objects.create(user=request.user,
@@ -374,6 +378,7 @@ class LessonFillView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         print num, page, ret
         print "nnnnnnnnnnnnnnnn"
+
         self._record(request, book, lesson)
         if page == '0':
             self._success(request, book, lesson)
