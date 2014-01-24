@@ -160,7 +160,11 @@ class UserHistoryView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         user_history = WordEventRecorder.objects.filter(user=request.user)
-        return render(request, self.template_name, {'user_history':user_history})
+        return render(request, self.template_name, {'user_history': user_history})
+
+    def delete(self, request, *args, **kwargs):
+        WordEventRecorder.objects.filter(user=request.user).delete()
+        return HttpResponse('')
 
 class WordStatView(TemplateView):
     template_name = 'crike_django/word_stat.html'
@@ -169,12 +173,12 @@ class WordStatView(TemplateView):
         word_stats = WordStat.objects.filter(user=request.user)
         for stat in word_stats:
             stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / (stat.correct_num + stat.mistake_num))
-        return render(request, self.template_name, {'word_stats':word_stats})
+        return render(request, self.template_name, {'word_stats': word_stats})
 
     def delete(self, request, *args, **kwargs):
         WordStat.objects.filter(user=request.user).delete()
         # Fill the view with a success message
-        return render(request, self.template_name)
+        return HttpResponse('')
 
 class WordsAdminView(TemplateView):
     template_name = 'crike_django/words_admin.html'
