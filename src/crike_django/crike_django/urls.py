@@ -35,7 +35,6 @@ urlpatterns = patterns('',
     url(r'^student$', StudentView.as_view(), name='student'),
     url(r'^teacher$', TeacherView.as_view(), name='teacher'),
     url(r'^word/stat$', login_required(WordStatView.as_view()), name='word_stat'),
-    url(r'^word/stat/delete', login_required(word_stat_delete), name='word_stat_delete'),
     url(r'^user/history$', login_required(UserHistoryView.as_view()), name='user_history'),
 
     # This is an interim implement to redirect when registration complete.

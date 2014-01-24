@@ -162,11 +162,6 @@ class UserHistoryView(TemplateView):
         user_history = WordEventRecorder.objects.filter(user=request.user)
         return render(request, self.template_name, {'user_history':user_history})
 
-@csrf_exempt
-def word_stat_delete(request):
-    WordStat.objects.filter(user=request.user).delete()
-    return HttpResponse('delete ok..')
-
 class WordStatView(TemplateView):
     template_name = 'crike_django/word_stat.html'
 
@@ -175,7 +170,6 @@ class WordStatView(TemplateView):
         for stat in word_stats:
             stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / (stat.correct_num + stat.mistake_num))
         return render(request, self.template_name, {'word_stats':word_stats})
-
 
     def delete(self, request, *args, **kwargs):
         WordStat.objects.filter(user=request.user).delete()
