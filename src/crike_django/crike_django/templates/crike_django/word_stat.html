@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
       <div class="bs-docs-section">
@@ -46,11 +47,12 @@
 
 {% block body_footer %}
 
-
 <script type="text/javascript">
-$('#clear_button').click(function(){
+{% include 'js/csrf.js' %}
+
+$('#clear_button').on('click', function(){
 	$.ajax({
-	    url: '/word/stat/delete',
+	    url: '/word/stat',
 	    type: 'DELETE',
 	    success: function(result) {
 	        // Do something with the result
