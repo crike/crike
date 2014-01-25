@@ -1,7 +1,7 @@
 
+src/crike_django/crike_django/media
 *.swp
 nohup.out
-*.jpg
 *.mp3
 *.db-journal
 .settings
