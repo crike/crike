@@ -174,7 +174,7 @@
             {% endif %}
           </ul>
           {% if user.is_authenticated %}
-          <ul class="nav navbar-nav pull-right">
+          <ul class="nav navbar-nav navbar-right">
             <li><a href="{% if user.student %}{% url "student" %}{% elif user.teacher %}{% url "teacher" %}{% endif %}"
                    data-toggle="tooltip" data-placement="bottom" title="用户信息">
               <i class="fa fa-user fa-lg"></i>
