@@ -13,3 +13,4 @@ misc
 ==========
 * registration
 * crispy-forms
+* django-admin-bootstrapped
