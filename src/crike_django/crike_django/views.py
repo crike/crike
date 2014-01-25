@@ -410,10 +410,13 @@ class LessonDictationView(TemplateView):
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
 
-        options = []
-        for word in words:
-            options.append(word)
-        options = sample(options, len(options))
+        words_list = filter(lambda x: x.name !=words[0].name, words_list)
+        count = len(words_list)
+        if count > 3:
+            options = sample(words_list, 3)
+        else:
+            options = sample(words_list, count)
+        options.insert(randrange(len(options)+1), words[0])
 
         return render(request, self.template_name,
                 {'words':words, 'book':book, 'lesson':lesson, 'options':options})
@@ -428,7 +431,7 @@ class LessonDictationView(TemplateView):
         self._record(request, book, lesson)
         if page == '0':
             self._success(request, book, lesson)
-            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')#TODO goto a result show page
+            return HttpResponseRedirect('/home')#TODO goto a result show page
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation?page='+page)
 
 class BooksStudyView(TemplateView):
@@ -468,38 +471,56 @@ class BooksStudyView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect("/study/books/")
 
-class ExamDictationView(TemplateView):
-    template_name='crike_django/Exam_dictation.html'
-
-    def get(self, request, book, lessons):
-        words_list = []
+def exam_creator(book, unit):
+    words_list = []
+    if book != '':
         bookob = Book.objects.filter(name=book)[0]
+    else:
+        bookob = Book.objects.all()[0]#TODO get user's current book?
+    if unit == 0:
         for lessonobj in bookob.lessons:
-            if lessonobj.name in lessons:
-                words_list.append(Word.objects.filter(id__in=lessonobj.words))
+            words_list += Word.objects.filter(id__in=lessonobj.words)
+    else:
+        for lessonobj in bookob.lessons[(unit-1)*3:unit*3]:
+            words_list += Word.objects.filter(id__in=lessonobj.words)
+    return words_list
 
-        paginator = Paginator(words_list, 8)
+class ExamView(TemplateView):
+    template_name='crike_django/exam_view.html'
+
+    def get(self, request, book, unit):
+        if unit != '':
+            unit = eval(unit)
+            words_list = exam_creator(book, unit)
+        else:
+            words_list = exam_creator(book, 0)
+
+        paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
 
-        options = []
-        for word in words:
-            options.append(word)
-        options = sample(options, len(options))
+        words_list = filter(lambda x: x.name !=words[0].name, words_list)
+        count = len(words_list)
+        if count > 3:
+            options = sample(words_list, 3)
+        else:
+            options = sample(words_list, count)
+        options.insert(randrange(len(options)+1), words[0])
 
         return render(request, self.template_name,
-                {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+                {'words':words, 'options':options, 'book':book, 'unit':unit})
 
-    def post(self, request, book, lessons):
+    def post(self, request, book, unit):
         page = request.POST.get('page')
         num = request.POST.get('num')
+        ret = request.POST.get('ret')
 # TODO put this word into this student's strange list if num > 1, and store the num
         print "nnnnnnnnnnnnnnnn"
-        print num
+        print num, page, ret
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
-            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/show')
-        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill?page='+page)
+            return HttpResponseRedirect('/home')#TODO show exam result
+        return HttpResponseRedirect('/exam/book/'+book+'/unit/'+str(unit)+'/?page='+page)
 
 # for management
 class LessonAdminView(TemplateView):
@@ -689,13 +710,4 @@ class BooksAdminView(TemplateView):
                 bookob.delete()
 
         return HttpResponseRedirect("/admin/books/")
-
-class ExamView(TemplateView):
-    template_name='crike_django/exam_view.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
-
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
 

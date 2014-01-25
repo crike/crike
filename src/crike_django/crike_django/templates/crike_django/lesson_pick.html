@@ -5,6 +5,8 @@
 <script>
   $('.step-links').hide();
 
+  var numoftry = 0;
+
   $(function(){
     var form = $('#PickForm');
     $('#counter').countdown({
@@ -23,7 +25,6 @@
     });
   });
 
-  var numoftry = 0;
   function onSubmit(e) {
 
     numoftry++;

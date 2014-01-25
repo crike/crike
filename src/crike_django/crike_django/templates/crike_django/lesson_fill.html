@@ -8,6 +8,8 @@
     $('#FillForm').find( "input[name='answer']" ).focus();
   });
 
+  var numoftry = 0;
+
   $(function(){
     var form = $('#FillForm');
     $('#counter').countdown({
@@ -26,7 +28,6 @@
     });
   });
  
-  var numoftry = 0;
   function onSubmit(e) {
 
     numoftry++;
