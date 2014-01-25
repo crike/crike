@@ -27,16 +27,27 @@
 
   function onSubmit(e) {
 
-    numoftry++;
-
     var form = $('#ExamForm');
     var ques = $(form).find( "input[name='question']" ).prop('value');
-    var pickans = $(form).find( "input:radio[name='pickanswer']:checked" ).prop('value');
+    var pickcheck = $(form).find( "input:radio[name='pickanswer']:checked" ).length;
     var fillans = $(form).find( "input[name='fillanswer']" ).prop('value');
-    console.log(ques)
-    console.log(pickans)
-    console.log(fillans)
 
+    if ( pickcheck == 0 || fillans == '')
+    {
+      e.preventDefault();
+      var showtimer = null;
+      var cb = "$('#popup').hide();$('#overlay').hide()"
+      $('#popup')
+      .html("<label style='font-size:250%'><i class='fa fa-minus-square'></i> 还没做完呢，又粗心了吧 <i class='fa fa-frown-o'/></label>")
+      .show()
+      $('#overlay').show()
+      shotimer = setTimeout(cb, 2000)
+      return false;
+    }
+
+    var pickans = $(form).find( "input:radio[name='pickanswer']:checked" ).prop('value');
+
+    numoftry++;
     if (ques == pickans && ques == fillans)
     {
       e.preventDefault();
