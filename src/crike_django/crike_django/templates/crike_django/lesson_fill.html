@@ -44,6 +44,7 @@
       .show()
       $('#overlay').show()
       $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
+      $('<input>').attr({name:'ret', value:'true', hidden:'true'}).appendTo(form);
       setTimeout( function () { $(form).submit(); }, 2000);
     } else {
       var showtimer = null;
