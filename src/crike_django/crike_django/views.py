@@ -41,8 +41,16 @@ def get_or_none(model, **kwargs):
     except model.DoesNotExist:
         return None
 
+def get_bookobj(book):
+    bookobjs = Book.objects.filter(name=book)
+    if len(bookobjs) > 0:
+        return bookobjs[0]
+    return None
+
 def get_lessonobj(book, lesson):
-    bookobj = Book.objects.filter(name=book)[0]
+    bookobj = get_bookobj(book)
+    if bookobj == None:
+        return None
     lessonobjs = filter(lambda x: x.name == lesson, bookobj.lessons)
     if len(lessonobjs) > 0:
         return lessonobjs[0]
@@ -478,9 +486,14 @@ class BooksStudyView(TemplateView):
 def exam_creator(book, unit):
     words_list = []
     if book != '':
-        bookob = Book.objects.filter(name=book)[0]
+        bookob = get_bookobj(book)
+        if bookob == None:
+            return words_list
     else:
-        bookob = Book.objects.all()[0]#TODO get user's current book?
+        if len(Book.objects.all()) > 0:
+            bookob = Book.objects.all()[0]#TODO get user's current book?
+        else:
+            return words_list
     if unit == 0:
         for lessonobj in bookob.lessons:
             words_list += Word.objects.filter(id__in=lessonobj.words)
@@ -498,6 +511,10 @@ class ExamView(TemplateView):
             words_list = exam_creator(book, unit)
         else:
             words_list = exam_creator(book, 0)
+
+        if len(words_list) == 0:
+            return render(request, self.template_name,
+                    { 'book':book, 'unit':unit})
 
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
