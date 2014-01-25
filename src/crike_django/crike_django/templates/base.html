@@ -158,6 +158,7 @@
                 <li><a href="{% url 'word_stat' %}">常错词</a></li>
               </ul>
             </li>
+            {% if user.teacher %}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_science_30x30.png' %}"></div>
@@ -170,6 +171,7 @@
                 <li><a href="#">班级管理</a></li>
               </ul>
             </li>
+            {% endif %}
           </ul>
           {% if user.is_authenticated %}
           <ul class="nav navbar-nav pull-right">
