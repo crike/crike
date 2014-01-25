@@ -1,14 +1,40 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+<style type="text/css">
+#padding-top {
+    padding-top: 20px;
+}
+</style>
+{% endblock %}
 
 {% block content %}
+<div id='padding-top'></div>
+<div class="container subject-header-container clearfix">
+        <div class="col-sm-12 col-md-10 col-md-offset-1 subject-header">
+            <div class="subject-header-icon col-md-3 hidden-xs hidden-sm">
+                <img src="{% static 'images/small/efk_icon_healthskills_140x140.png' %}">
+            </div>
+            <div class="col-sm-12 col-md-9 subject-header-description">
+                <h1>Crike -- 课程选择</h1>
+                <p>Our Life Skills Curriculum consist of 15 e-lessons in English.</p>
+                <p>Support the development of our free digital lessons – Make a Donation!</p>
+                <a title="返回" href="/">返回首页</a>
+            </div>
+        </div>
+</div>
+
   <link href="/static/index.css" rel="stylesheet" type="text/css"/>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script language="javascript" type="text/javascript">
   </script>
+<!-- 
   <div class="jumbotron">
     <h1>Crike -- 课程选择</h1>
     <a title="返回" href="/">返回首页</a>
   </div>
+ -->
 <!-- Cycle through entries -->
   {% for book in books %}
   <div class='row'>

@@ -26,6 +26,12 @@
       .navbar-brand {
         padding: 10px;
       }
+      h1, h2, h3, h4, h5 {
+        color: #662680;
+      }
+      h1, h2, h3, h4, h5, p, div, form {
+        font-family:microsoft yahei;
+      }
       
       {% include "css/navbar_purple.css" %}
       
@@ -73,7 +79,7 @@
   .subject-header-container {
     height: 300px;
     padding: 50px;
-    background-image: url(/static/img/subject-pattern.png); }
+    background-image: url({% static 'images/background/subject-pattern.png' %}); }
     .subject-header-container .subject-header {
       height: 200px;
       line-height: 200px;
