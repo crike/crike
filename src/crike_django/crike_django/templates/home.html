@@ -6,8 +6,86 @@
 .thumbnail {
 text-align:center;
 }
-
+.user-profile-header {
+position: relative;
+padding: 30px 0;
+margin-bottom: 20px;
+}
 </style>
+{% endblock %}
+
+{% block container_header %}
+
+<header class="user-profile-header header-gray">
+  <div class="container">
+
+    <div id="user-info-view">
+      <div class="avatar-wrapper">
+        <div class="avatar-image-container">
+          <img alt="alexapollo" class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
+        </div>
+
+          <div class="avatar-edit-link user-avatar-editable">
+            <a href="/zh/users/50f83050575cd2fca5000cc8/edit" class="plain-text-link light-text edit-avatar">Update photo</a>
+          </div>
+          <form accept-charset="UTF-8" action="/profiles/50f83050575cd2fca5000cc8/image" class="user-avatar-editor" enctype="multipart/form-data" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓" class="ui-inited"><input name="authenticity_token" type="hidden" value="IqYLPliKsWDcGUdakjBH9Oa+VIYX8QqKT7RZMJZ0ZbU=" class="ui-inited"></div>
+            <div>
+              <input type="file" name="profile_image" class="profile-image-input ui-inited">
+              <input type="hidden" name="username" value="alexapollo" class="ui-inited">
+            </div>
+</form>
+      </div>
+
+      <div class="user-details">
+        <div class="user-details-show">
+          <div class="user-identifier user-details-editable">
+            <span class="username">alexapollo</span>
+            &nbsp;
+
+              <a href="/zh/users/50f83050575cd2fca5000cc8/edit" class="user-details-editable edit-profile plain-text-link light-text add-name-prompt">Add your name</a>
+
+            <span class="full-name light-text name-content"></span>
+          </div>
+      </div>
+
+      <div class="user-banned-text">
+      </div>
+
+    </div>
+
+    <div class="user-stats light-text">
+  <div class="user-points-bar-container">
+      <div class="points-labels">
+        Points today
+        <span class="best">最好的 <strong class="best-count">22</strong></span>
+      </div>
+
+      <div class="points-bar">
+        <span class="points-bar-fill" style="width: 0.0%">
+          <span class="count-container count-right">
+            <span class="points-today-count">0</span>
+          </span>
+</span>      </div>
+  </div>
+
+  <span class="stat-count">60</span>
+  total points
+
+  &nbsp;
+  &nbsp;
+
+  <span class="stat-count">0</span>
+  day streak
+
+    <div class="last-coded">
+      Last coded <span class="last-coded-time">22 天 ago</span>
+    </div>
+</div>
+
+
+  </div>
+</header>
+
 {% endblock %}
 
 {% block container %}
