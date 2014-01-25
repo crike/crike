@@ -149,15 +149,19 @@
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_environmentalskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans "考试" %}</div>
             </a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计 <b class="caret"></b></a>
+            <li class="dropdown subject-item">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_math_30x30.png' %}"></div>
+                <div class="subject-title">统计 <b class="caret"></b></div></a>
               <ul class="dropdown-menu">
                 <li><a href="{% url 'user_history' %}">学习历史</a></li>
                 <li><a href="{% url 'word_stat' %}">常错词</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">教学 <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_science_30x30.png' %}"></div>
+                <div class="subject-title">教学 <b class="caret"></b></div></a>
               <ul class="dropdown-menu">
                 <li><a href="#">学员成绩</a></li>
                 <li><a href="#">历史曲线</a></li>
