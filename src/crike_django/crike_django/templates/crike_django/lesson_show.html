@@ -26,7 +26,15 @@
           var elem = document.getElementById('page_next');
           if (elem != null)
             window.location = elem.href;
-        } else
+          } else {
+            var showtimer = null;
+            var cb = "$('#popup').hide();$('#overlay').hide()"
+            $('#popup')
+            .html("<label style='font-size:300%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
+            .show()
+            $('#overlay').show()
+            shotimer = setTimeout(cb, 2000)
+          }
           alert("所有内容都学完才可以走哦");
       }else if(e.which == 37) { // left
           var elem = document.getElementById('page_prev');
@@ -53,6 +61,10 @@
       gotimer = setTimeout(cb, 500);
   };
 </script>
+
+<div id='overlay'></div>
+<div id='popup' class='pin'></div>
+
 <div class='jumbotron'>
   {% for word in words %}
   <div id="counter" style='float:right;font-size:150%'></div>
