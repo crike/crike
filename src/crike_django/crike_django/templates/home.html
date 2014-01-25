@@ -10,6 +10,7 @@ text-align:center;
 position: relative;
 padding: 30px 0;
 margin-bottom: 20px;
+background-color:white;
 }
 </style>
 {% endblock %}
@@ -33,28 +34,22 @@ margin-bottom: 20px;
               <input type="file" name="profile_image" class="profile-image-input ui-inited">
               <input type="hidden" name="username" value="alexapollo" class="ui-inited">
             </div>
-</form>
+          </form>
       </div>
 
       <div class="user-details">
         <div class="user-details-show">
           <div class="user-identifier user-details-editable">
             <span class="username">alexapollo</span>
-            &nbsp;
-
               <a href="/zh/users/50f83050575cd2fca5000cc8/edit" class="user-details-editable edit-profile plain-text-link light-text add-name-prompt">Add your name</a>
-
             <span class="full-name light-text name-content"></span>
           </div>
-      </div>
-
-      <div class="user-banned-text">
       </div>
 
     </div>
 
     <div class="user-stats light-text">
-  <div class="user-points-bar-container">
+      <div class="user-points-bar-container">
       <div class="points-labels">
         Points today
         <span class="best">最好的 <strong class="best-count">22</strong></span>
@@ -65,25 +60,22 @@ margin-bottom: 20px;
           <span class="count-container count-right">
             <span class="points-today-count">0</span>
           </span>
-</span>      </div>
-  </div>
+        </span>
+      </div>
+    </div>
 
-  <span class="stat-count">60</span>
-  total points
+    <span class="stat-count">60</span>
+    total points
 
-  &nbsp;
-  &nbsp;
-
-  <span class="stat-count">0</span>
-  day streak
+    <span class="stat-count">0</span>
+    day streak
 
     <div class="last-coded">
       Last coded <span class="last-coded-time">22 天 ago</span>
     </div>
 </div>
 
-
-  </div>
+</div>
 </header>
 
 {% endblock %}
