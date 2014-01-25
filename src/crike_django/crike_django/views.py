@@ -172,7 +172,11 @@ class WordStatView(TemplateView):
     def get(self, request, *args, **kwargs):
         word_stats = WordStat.objects.filter(user=request.user)
         for stat in word_stats:
-            stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / (stat.correct_num + stat.mistake_num))
+            tries = stat.correct_num + stat.mistake_num
+            if tries is 0:
+                stat.accuracy = 0
+            else:
+                stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / tries)
         return render(request, self.template_name, {'word_stats': word_stats})
 
     def delete(self, request, *args, **kwargs):
