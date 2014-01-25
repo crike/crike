@@ -14,7 +14,7 @@
        startTime: '01:00',
        timerEnd: function(){ 
         $('#popup')
-        .html("<label style='font-size:300%'>时间到.. <i class='fa fa-frown-o'/></label>")
+        .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
         .show()
         $('#overlay').show()
         $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
@@ -38,7 +38,7 @@
       var showtimer = null;
       var cb = "$('#popup').hide();$('#overlay').hide()"
       $('#popup')
-      .html("<label style='font-size:250%'><i class='fa fa-minus-square'></i> 还没做完呢，又粗心了吧 <i class='fa fa-frown-o'/></label>")
+      .html("<label style='font-size:250%'><i style='color:red' class='fa fa-minus-square'></i> 还没做完呢，又粗心了吧 <i style='color:orange' class='fa fa-frown-o'/></label>")
       .show()
       $('#overlay').show()
       shotimer = setTimeout(cb, 2000)
@@ -52,7 +52,7 @@
     {
       e.preventDefault();
       $('#popup')
-      .html("<label style='font-size:300%'><i class='fa fa-check'/i> 你真棒 <i class='fa fa-smile-o'/></label>")
+      .html("<label style='font-size:300%'><i style='color:green' class='fa fa-check'></i> 你真棒 <i style='color:orange' class='fa fa-smile-o'/></label>")
       .show()
       $('#overlay').show()
       $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
@@ -62,13 +62,23 @@
       var showtimer = null;
       var cb = "$('#popup').hide();$('#overlay').hide()"
       e.preventDefault();
-      $('#popup')
-      .html("<label style='font-size:300%'><i class='fa fa-times'></i> 不对哦，再想一想 <i class='fa fa-frown-o'/></label>")
-      .show()
-      $('#overlay').show()
-      shotimer = setTimeout(cb, 2000)
-      $('input[name="pickanswer"]').prop('checked', false);
-      $('input[name="fillanswer"]').prop('value', '');
+      if (numoftry < 3) {
+        $('#popup')
+        .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 不对哦, 还有"+(3-numoftry)+"次机会 <i style='color:orange' class='fa fa-frown-o'/></label>")
+        .show()
+        $('#overlay').show()
+        shotimer = setTimeout(cb, 2000)
+        $('input[name="pickanswer"]').prop('checked', false);
+        $('input[name="fillanswer"]').prop('value', '');
+      } else {
+        $('#popup')
+        .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 看来要努力了啊 <i style='color:orange' class='fa fa-frown-o'/></label>")
+        .show()
+        $('#overlay').show()
+        $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
+        $('<input>').attr({name:'ret', value:'false', hidden:'true'}).appendTo(form);
+        setTimeout( function () { $(form).submit(); }, 2000);
+      }
     }
   };
   function onPick(pin) {
