@@ -65,23 +65,23 @@
     <form id="gototest" style="display:none;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
       <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
     </form>
-  </h1>
-  <div class="pagination bubbleInfo">
-    <div class="popup pin" style="font-size:80%;width:200px" ><i class="fa fa-minus-square"></i> 未完成全部内容</div>
-    <span class="step-links trigger" style="font-size:200%">
-      {% if words.has_previous %}
-      <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
-      {% endif %}
+    <div class="pagination bubbleInfo" style="float:right">
+      <div class="popup pin" style="font-size:30%;width:200px" ><i class="fa fa-minus-square"></i> 未完成全部内容</div>
+      <span class="step-links trigger">
+        {% if words.has_previous %}
+        <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
+        {% endif %}
 
-      <span class="current">
-          {{ words.number }}/{{ words.paginator.num_pages }}
+        <span class="current">
+            {{ words.number }}/{{ words.paginator.num_pages }}
+        </span>
+
+        {% if words.has_next %}
+        <a id="page_next" href="#"><i class="fa fa-times-circle"></i></a>
+        {% endif %}
       </span>
-
-      {% if words.has_next %}
-      <a id="page_next" href="#"><i class="fa fa-times-circle"></i></a>
-      {% endif %}
-    </span>
-  </div>
+    </div>
+  </h1>
   {% endfor %}
 </div>
 
