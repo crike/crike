@@ -256,7 +256,8 @@ def lesson_success(request, book, lesson, tag):
 
 def word_event_recorder(request, book, lesson, tag):
     try:
-        page = int(request.POST.get('page')) - 1
+        page_str = request.POST.get('page') or request.GET.get('page')
+        page = int(page_str) - 1
     except:
         page = 0
     num = request.POST.get('num', 1)
@@ -269,7 +270,7 @@ def word_event_recorder(request, book, lesson, tag):
                                                     word=word,
                                                     lesson=get_lessonobj(book, lesson),
                                                     tag=tag)
-    if ret == 'true':
+    if ret == 'true' or tag == 'show':
         correct_num = 1
         mistake_num = int(num) - 1
     else:
