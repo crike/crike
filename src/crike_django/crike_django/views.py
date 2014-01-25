@@ -6,6 +6,7 @@ import string
 import sys
 import shutil
 import os
+import time
 
 
 from django.views.generic import *
@@ -23,7 +24,7 @@ from crike_django.forms import *
 from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
 from word_utils import download_word, handle_uploaded_file
 from image_download import download_images_single
-
+from multiprocessing import Process
 
 # Utils
 def save_file(srcfile, dst):
@@ -166,7 +167,9 @@ def retrieve_word(request, book, lesson, word):
     download_word(word)
     if os.path.exists(imgpath):
         shutil.rmtree(imgpath)
-    download_images_single(word)
+    process = Process(target=download_images_single, args=(word,))
+    process.start()
+    time.sleep(8)
     return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
 
 class UserHistoryView(TemplateView):
