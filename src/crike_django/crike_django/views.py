@@ -121,6 +121,12 @@ class StudentView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
+class StudentsAdminView(TemplateView):
+    template_name = 'crike_django/student_admin_view.html'
+
+    def get(self, request, *args, **kwargs):
+        return redirect('home')
+
 class TeacherView(TemplateView):
     template_name = 'crike_django/teacher_view.html'
 
@@ -263,18 +269,22 @@ def word_event_recorder(request, book, lesson, tag):
                                                     word=word,
                                                     lesson=get_lessonobj(book, lesson),
                                                     tag=tag)
-    if ret is True:
-        word_stat.correct_num += 1
-        word_stat.mistake_num += (int(num) - 1)
+    if ret == 'true':
+        correct_num = 1
+        mistake_num = int(num) - 1
     else:
-        word_stat.mistake_num += int(num)
+        correct_num = 0
+        mistake_num = int(num)
+    
+    word_stat.correct_num += correct_num
+    word_stat.mistake_num += mistake_num
     word_stat.save()
 
     wer = WordEventRecorder.objects.create(user=request.user,
                                            word=word,
                                            lesson=get_lessonobj(book,lesson),
-                                           correct_num=1,
-                                           mistake_num=int(num),
+                                           correct_num=correct_num,
+                                           mistake_num=mistake_num,
                                            tag=tag)
     wer.save()
 
