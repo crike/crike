@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load tags %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,11 +19,94 @@
     <!-- <link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet"> -->
     <style type="text/css">
       body {
-        padding-top: 50px;
+        padding-top: 42px;
         padding-bottom: 40px;
         background-color: #F4F4F4;
       }
+      .navbar-brand {
+        padding: 10px;
+      }
+      
       {% include "css/navbar_purple.css" %}
+      
+.subjectbar {
+  z-index: 900;
+  min-height: 0px;
+}
+
+.subjects-toggle {
+  background-image: none !important;
+  color: #e84d1a;
+  clear: both; }
+
+.subjects {
+  /* margin: 20px 0 20px 0; */
+  /* clear: both; */
+}
+
+.subjects .nav li {
+  position: relative;
+  vertical-align: middle;
+  line-height: 15px; }
+  @media screen and (min-width: 1024px) {
+    .subjects .nav li {
+/*      border-left: 1px solid #c8c8c8; */ }
+      .subjects .nav li .subject-title {
+        max-width: 100px; } }
+  .subjects .nav li div {
+    display: table-cell;
+    vertical-align: middle; }
+  .subjects .nav li .subject-chevron {
+    color: #e84d1a; }
+  .subjects .nav li .subject-title {
+    padding: 0 10px 0 10px; }
+  .subjects .nav li a {
+    font-size: 12px;
+    color: #000;
+    text-transform: capitalize;
+    display: block;
+    line-height: 30px;
+    padding: 5px 10px 5px 10px; }
+.subjects .nav :first-child {
+/*  border-left: none; */}
+@media screen and (min-width: 768px) {
+  .subject-header-container {
+    height: 300px;
+    padding: 50px;
+    background-image: url(/static/img/subject-pattern.png); }
+    .subject-header-container .subject-header {
+      height: 200px;
+      line-height: 200px;
+      position: relative;
+      vertical-align: middle; }
+      .subject-header-container .subject-header .subject-header-icon, .subject-header-container .subject-header .subject-header-description {
+        height: 200px; }
+      .subject-header-container .subject-header .subject-header-icon {
+        vertical-align: middle; }
+        .subject-header-container .subject-header .subject-header-icon img, .subject-header-container .subject-header .subject-header-icon object {
+          background-color: #fff;
+          padding: 30px;
+          margin-left: -10px;
+          -webkit-border-radius: 4px;
+          -moz-border-radius: 4px;
+          -ms-border-radius: 4px;
+          -o-border-radius: 4px;
+          border-radius: 4px; }
+      .subject-header-container .subject-header .subject-header-description {
+        margin-top: 2px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+        background-color: #fff;
+        line-height: 15px;
+        padding: 10px 10px 0 20px; }
+        .subject-header-container .subject-header .subject-header-description h1 {
+          text-transform: capitalize; }
+        .subject-header-container .subject-header .subject-header-description p {
+          font-size: 16px; } }
+
     </style>
 
     {% block header %}
@@ -32,22 +116,33 @@
   <body>
     <div class="navbar-xs">
     <div class="navbar-primary">
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top subjectbar" role="navigation">
       <div class="container">
+
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <button type="button" class="navbar-toggle subjects-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand nav" href="{% url 'index' %}">Crike</a>
         </div>
-        <div class="navbar-collapse collapse">
+
+        <div class="navbar-collapse collapse subjects">
           <ul class="nav navbar-nav">
             <li class="{% active request 'auth' %} hide"><a href="{% url 'auth' %}">{% trans '账户' %}</a></li>
-            <li class="{% active request 'books' %}"><a href="{% url 'books' %}">{% trans '课本' %}</a></li>
-            <li class="{% active request 'study' %}"><a href="{% url 'study' %}">{% trans '学习' %}</a></li>
-            <li class="{% active request 'exam' %}"><a href="{% url 'exam' %}">{% trans "考试" %}</a></li>
+            <li class="{% active request 'books' %} subject-item"><a href="{% url 'books' %}">
+              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_languagearts_30x30.png' %}"></div>
+              <div class="subject-title">{% trans '课本' %}</div>
+            </a></li>
+            <li class="{% active request 'study' %} subject-item"><a href="{% url 'study' %}">
+              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_healthskills_30x30.png' %}"></div>
+              <div class="subject-title">{% trans '学习' %}</div>
+            </a></li>
+            <li class="{% active request 'exam' %} subject-item"><a href="{% url 'exam' %}">
+              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_environmentalskills_30x30.png' %}"></div>
+              <div class="subject-title">{% trans "考试" %}</div>
+            </a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">统计 <b class="caret"></b></a>
               <ul class="dropdown-menu">
