@@ -38,6 +38,11 @@ jquery
 * popup bubble
  http://jqueryfordesigners.com/coda-popup-bubbles/
 
+* windy - shuffle animation
+ [demo](http://tympanus.net/Development/Windy/index2.html)
+ [src](https://github.com/codrops/Windy/tree/master/js)
+
+
 div + css
 =====
 
