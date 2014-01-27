@@ -542,20 +542,27 @@ class ExamView(TemplateView):
             options = sample(words_list, count)
         options.insert(randrange(len(options)+1), words[0])
 
+        score = request.GET.get('score')
         return render(request, self.template_name,
-                {'words':words, 'options':options, 'book':book, 'unit':unit})
+                {'words':words, 'options':options, 'book':book, 'unit':unit, 'score':score})
 
     def post(self, request, book, unit):
         page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
-# TODO put this word into this student's strange list if num > 1, and store the num
+        score = request.POST.get('score')
+        if score != 'None':
+            score = eval(score)
+        else:
+            score = 0
+        if ret == 'true':
+            score += 1
         print "nnnnnnnnnnnnnnnn"
-        print num, page, ret
+        print num, page, ret, score
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
             return HttpResponseRedirect('/home')#TODO show exam result
-        return HttpResponseRedirect('/exam/book/'+book+'/unit/'+str(unit)+'/?page='+page)
+        return HttpResponseRedirect('/exam/book/'+book+'/unit/'+str(unit)+'/?page='+page+'&score='+str(score))
 
 # for management
 class LessonAdminView(TemplateView):
