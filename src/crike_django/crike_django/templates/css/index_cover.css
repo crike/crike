@@ -80,4 +80,6 @@ color: #fff!important;
 
 .nextdoor-bottom a:hover {background:#3a485d;text-decoration:none}
 
-body {font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;}
+#carousel-example-captions {
+margin-top: 20px;
+}
