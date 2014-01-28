@@ -3,6 +3,10 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+
+from models import *
+
+
 class UploadFileForm(forms.Form):
     book = forms.CharField(max_length=50)
     lesson = forms.CharField(max_length=50)
@@ -52,3 +56,8 @@ class CrikeRegistrationForm(forms.Form):
 
 class CrikeLoginForm(forms.Form):
     pass
+
+
+class UploadHeadSculptureForm(forms.Form):
+    image = forms.ImageField(label=_('上传图片'))
+

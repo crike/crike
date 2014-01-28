@@ -26,6 +26,7 @@ from word_utils import download_word, handle_uploaded_file
 from image_download import download_images_single
 from multiprocessing import Process
 
+
 # Utils
 def save_file(srcfile, dst):
     try:
@@ -107,7 +108,10 @@ class HomeView(TemplateView):
                     lesson.stat = stat
                     todos.append({'book':book, 'lesson':lesson})
 
-        return render(request, self.template_name, {'todos': todos})
+        return render(request, self.template_name, {
+            'todos': todos,
+            'header_form': UploadHeadSculptureForm
+        })
 
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
@@ -183,6 +187,32 @@ class UserHistoryView(TemplateView):
     def delete(self, request, *args, **kwargs):
         WordEventRecorder.objects.filter(user=request.user).delete()
         return HttpResponse('')
+
+
+def get_profile(user):
+    try:
+        return user.student
+    except:
+        return user.teacher
+
+
+class UserHeadSculptureView(TemplateView):
+    template_name = 'crike_django/'
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponseForbidden('allowed only via POST')
+    
+    def post(self, request, *args, **kwargs):
+        # print request.POST
+        form = UploadHeadSculptureForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = get_profile(request.user)
+            profile.profile_picture = form.cleaned_data['image']
+            profile.save()
+            # XXX success hint
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
 class WordStatView(TemplateView):
     template_name = 'crike_django/word_stat.html'

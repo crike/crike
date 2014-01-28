@@ -92,6 +92,7 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'crike_django.context_processors.user_profile',
     'crike_django.context_processors.registration',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',

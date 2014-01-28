@@ -39,7 +39,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=140, blank=True, null=True)
     gender = models.CharField(max_length=140, blank=True, null=True)
     school = models.CharField(max_length=140, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
+    profile_picture = models.ImageField(upload_to='media/head_sculpture', blank=True)
     age = models.IntegerField(blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True, null=True)

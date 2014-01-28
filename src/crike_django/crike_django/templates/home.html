@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block header %}
 <style>
@@ -29,10 +30,25 @@ background-color: #F3F3F3;
     <div id="user-info-view" class="col-md-2 pull-left">
       <div class="avatar-wrapper">
         <div class="avatar-image-container">
+          {% if profile.profile_picture %}
+           <img class="avatar large border" src="{{ profile.profile_picture }}">
+          {% else %} <!-- no head sculpture -->
           <img class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
+          {% endif %}
         </div>
+        <form method="post" action="{% url 'user_head_sculpture' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ header_form|crispy }}
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-primary">上传</button>
+            </div>
+          </div>
+        </form>
       </div>
+    </div>
 
+    <div id="user-info-view" class="col-md-2 pull-left">
       <div class="user-details">
         <div class="user-details-show">
           <div class="user-identifier user-details-editable">
@@ -42,7 +58,6 @@ background-color: #F3F3F3;
         <div>详细信息</div>
       </div>
     </div>
-
 
     <div class="user-stats col-md-2">
       <div class="user-points-bar-container">
