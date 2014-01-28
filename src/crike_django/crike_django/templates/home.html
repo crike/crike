@@ -24,7 +24,9 @@ background-color: #F3F3F3;
 <header class="user-profile-header header-gray">
   <div class="container">
 
-    <div id="user-info-view" class="pull-left">
+<div class="row">
+
+    <div id="user-info-view" class="col-md-2 pull-left">
       <div class="avatar-wrapper">
         <div class="avatar-image-container">
           <img class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
@@ -37,10 +39,12 @@ background-color: #F3F3F3;
             <span class="username">用户名：{{ user }}</span>
           </div>
         </div>
+        <div>详细信息</div>
       </div>
     </div>
 
-    <div class="user-stats pull-right">
+
+    <div class="user-stats col-md-2">
       <div class="user-points-bar-container">
       <div class="points-labels">
         <span class="best">最好的分数 <strong class="best-count">22</strong></span>
@@ -63,6 +67,8 @@ background-color: #F3F3F3;
     <div class="last-coded">上次编码<span class="last-coded-time"> 22 天前</span>
     </div>
     </div>
+
+</div>
 
 </div>
 </header>
