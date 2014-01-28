@@ -78,7 +78,7 @@
       <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
     </form>
     <div class="pagination bubbleInfo" style="float:right">
-      <div class="popup pin" style="font-size:30%;width:200px" ><i class="fa fa-minus-square"></i> 未完成全部内容</div>
+      <div class="popup pin" style="font-size:30%;width:200px" ><i style="color:red" class="fa fa-minus-square"></i> 未完成全部内容</div>
       <span class="step-links trigger">
         {% if words.has_previous %}
         <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
