@@ -123,10 +123,11 @@ class StudentView(TemplateView):
         return HttpResponse("Not implement yet")
 
 class StudentsAdminView(TemplateView):
-    template_name = 'crike_django/student_admin_view.html'
+    template_name = 'crike_django/students_admin_view.html'
 
     def get(self, request, *args, **kwargs):
-        return redirect('home')
+        students = Student.objects.all()
+        return render(request, self.template_name, {'students': students})
 
 class TeacherView(TemplateView):
     template_name = 'crike_django/teacher_view.html'

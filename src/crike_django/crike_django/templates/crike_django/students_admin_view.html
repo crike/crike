@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for student in students %}
+<div class="checkbox">
+  <label>
+    <input type="checkbox" value="">
+    {{ student.user.username }}
+  </label>
+</div>
+{% endfor %}
+
+{% endblock %}

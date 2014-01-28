@@ -36,7 +36,7 @@ urlpatterns = patterns('',
     url(r'^teacher$', TeacherView.as_view(), name='teacher'),
     url(r'^word/stat$', login_required(WordStatView.as_view()), name='word_stat'),
     url(r'^user/history$', login_required(UserHistoryView.as_view()), name='user_history'),
-    url(r'^admin/students/?$', StudentsAdminView.as_view(), name='students'),
+    url(r'^admin/students/?$', StudentsAdminView.as_view(), name='students_admin'),
 
     # This is an interim implement to redirect when registration complete.
     url(r'^users/(?P<username>.*)/?$', RedirectView.as_view(url=reverse_lazy('index'))),
