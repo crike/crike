@@ -31,7 +31,7 @@ background-color: #F3F3F3;
       <div class="avatar-wrapper">
         <div class="avatar-image-container">
           {% if profile.profile_picture %}
-           <img class="avatar large border" src="{{ profile.profile_picture.url }}">
+           <img class="avatar large border" src="{{ profile.profile_picture.url }}" style="max-width:100%; max-height:100%;">
           {% else %} <!-- no head sculpture -->
           <img class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
           {% endif %}
