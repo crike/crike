@@ -193,7 +193,10 @@ def get_profile(user):
     try:
         return user.student
     except:
-        return user.teacher
+        try:
+            return user.teacher
+        except:
+            return None
 
 
 class UserHeadSculptureView(TemplateView):
@@ -207,6 +210,8 @@ class UserHeadSculptureView(TemplateView):
         form = UploadHeadSculptureForm(request.POST, request.FILES)
         if form.is_valid():
             profile = get_profile(request.user)
+            if not profile:
+                return redirect(request.META.get('HTTP_REFERER', '/'))
             profile.profile_picture = form.cleaned_data['image']
             profile.save()
             # XXX success hint
