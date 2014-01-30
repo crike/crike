@@ -64,7 +64,7 @@
 <div id='popup' class='pin'></div>
 
 {% for word in words %}
-<div class='jumbotron'>
+<div class='jumbotron subject-header-container'>
   <div id="counter" style='float:right;font-size:150%'></div>
   <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
