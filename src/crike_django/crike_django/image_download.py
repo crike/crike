@@ -161,6 +161,8 @@ def get_dir_len(path):
     else:
         return 0
 
+def is_path_full(path):
+    return get_dir_len(path) >= pics_per_word
 
 def download_controller(wordname, engine):
     lastlen = get_dir_len(os.path.join(IMG_PATH, wordname))
@@ -192,7 +194,7 @@ def get_word_from_queue(words):
     wordname = None
     for word in words:
         BASE_PATH = os.path.join(IMG_PATH, word)
-        if get_dir_len(BASE_PATH) >= pics_per_word:
+        if is_path_full(BASE_PATH):
             words.remove(word)
             continue
         else:
@@ -223,8 +225,7 @@ class download_thread(threading.Thread):
 
 def download_images_single(word):
     download_controller(word, download_from_bing_thread)
-    currentlen = get_dir_len(os.path.join(IMG_PATH, word))
-    if currentlen < pics_per_word:
+    if not is_path_full(os.path.join(IMG_PATH, word)):
         print('Try another engine')
         download_controller(word, download_from_google_thread)
 

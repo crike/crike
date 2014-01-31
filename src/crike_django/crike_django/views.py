@@ -23,7 +23,7 @@ from crike_django.models import *
 from crike_django.forms import *
 from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
 from word_utils import download_word, handle_uploaded_file
-from image_download import download_images_single
+from image_download import download_images_single, is_path_full
 from multiprocessing import Process
 
 
@@ -174,7 +174,11 @@ def retrieve_word(request, book, lesson, word):
         shutil.rmtree(imgpath)
     process = Process(target=download_images_single, args=(word,))
     process.start()
-    time.sleep(8)
+    num = 0
+    while not is_path_full(imgpath) and num < 3:
+        num += 1
+        time.sleep(10)
+
     return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
 
 class UserHistoryView(TemplateView):
