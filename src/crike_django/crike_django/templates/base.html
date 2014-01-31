@@ -177,14 +177,20 @@
           </ul>
           {% if user.is_authenticated %}
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{% if user.student %}{% url "student" %}{% elif user.teacher %}{% url "teacher" %}{% endif %}"
+            {% if user.student %}
+						<li><a href="{% url 'student' %}"
                    data-toggle="tooltip" data-placement="bottom" title="用户信息">
-              <i class="fa fa-user fa-lg"></i>
-              {% if user.student %}学生{% endif %}
-              {% if user.teacher %}教师{% endif %}
+              <i class="fa fa-user fa-lg"></i>学生
               <strong>{{ user.username }}</strong>
             </a></li>
-            <li class="divider-vertical"></li>
+						{% else %}
+						<li><a href="{% url 'teacher' %}"
+									 data-toggle="tooltip" data-placement="bottom" title="用户信息">
+							<i class="fa fa-user fa-lg"></i>教师
+							<strong>{{ user.username }}</strong>
+						</a></li>
+						{% endif %}
+						<li class="divider-vertical"></li>
             <li><a href="{% url "django.contrib.auth.views.password_change" %}" data-toggle="tooltip" data-placement="bottom" title="修改密码">
               <i class="fa fa-key fa-lg"></i>
             </a></li>
