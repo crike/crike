@@ -98,6 +98,24 @@ class HomeView(TemplateView):
     template_name = 'home.html'
 
     def get(self, request, *args, **kwargs):
+        strange_record_list = WordEventRecorder.objects.filter(mistake_num__gte=3)
+        strange_list = []
+        for item in strange_record_list:
+            strange_list.append(item.word)
+
+        book_obj = Book.objects.get_or_create(name=request.user)[0]
+        if len(book_obj.lessons) > 0:
+            lesson_obj = book_obj.lessons[0]
+            for word in strange_list:
+                if len(filter(lambda x: x.id == word.id, strange_list)) == 0:
+                    lesson_obj.words.append(word.id)
+        else:
+            lesson_obj = Lesson(name='strange words')
+            for word in strange_list:
+                lesson_obj.words.append(word.id)
+            book_obj.lessons.append(lesson_obj)
+        book_obj.save()
+
         books = Book.objects.all()
         todos = []
         for book in books:
