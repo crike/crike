@@ -72,9 +72,6 @@
         onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
         onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
-    <form id="gototest" style="display:none;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
-      <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
-    </form>
     <div class="pagination bubbleInfo" style="float:right">
       <div class="popup pin" style="font-size:30%;width:200px" ><i style="color:red" class="fa fa-minus-square"></i> 未完成全部内容</div>
       <span class="step-links trigger">
@@ -89,6 +86,9 @@
         {% if words.has_next %}
         <a id="page_next" href="#"><i class="fa fa-times-circle"></i></a>
         {% endif %}
+        <form id="gototest" style="display:none;float:right;margin-left:10px" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
+          <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
+        </form>
       </span>
     </div>
   </h1>
