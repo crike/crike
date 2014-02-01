@@ -114,13 +114,15 @@ class HomeView(TemplateView):
             for word in strange_list:
                 lesson_obj.words.append(word.id)
             book_obj.lessons.append(lesson_obj)
+            lesson_obj.save()
         book_obj.save()
 
         books = Book.objects.all()
         todos = []
         for book in books:
             for lesson in book.lessons:
-                stat = lesson.lessonstat_set.get_or_create(user=request.user)[0]
+                stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
+                                                                   lesson=lesson)
                 lesson_stat_update(stat)
                 if stat.percent < 100:
                     lesson.stat = stat
@@ -545,7 +547,7 @@ class BooksStudyView(TemplateView):
         for book in books:
             for lesson in book.lessons:
                 lesson_result = LessonStat.objects.get_or_create(user=request.user,
-                                                                   lesson=lesson)[0]
+                                                                 lesson=lesson)[0]
                 # XXX this result should never save
                 lesson.result = lesson_result
 
