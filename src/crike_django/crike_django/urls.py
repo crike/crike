@@ -25,15 +25,15 @@ urlpatterns = patterns('',
 # accounts management for administrators
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
-    url(r'^home$', HomeView.as_view(), name='home'), #TODO need read current user's learning process info
+    url(r'^home$', login_required(HomeView.as_view()), name='home'), #TODO need read current user's learning process info
     url(r'^study$', BooksStudyView.as_view(), name='study'),#TODO need get exam unit from user's info
     url(r'^exam/book/(?P<book>.*?)/unit/(?P<unit>.*?)/?$', ExamView.as_view(), name='exam'),
     url(r'^accounts/register/$',
           RegistrationView.as_view(form_class=CrikeRegistrationForm),
           name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
-    url(r'^student$', StudentView.as_view(), name='student'),
-    url(r'^teacher$', TeacherView.as_view(), name='teacher'),
+    url(r'^student$', login_required(StudentView.as_view()), name='student'),
+    url(r'^teacher$', login_required(TeacherView.as_view()), name='teacher'),
     url(r'^word/stat$', login_required(WordStatView.as_view()), name='word_stat'),
     url(r'^user/history$', login_required(UserHistoryView.as_view()), name='user_history'),
     url(r'^user/head-sculpture$', login_required(UserHeadSculptureView.as_view()), name='user_head_sculpture'),
