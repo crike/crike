@@ -177,20 +177,20 @@ font-size: 16px; } }
           </ul>
           {% if user.is_authenticated %}
           <ul class="nav navbar-nav navbar-right">
+
             {% if user.student %}
-						<li><a href="{% url 'student' %}"
-                   data-toggle="tooltip" data-placement="bottom" title="用户信息">
+            <li><a href="{% url 'student' %}" data-toggle="tooltip" data-placement="bottom" title="用户信息">
               <i class="fa fa-user fa-lg"></i>学生
               <strong>{{ user.username }}</strong>
             </a></li>
-						{% else %}
-						<li><a href="{% url 'teacher' %}"
-									 data-toggle="tooltip" data-placement="bottom" title="用户信息">
-							<i class="fa fa-user fa-lg"></i>教师
-							<strong>{{ user.username }}</strong>
-						</a></li>
-						{% endif %}
-						<li class="divider-vertical"></li>
+            {% elif user.teacher %}
+            <li><a href="{% url 'teacher' %}" data-toggle="tooltip" data-placement="bottom" title="用户信息">
+              <i class="fa fa-user fa-lg"></i>教师
+              <strong>{{ user.username }}</strong>
+            </a></li>
+            {% endif %}
+
+            <li class="divider-vertical"></li>
             <li><a href="{% url "django.contrib.auth.views.password_change" %}" data-toggle="tooltip" data-placement="bottom" title="修改密码">
               <i class="fa fa-key fa-lg"></i>
             </a></li>
