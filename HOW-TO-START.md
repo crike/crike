@@ -1,4 +1,3 @@
-
 Here are things you should learn.
 
 ###Common
@@ -16,17 +15,15 @@ Here are things you should learn.
 3. Sql
 4. Nginx.
 
-###Related projects you should take a look at
-> https://github.com/fotomxq/qidimission-en
-
-###Related projects(not open source)
-> http://www.whyyu.com/
-http://www.tingvoa.com/
-http://www.rong-chang.com/eflfast/
-http://www.wwenglish.com/
-http://www.hjenglish.com/new/
-http://bbs.24en.com/bdc/
-http://www.vipabc.com/aspx/portal
-http://www.bigear.cn/
-http://www.spiiker.com/english-plaza.jsp
-http://www.e2say.com/zhuce/business.asp
+###Related projects
+> https://github.com/fotomxq/qidimission-en  
+  http://www.whyyu.com/  
+  http://www.tingvoa.com/  
+  http://www.rong-chang.com/eflfast/  
+  http://www.wwenglish.com/  
+  http://www.hjenglish.com/new/  
+  http://bbs.24en.com/bdc/  
+  http://www.vipabc.com/aspx/portal  
+  http://www.bigear.cn/  
+  http://www.spiiker.com/english-plaza.jsp  
+  http://www.e2say.com/zhuce/business.asp
