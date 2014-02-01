@@ -19,7 +19,7 @@ class Word(models.Model):
         return self.name
 
 class Lesson(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     words = ListField(models.ForeignKey('Word'))
 
 
