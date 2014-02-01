@@ -20,6 +20,7 @@ class Word(models.Model):
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    book = models.ForeignKey('Book')
     words = ListField(models.ForeignKey('Word'))
 
 

@@ -49,7 +49,7 @@ def get_bookobj(book):
         return bookobjs[0]
     return None
 
-def get_lessonobj(book, lesson):
+def get_lessonemb(book, lesson):
     bookobj = get_bookobj(book)
     if bookobj == None:
         return None
@@ -58,8 +58,11 @@ def get_lessonobj(book, lesson):
         return lessonobjs[0]
     return None
 
+def get_lessonobj(lessonemb):
+    return lessonemb.book.lesson_set.filter(name=lessonemb.name)[0]
+
 def get_words_from_lesson(book, lesson):
-    lessonobj = get_lessonobj(book, lesson)
+    lessonobj = get_lessonemb(book, lesson)
     if lessonobj:
         # https://bitbucket.org/wkornewald/djangotoolbox/pull-request/3/allow-setting-an-actual-object-in-a/diff
         return Word.objects.filter(id__in=lessonobj.words)
@@ -114,7 +117,8 @@ class HomeView(TemplateView):
             for word in strange_list:
                 lesson_obj.words.append(word.id)
             book_obj.lessons.append(lesson_obj)
-            lesson_obj.save()
+
+        lesson_obj.save()
         book_obj.save()
 
         books = Book.objects.all()
@@ -309,7 +313,7 @@ def delete_lesson(request, book, lesson):
 def lesson_success(request, book, lesson, tag):
     user = request.user
     # profile = request.user.profile
-    lessonobj = get_lessonobj(book, lesson)
+    lessonobj = get_lessonemb(book, lesson)
     lesson_result = LessonStat.objects.get_or_create(user=user,
                                                        lesson=lessonobj)[0]
     setattr(lesson_result, tag, 25)
@@ -331,7 +335,7 @@ def word_event_recorder(request, book, lesson, tag):
 
     word_stat, retval = WordStat.objects.get_or_create(user=request.user,
                                                     word=word,
-                                                    lesson=get_lessonobj(book, lesson),
+                                                    lesson=get_lessonemb(book, lesson),
                                                     tag=tag)
     if ret == 'true' or tag == 'show':
         correct_num = 1
@@ -346,7 +350,7 @@ def word_event_recorder(request, book, lesson, tag):
 
     wer = WordEventRecorder.objects.create(user=request.user,
                                            word=word,
-                                           lesson=get_lessonobj(book,lesson),
+                                           lesson=get_lessonemb(book,lesson),
                                            correct_num=correct_num,
                                            mistake_num=mistake_num,
                                            tag=tag)
@@ -366,7 +370,7 @@ class LessonShowView(TemplateView):
         word_event_recorder(request, book, lesson, 'show')
 
     def get(self, request, book, lesson):
-        lesson_obj = get_lessonobj(book, lesson)
+        lesson_obj = get_lessonemb(book, lesson)
         words_list = get_words_from_lesson(book, lesson)
         if len(words_list) == 0:
             return render(request, self.template_name,
@@ -641,11 +645,13 @@ class LessonAdminView(TemplateView):
     def post(self, request, book, lesson):
         if request.POST['extra'] == 'rename':
             bookobj = Book.objects.filter(name=book)[0]
-            lessonobj = get_lessonobj(book, lesson)
+            lessonemb = get_lessonemb(book, lesson)
+            lessonobj = get_lessonobj(lessonemb)
             newname = request.POST['newname']
-            if not get_lessonobj(book, newname):
-                bookobj.lessons.remove(lessonobj)
+            if not get_lessonemb(book, newname):
+                bookobj.lessons.remove(lessonemb)
                 lessonobj.name = newname
+                lessonobj.save()
                 bookobj.lessons.append(lessonobj)
                 bookobj.save()
                 return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+newname)
@@ -671,6 +677,10 @@ class LessonAdminView(TemplateView):
                             'AddWordForm':self.addwordform, 'showform':'AddWordForm',
                             'warning':'已经存在，可以使用修改功能哦'})
 
+            bookobj = Book.objects.filter(name=book)[0]
+            lessonemb = get_lessonemb(book, lesson)
+            lessonobj = get_lessonobj(lessonemb)
+            bookobj.lessons.remove(lessonemb)
             word = None
             words = Word.objects.filter(name=request.POST['name'])
             if len(words) > 0:
@@ -693,21 +703,21 @@ class LessonAdminView(TemplateView):
                     save_file(request.FILES['image2'], imagepath+"/2.jpg")
                 word.save()
 
-            bookobj = Book.objects.filter(name=book)[0]
-            lessonobj = get_lessonobj(book, lesson)
-            bookobj.lessons.remove(lessonobj)
             lessonobj.words.append(word.id)
+            lessonobj.save()
             bookobj.lessons.append(lessonobj)
             bookobj.save()
 
         if request.POST['extra'] == 'delword':
             words = request.POST.getlist('delwords')
             bookobj = Book.objects.filter(name=book)[0]
-            lessonobj = get_lessonobj(book, lesson)
-            bookobj.lessons.remove(lessonobj)
+            lessonemb = get_lessonemb(book, lesson)
+            lessonobj = get_lessonobj(lessonemb)
+            bookobj.lessons.remove(lessonemb)
             for word in words:
                 wordobj = Word.objects.filter(name=word)[0]
                 lessonobj.words.remove(wordobj.id)
+                lessonobj.save()
                 if request.POST.get('delinfos', None):
                     wordobj.delete()
                 if request.POST.get('delaudio', None):
@@ -788,7 +798,7 @@ class BooksAdminView(TemplateView):
             book = request.POST['book']
             lesson = request.POST['lesson']
             if get_or_none(Book, name=book):
-                if get_lessonobj(book, lesson):
+                if get_lessonemb(book, lesson):
                     return render(request, self.template_name,
                             {'books':books,'Uploadform':uploadform,
                              'Showform':'uploadform',
@@ -804,9 +814,10 @@ class BooksAdminView(TemplateView):
             lessons = request.POST.getlist('dellessons')
             bookob = Book.objects.filter(name=book)[0]
             for lesson in lessons:
-                for lessonobj in bookob.lessons:
-                    if lessonobj.name == lesson:
-                        bookob.lessons.remove(lessonobj)
+                for lessonemb in bookob.lessons:
+                    if lessonemb.name == lesson:
+                        get_lessonobj(lessonemb).delete()
+                        bookob.lessons.remove(lessonemb)
             bookob.save()
             if len(bookob.lessons) == 0:
                 bookob.delete()
