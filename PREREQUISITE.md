@@ -1,16 +1,13 @@
-djanog-nonrel
-==========
+###djanog-nonrel
 * django-nonrel
 * djangotoolbox
 * mongodb-engine
 
-mongodb
-==========
+###mongodb
 * mongodb
 * pymongo
 
-misc
-==========
+###misc
 * registration
 * crispy-forms
 * django-admin-bootstrapped
