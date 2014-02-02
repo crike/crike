@@ -98,8 +98,9 @@ def lesson_stat_update(stat):
     stat.save()
 
 def update_strange_words_lesson(request):
-    strange_record_list = WordEventRecorder.objects.filter(mistake_num__gte=3)
+    strange_record_list = WordStat.objects.filter(mistake_num__gte=3)
     strange_list = []
+    familiar_list = []
     for item in strange_record_list:
         strange_list.append(item.word)
 
@@ -114,6 +115,15 @@ def update_strange_words_lesson(request):
         for word in strange_list:
             if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
                 lesson_obj.words.append(word.id)
+        familiar_record_list = WordStat.objects.filter(correct_num__gte=2)
+        print familiar_record_list
+        for item in familiar_record_list:
+            if item.lesson.name == 'strange words':
+                familiar_list.append(item.word)
+        print familiar_list
+        for word in familiar_list:
+            if len(filter(lambda x: x == word.id, lesson_obj.words)) > 0:
+                lesson_obj.words.remove(word.id)
     else:
         lesson_obj = Lesson(name='strange words')
         lesson_obj.book = book_obj
