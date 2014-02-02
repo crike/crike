@@ -119,7 +119,8 @@ $(function() {
     $(".dial").knob({
     	readOnly:true,
         'draw': function () {
-        	$(this.i).val(this.cv + '%')
+          if (this.cv.indexOf('%') == -1)
+            $(this.i).val(this.cv + '%')
         }
     });
     $(".knob").knob();
@@ -127,3 +128,4 @@ $(function() {
 </script>
 
 {% endblock %}
+
