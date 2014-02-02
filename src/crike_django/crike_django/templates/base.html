@@ -188,6 +188,11 @@ font-size: 16px; } }
               <i class="fa fa-user fa-lg"></i>教师
               <strong>{{ user.username }}</strong>
             </a></li>
+            {% else %}
+            <li><a href="{% url 'teacher' %}" data-toggle="tooltip" data-placement="bottom" title="用户信息">
+              <i class="fa fa-user fa-lg"></i>admin
+              <strong>{{ user.username }}</strong>
+            </a></li>
             {% endif %}
 
             <li class="divider-vertical"></li>
