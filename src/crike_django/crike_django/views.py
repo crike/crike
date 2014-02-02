@@ -107,18 +107,24 @@ class HomeView(TemplateView):
             strange_list.append(item.word)
 
         book_obj = Book.objects.get_or_create(name=request.user)[0]
-        if len(book_obj.lessons) > 0:
-            lesson_obj = book_obj.lessons[0]
+        lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
+        lesson_obj = None
+        if len(lesson_embs) > 0:
+            lesson_emb = lesson_embs[0]
+            lesson_obj = get_lessonobj(lesson_emb)
+            lesson_obj.book = book_obj
+            book_obj.lessons.remove(lesson_emb)
             for word in strange_list:
-                if len(filter(lambda x: x.id == word.id, strange_list)) == 0:
+                if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
                     lesson_obj.words.append(word.id)
         else:
             lesson_obj = Lesson(name='strange words')
+            lesson_obj.book = book_obj
             for word in strange_list:
                 lesson_obj.words.append(word.id)
-            book_obj.lessons.append(lesson_obj)
 
         lesson_obj.save()
+        book_obj.lessons.append(lesson_obj)
         book_obj.save()
 
         books = Book.objects.all()
