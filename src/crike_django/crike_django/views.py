@@ -97,35 +97,38 @@ def lesson_stat_update(stat):
     stat.percent = stat.pick + stat.show + stat.dictation + stat.fill
     stat.save()
 
+def update_strange_words_lesson(request):
+    strange_record_list = WordEventRecorder.objects.filter(mistake_num__gte=3)
+    strange_list = []
+    for item in strange_record_list:
+        strange_list.append(item.word)
+
+    book_obj = Book.objects.get_or_create(name=request.user)[0]
+    lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
+    lesson_obj = None
+    if len(lesson_embs) > 0:
+        lesson_emb = lesson_embs[0]
+        lesson_obj = get_lessonobj(lesson_emb)
+        lesson_obj.book = book_obj
+        book_obj.lessons.remove(lesson_emb)
+        for word in strange_list:
+            if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
+                lesson_obj.words.append(word.id)
+    else:
+        lesson_obj = Lesson(name='strange words')
+        lesson_obj.book = book_obj
+        for word in strange_list:
+            lesson_obj.words.append(word.id)
+
+    lesson_obj.save()
+    book_obj.lessons.append(lesson_obj)
+    book_obj.save()
+
 class HomeView(TemplateView):
     template_name = 'home.html'
 
     def get(self, request, *args, **kwargs):
-        strange_record_list = WordEventRecorder.objects.filter(mistake_num__gte=3)
-        strange_list = []
-        for item in strange_record_list:
-            strange_list.append(item.word)
-
-        book_obj = Book.objects.get_or_create(name=request.user)[0]
-        lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
-        lesson_obj = None
-        if len(lesson_embs) > 0:
-            lesson_emb = lesson_embs[0]
-            lesson_obj = get_lessonobj(lesson_emb)
-            lesson_obj.book = book_obj
-            book_obj.lessons.remove(lesson_emb)
-            for word in strange_list:
-                if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
-                    lesson_obj.words.append(word.id)
-        else:
-            lesson_obj = Lesson(name='strange words')
-            lesson_obj.book = book_obj
-            for word in strange_list:
-                lesson_obj.words.append(word.id)
-
-        lesson_obj.save()
-        book_obj.lessons.append(lesson_obj)
-        book_obj.save()
+        update_strange_words_lesson(request)
 
         books = Book.objects.all()
         todos = []
@@ -534,6 +537,7 @@ class BooksStudyView(TemplateView):
     template_name='crike_django/books_study.html'
 
     def get(self, request):
+        update_strange_words_lesson(request)
 #TODO only enable the student's available books!!!
         """
         if not book:
