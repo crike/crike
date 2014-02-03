@@ -354,8 +354,11 @@ def word_event_recorder(request, book, lesson, tag):
                                                     word=word,
                                                     lesson=get_lessonemb(book, lesson),
                                                     tag=tag)
-    if ret == 'true' or tag == 'show':
+    if ret == 'true':
         correct_num = 1
+        mistake_num = int(num) - 1
+    elif tag == 'show':
+        correct_num = 0
         mistake_num = int(num) - 1
     else:
         correct_num = 0
