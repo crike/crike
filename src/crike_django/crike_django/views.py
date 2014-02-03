@@ -404,7 +404,7 @@ class LessonShowView(TemplateView):
                                                          lesson=lesson_obj)[0]
         pick = lesson_result.pick
         print 'Show with LessonStat: ', lesson_result
-        if page and eval(page) == len(words_list):
+        if page and eval(page) == len(words_list) or len(words_list) == 1:
             return render(request, self.template_name,
                     {'words': words, 'book': book, 'lesson': lesson, 'done':'True',
                     'lesson_result': lesson_result})
