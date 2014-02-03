@@ -289,17 +289,14 @@ def handle_uploaded_file(bookname, lessonname, words_file):
             wordrecord = Word.objects.filter(name=word)[0]
             lesson.words.append(wordrecord.id)
 
-
+    book = None
     if len(Book.objects.filter(name=bookname)) == 0:
         book = Book.objects.create(name=bookname)
-        book.lessons.append(lesson)
-        lesson.book = book
-        book.save()
     else:
         book = Book.objects.filter(name=bookname)[0]
-        book.lessons.append(lesson)
-        lesson.book = book
-        book.save()
 
+    lesson.book = book
     lesson.save()
+    book.lessons.append(lesson)
+    book.save()
 

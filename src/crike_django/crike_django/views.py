@@ -116,11 +116,9 @@ def update_strange_words_lesson(request):
             if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
                 lesson_obj.words.append(word.id)
         familiar_record_list = WordStat.objects.filter(correct_num__gte=2)
-        print familiar_record_list
         for item in familiar_record_list:
             if item.lesson.name == 'strange words':
                 familiar_list.append(item.word)
-        print familiar_list
         for word in familiar_list:
             if len(filter(lambda x: x == word.id, lesson_obj.words)) > 0:
                 lesson_obj.words.remove(word.id)
