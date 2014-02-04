@@ -147,7 +147,7 @@ font-size: 16px; } }
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_healthskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans '学习' %}</div>
             </a></li>
-            <li class="{% active request 'exam' %} subject-item"><a href="/exam/book/test/unit/0/">
+						<li class="{% active request 'exam' %} subject-item"><a href="{% url 'student' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_environmentalskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans "考试" %}</div>
             </a></li>
