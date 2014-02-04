@@ -90,13 +90,9 @@
 <div id='popup'></div>
 
 {% for word in words %}
-<form id='ExamForm' action='/exam/book/{{book}}/unit/{{unit}}/' method='post'>
+<form id='ExamForm' action='/exam/{{id}}/' method='post'>
   <div class='jumbotron subject-header-container'>
-    {% if unit == 0 %}
-    <label>{{book}} 总测验</label>
-    {% else %}
-    <label>{{book}} / {{unit}} 单元测验</label>
-    {% endif %}
+    <label>{{name}}</label>
     <div id="counter" style='float:right;font-size:150%'></div>
     {% csrf_token %}
     {% if words.has_next %}

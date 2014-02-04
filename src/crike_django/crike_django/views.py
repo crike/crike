@@ -147,9 +147,19 @@ class HomeView(TemplateView):
                 if stat.percent < 100:
                     lesson.stat = stat
                     todos.append({'book':book, 'lesson':lesson})
+                elif lesson.tag != 'intest':
+                    exam = Exam.objects.get_or_create(
+                            user=request.user, name='Unit test', tag='current')[0]
+                    exam.lessons.append(lesson.id)
+                    if len(exam.lessons) == 3:
+                        exam.tag = 'todo'
+                    exam.save()
+                    lesson.tag = 'intest'
+                    lesson.save()
 
         return render(request, self.template_name, {
             'todos': todos,
+            'exams': Exam.objects.filter(tag='todo'),
             'header_form': UploadHeadSculptureForm
         })
 
@@ -604,16 +614,17 @@ def exam_creator(book, unit):
 class ExamView(TemplateView):
     template_name='crike_django/exam_view.html'
 
-    def get(self, request, book, unit):
-        if unit != '':
-            unit = eval(unit)
-            words_list = exam_creator(book, unit)
-        else:
-            words_list = exam_creator(book, 0)
+    def get(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        name = exam.name
+        words_list = []
+        for lesson in exam.lessons:
+            lessonobj = Lesson.objects.filter(id=lesson)[0]
+            words_list += Word.objects.filter(id__in=lessonobj.words)
 
         if len(words_list) == 0:
             return render(request, self.template_name,
-                    { 'book':book, 'unit':unit})
+                    { 'name':name})
 
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
@@ -629,9 +640,10 @@ class ExamView(TemplateView):
 
         score = request.GET.get('score')
         return render(request, self.template_name,
-                {'words':words, 'options':options, 'book':book, 'unit':unit, 'score':score})
+                {'words':words, 'options':options, 
+                    'id':id, 'name':name, 'score':score})
 
-    def post(self, request, book, unit):
+    def post(self, request, id):
         page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
@@ -647,7 +659,7 @@ class ExamView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
             return HttpResponseRedirect('/home')#TODO show exam result
-        return HttpResponseRedirect('/exam/book/'+book+'/unit/'+str(unit)+'/?page='+page+'&score='+str(score))
+        return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
 # for management
 class LessonAdminView(TemplateView):

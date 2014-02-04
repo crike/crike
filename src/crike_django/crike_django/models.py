@@ -22,6 +22,7 @@ class Lesson(models.Model):
     name = models.CharField(max_length=50, unique=True)
     book = models.ForeignKey('Book')
     words = ListField(models.ForeignKey('Word'))
+    tag = models.CharField(max_length=50, blank=True, default='new')
 
     def __unicode__(self):
         return self.name
@@ -36,8 +37,11 @@ class Book(models.Model):
 
 
 class Exam(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    name = models.CharField(max_length=50)
     lessons = ListField(models.ForeignKey('Lesson'))
+    score = models.IntegerField(blank=True, null=True)
+    tag = models.CharField(max_length=50, blank=True, null=True)
 
 
 # This class is to keep compability with other apps
