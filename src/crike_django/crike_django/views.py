@@ -415,8 +415,9 @@ class LessonShowView(TemplateView):
                {'words': words, 'book': book, 'lesson': lesson,
                 'lesson_result': lesson_result})
 
-    def post(self, request, *args, **kwargs):
-        return HttpResponse("Not implement yet")
+    def post(self, request, book, lesson):
+        self._success(request, book, lesson)
+        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/pick')
 
 class LessonPickView(TemplateView):
     template_name = 'crike_django/lesson_pick.html'
@@ -540,7 +541,7 @@ class LessonDictationView(TemplateView):
         self._record(request, book, lesson)
         if page == '0':
             self._success(request, book, lesson)
-            return HttpResponseRedirect('/home')#TODO goto a result show page
+            return HttpResponseRedirect('/home')
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation?page='+page)
 
 class BooksStudyView(TemplateView):

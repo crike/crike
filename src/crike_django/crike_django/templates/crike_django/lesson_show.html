@@ -86,7 +86,8 @@
         {% if words.has_next %}
         <a id="page_next" href="#"><i class="fa fa-times-circle"></i></a>
         {% endif %}
-        <form id="gototest" style="display:none;float:right;margin-left:10px" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
+        <form id="gototest" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
+          {% csrf_token %}
           <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
         </form>
       </span>
