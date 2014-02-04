@@ -39,9 +39,6 @@ class Exam(models.Model):
     name = models.CharField(max_length=50, unique=True)
     lessons = ListField(models.ForeignKey('Lesson'))
 
-class ExamStat(models.Model):
-    exam = models.ForeignKey('Exam')
-    score = models.IntegerField(blank=True, null=True)
 
 # This class is to keep compability with other apps
 # which use original settings.AUTH_USER_MODEL model.
@@ -153,6 +150,7 @@ class StudentStat(models.Model):
 class ExamStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
+    score = models.IntegerField(blank=True, null=True)
 
 
 class WordStat(models.Model):
