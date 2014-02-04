@@ -104,7 +104,7 @@ def update_strange_words_lesson(request):
     for item in strange_record_list:
         strange_list.append(item.word)
 
-    book_obj = Book.objects.get_or_create(name=request.user)[0]
+    book_obj = Book.objects.get_or_create(name=request.user.username)[0]
     lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
     lesson_obj = None
     if len(lesson_embs) > 0:
@@ -123,8 +123,7 @@ def update_strange_words_lesson(request):
             if len(filter(lambda x: x == word.id, lesson_obj.words)) > 0:
                 lesson_obj.words.remove(word.id)
     else:
-        lesson_obj = Lesson(name='strange words')
-        lesson_obj.book = book_obj
+        lesson_obj = Lesson(name='strange words', book=book_obj)
         for word in strange_list:
             lesson_obj.words.append(word.id)
 
