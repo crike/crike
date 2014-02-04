@@ -6,7 +6,7 @@
         {% if form.errors %}
             <div class="alert alert-block fade in">
                 <a class="close" data-dismiss="alert" href="#">×</a>
-                <p><strong>{% trans "Oh snap!" %}</strong> {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}</p>
+                <p><strong>{% trans "啊哦！" %}</strong> {% trans "请输入正确的用户名与密码，注意大小写。" %}</p>
             </div>
         {% endif %}
         <form action="{% url "django.contrib.auth.views.login" %}" method="post" id="login-form">{% csrf_token %}
@@ -16,11 +16,11 @@
                     {% include 'registration/form_field.html' %}
                 {% endfor %}
                 <div class="actions">
-                    <input type="submit" class="btn primary" value="{% trans 'Log in' %}">&nbsp;<button type="reset" class="btn">{% trans 'Cancel' %}</button>
+                    <input type="submit" class="btn primary" value="{% trans '登录' %}">&nbsp;<button type="reset" class="btn">{% trans '取消' %}</button>
                 </div>
             </fieldset>
         </form>
-        <p><a href="{% url "django.contrib.auth.views.password_reset" %}">{% trans "Reset my password" %}</a></p>
+        <p><a href="{% url "django.contrib.auth.views.password_reset" %}">{% trans "密码重置" %}</a></p>
         <script type="text/javascript">
             $(function(){
                 $(".alert-message").alert();
