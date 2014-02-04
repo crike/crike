@@ -23,10 +23,16 @@ class Lesson(models.Model):
     book = models.ForeignKey('Book')
     words = ListField(models.ForeignKey('Word'))
 
+    def __unicode__(self):
+        return self.name
+
 
 class Book(models.Model):
     name = models.CharField(max_length=50)
     lessons = ListField(EmbeddedModelField('Lesson'))
+
+    def __unicode__(self):
+        return self.name
 
 
 class Exam(models.Model):
