@@ -661,6 +661,9 @@ class ExamView(TemplateView):
         print num, page, ret, score
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
+            exam = Exam.objects.filter(id=id)[0]
+            exam.score = score
+            exam.save()
             return HttpResponseRedirect('/home')#TODO show exam result
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
