@@ -147,15 +147,18 @@ class HomeView(TemplateView):
                 if stat.percent < 100:
                     lesson.stat = stat
                     todos.append({'book':book, 'lesson':lesson})
-                elif lesson.tag != 'intest':
+                elif lesson.name != 'strange words' and lesson.tag != 'intest':
                     exam = Exam.objects.get_or_create(
                             user=request.user, name='Unit test', tag='current')[0]
                     exam.lessons.append(lesson.id)
                     if len(exam.lessons) == 3:
                         exam.tag = 'todo'
                     exam.save()
+                    book.lessons.remove(lesson)
                     lesson.tag = 'intest'
                     lesson.save()
+                    book.lessons.append(lesson)
+                    book.save()
 
         return render(request, self.template_name, {
             'todos': todos,
