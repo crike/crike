@@ -40,6 +40,7 @@ class Exam(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=50)
     lessons = ListField(models.ForeignKey('Lesson'))
+    length = models.IntegerField(blank=True, default=0)
     score = models.IntegerField(blank=True, null=True)
     tag = models.CharField(max_length=50, blank=True, null=True)
 

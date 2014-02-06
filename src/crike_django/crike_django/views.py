@@ -151,6 +151,7 @@ class HomeView(TemplateView):
                     exam = Exam.objects.get_or_create(
                             user=request.user, name='Unit test', tag='current')[0]
                     exam.lessons.append(lesson.id)
+                    exam.length += len(lesson.words)
                     if len(exam.lessons) == 3:
                         exam.tag = 'todo'
                     exam.save()
