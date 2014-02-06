@@ -98,6 +98,8 @@ def lesson_stat_update(stat):
     stat.save()
 
 def update_strange_words_lesson(request):
+    if request.user.username == '':
+        return
     strange_record_list = WordStat.objects.filter(mistake_num__gte=3)
     strange_list = []
     familiar_list = []
