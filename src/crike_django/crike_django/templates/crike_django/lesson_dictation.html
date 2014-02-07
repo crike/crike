@@ -32,7 +32,6 @@ document.onkeypress = stopRKey;
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <input name="question" value="{{option.name}}" hidden="true">
       <input type="text" name="ans{{forloop.counter0}}" autocomplete="off">
       <a onmouseover="delayPlay('/media/audios/{{ option.name }}.mp3');"
           onmouseout ="clearTimeout(timer);" 
@@ -50,21 +49,25 @@ document.onkeypress = stopRKey;
   var form = $('#DictationForm');
   var ques = new Array();
   var ans = new Array();
+  var ret = new Array();
   var numoftry = new Array();
   {% for option in options %}
   ques.push('{{option.name}}')
   ans.push('')
   {% endfor %}
   for (i=0;i<{{options|length}};i++) {
-    numoftry[i] = 1;
+    numoftry[i] = 0;
+    ret[i]=false;
   }
 
   function onSubmit(t,e) {
     var index = parseInt(t.id.substring(3));
     ans[index] = $(form).find( "input[name='ans"+index+"']" ).prop('value');
+    numoftry[index]++;
 
     if (ques[index] == ans[index])
     {
+      ret[index] = true;
       $('#feedback'+index).text('Good job!');
       for (i=0;i<{{options|length}};i++) {
         if (ques[i] != ans[i]){
@@ -73,14 +76,17 @@ document.onkeypress = stopRKey;
         }
       }
       $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#DictationForm');
+      $('<input>').attr({name:'ret', value:ret, hidden:'true'}).appendTo('#DictationForm');
+      $('<input>').attr({name:'options', value:ques, hidden:'true'}).appendTo('#DictationForm');
     } else {
       e.preventDefault();
       $('#feedback'+index).text('不对哦，再想一想');
-      numoftry[index]++;
+      ret[index] = false;
     }
   console.log(ques)
   console.log(ans)
   console.log(numoftry)
+  console.log(ret)
   };
 </script>
 

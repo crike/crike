@@ -394,6 +394,39 @@ def word_event_recorder(request, book, lesson, tag):
     print word, request.user, lesson
 
 
+def words_event_recorder(request, book, lesson, tag):
+    num = request.POST.get('num').split(',')
+    ret = request.POST.get('ret').split(',')
+    options = request.POST.get('options').split(',')
+
+    for i,option in enumerate(options):
+        word = Word.objects.filter(name=option)[0]
+        word_stat, retval = WordStat.objects.get_or_create(user=request.user,
+                                                        word=word,
+                                                        lesson=get_lessonemb(book, lesson),
+                                                        tag=tag)
+        if ret[i] == 'true':
+            correct_num = 1
+            mistake_num = int(num[i]) - 1
+        else:
+            correct_num = 0
+            mistake_num = int(num[i])
+        
+        word_stat.correct_num += correct_num
+        word_stat.mistake_num += mistake_num
+        word_stat.save()
+
+        wer = WordEventRecorder.objects.create(user=request.user,
+                                               word=word,
+                                               lesson=get_lessonemb(book,lesson),
+                                               correct_num=correct_num,
+                                               mistake_num=mistake_num,
+                                               tag=tag)
+        wer.save()
+
+        print word, request.user, lesson
+
+
 # for learning
 class LessonShowView(TemplateView):
     template_name = 'crike_django/lesson_show.html'
@@ -526,7 +559,7 @@ class LessonDictationView(TemplateView):
         lesson_success(request, book, lesson, 'dictation')
 
     def _record(self, request, book, lesson):
-        word_event_recorder(request, book, lesson, 'dictation')
+        words_event_recorder(request, book, lesson, 'dictation')
 
     def get(self, request, book, lesson):
         words_list = get_words_from_lesson(book, lesson)
@@ -548,8 +581,10 @@ class LessonDictationView(TemplateView):
     def post(self, request, book, lesson):
         page = request.POST.get('page')
         num = request.POST.get('num')
+        ret = request.POST.get('ret')
+        options = request.POST.get('options')
         print "nnnnnnnnnnnnnnnn"
-        print num
+        print num, ret, options
         print "nnnnnnnnnnnnnnnn"
         self._record(request, book, lesson)
         if page == '0':
