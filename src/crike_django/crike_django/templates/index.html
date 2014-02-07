@@ -21,11 +21,11 @@
   }
 </script>
 {% endblock %}
-{% block content %}
+{% block container_header %}
 <div class="index_container">
   <div id="index_cover">
     <div style="margin: 10% 30%;">
-    <h1>Crike [kraɪk] 
+    <h1 style="color: white;">Crike [kraɪk] 
     <a onmouseover="delayPlay('/media/audios/crike.mp3');"
         onmouseout ="clearTimeout(timer);" 
         onclick="playSound('/meida/audios/crike.mp3');" 
@@ -47,8 +47,9 @@
       </div>
 </div>
 
+{% endblock %}
 
-
+{% block content %}
     <!-- Carousel
     ================================================== -->
       <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
