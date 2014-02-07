@@ -465,7 +465,6 @@ class LessonPickView(TemplateView):
         page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
-# TODO put this word into this student's strange list if num > 1, and store the num
         print "nnnnnnnnnnnnnnnn"
         print num, page, ret
         print "nnnnnnnnnnnnnnnn"
@@ -510,7 +509,6 @@ class LessonFillView(TemplateView):
         page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
-# TODO put this word into this student's strange list if num > 1, and store the num
         print "nnnnnnnnnnnnnnnn"
         print num, page, ret
         print "nnnnnnnnnnnnnnnn"
@@ -550,7 +548,6 @@ class LessonDictationView(TemplateView):
     def post(self, request, book, lesson):
         page = request.POST.get('page')
         num = request.POST.get('num')
-# TODO put this word into this student's strange list if num > 1, and store the num
         print "nnnnnnnnnnnnnnnn"
         print num
         print "nnnnnnnnnnnnnnnn"
