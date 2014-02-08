@@ -79,7 +79,7 @@
         {% csrf_token %}
         {{ Uploadform|crispy }}
         <input hidden='true' name='extra' value='add'>
-        <input type="submit" value="upload">
+        <input type="submit" value="upload" onclick="this.disabled=true; this.value='Please Wait...';$('#uploadform').submit();">
         <strong>{{ Uploadwarning }}</strong>
       </form>
       {% if Showform == "deleteform" %}
