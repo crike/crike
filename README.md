@@ -6,14 +6,10 @@ English online teaching and testing system.
 Todo
 -----
 * refine urls to RESTful -- WIP
-* pad上支持滑动翻页
-* 加入中间休息环节，播放轻松音乐和休息提示
 * 每次登陆提示先学习常错的单词
 * 加入积分系统，主要针对考试，教师可以消除积分，积分换奖品提示等
-* 考试和学习结束时根据成绩播放掌声或成功画面
 * 统计信息：对单词阅读、学习、考试进行统计
 * 禁止通过修改browser地址栏直接进入某页面，禁止刷新清零错误次数
-* 性能：使用 redis 作为缓存层
 * 网站命名
 * 网站图标
 * beautify
