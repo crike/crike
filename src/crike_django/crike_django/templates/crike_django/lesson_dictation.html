@@ -1,4 +1,5 @@
 {% extends 'crike_django/lesson_base.html' %}
+{% load staticfiles %}
 
 {% block subcontent %}
 <script type="text/javascript"> 
@@ -10,16 +11,17 @@ function stopRKey(evt) {
 document.onkeypress = stopRKey; 
 </script>
 
+<div id='overlay'></div>
+<div id='popup' class='pin'></div>
+
 <div class='jumbotron subject-header-container'>
-  <span style="float:right">返回  
-    <a href='/study/book/{{book}}/lesson/{{lesson}}/show'>单词学习</a>
-  </span>
-  <span class="current" style="float:right">
-      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
-  </span>
+  <div id="counter" style='float:right;font-size:150%'></div>
   <h1>
     鼠标轻抚<i class="fa fa-volume-up"></i>听发音，<br>填写完整单词
   </h1>
+  <span class="current" style="float:right">
+      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
+  </span>
 </div>
 
 <form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/dictation' method='post'>
@@ -60,6 +62,25 @@ document.onkeypress = stopRKey;
     ret[i]=false;
   }
 
+  $(function(){
+    var form = $('#DictationForm');
+    $('#counter').countdown({
+       image: "{% static 'countdown/img/digits.png' %}",
+       startTime: '01:00',
+       timerEnd: function(){ 
+        $('#popup')
+        .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'></i></label>")
+        .show()
+        $('#overlay').show()
+        $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#DictationForm');
+        $('<input>').attr({name:'ret', value:ret, hidden:'true'}).appendTo('#DictationForm');
+        $('<input>').attr({name:'options', value:ques, hidden:'true'}).appendTo('#DictationForm');
+        setTimeout( function () { $(form).submit(); }, 1000);
+       },
+       format: 'mm:ss'
+    });
+  });
+
   function onSubmit(t,e) {
     var index = parseInt(t.id.substring(3));
     ans[index] = $(form).find( "input[name='ans"+index+"']" ).prop('value');
@@ -83,12 +104,12 @@ document.onkeypress = stopRKey;
       $('#feedback'+index).text('不对哦，再想一想');
       ret[index] = false;
     }
-  console.log(ques)
-  console.log(ans)
-  console.log(numoftry)
-  console.log(ret)
   };
 </script>
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
 
 {% endblock %}
 
