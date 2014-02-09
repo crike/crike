@@ -66,7 +66,8 @@
 {% for word in words %}
 <div class='jumbotron subject-header-container'>
   <div id="counter" style='float:right;font-size:150%'></div>
-  <h1><strong style='font-size:150%'>{{word.name}} </strong> [{{ word.phonetics }}]
+  <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
+    [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
         onmouseout ="clearTimeout(timer);" 
         onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
@@ -75,12 +76,12 @@
         {{ words.number }} / {{ words.paginator.num_pages }}
     </span>
   </h1>
-  <strong id='feedback'>请选择单词释义，只有一个正确哦</strong>
 </div>
 
 <form id='PickForm' action='/study/book/{{book}}/lesson/{{lesson}}/pick' method='post'>
   {% csrf_token %}
   <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
+  <strong id='feedback' style="font-size:150%">请选择单词释义，只有一个正确哦</strong>
   <input name="question" value="{{word.name}}" hidden="true">
   {% if words.has_next %}
   <input name="page" value="{{words.next_page_number}}" hidden="true">
