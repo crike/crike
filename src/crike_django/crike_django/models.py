@@ -175,6 +175,7 @@ class LessonStat(models.Model):
     dictation = models.IntegerField(default=0)
     fill = models.IntegerField(default=0)
     percent = models.IntegerField(default=0)
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u'User %s show %d pick %d dictation %d fill %d' % (self.user, self.show, self.pick, self.dictation, self.fill)
