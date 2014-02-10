@@ -7,6 +7,7 @@ import sys
 import shutil
 import os
 import time
+import datetime
 
 
 from django.views.generic import *
@@ -439,6 +440,14 @@ class LessonShowView(TemplateView):
 
     def get(self, request, book, lesson):
         lesson_obj = get_lessonemb(book, lesson)
+        if lesson_obj.name != "strange words":
+            lesson_strange = get_lessonemb(request.user.username, "strange words")
+            lesson_result = LessonStat.objects.get_or_create(user=request.user,
+                                                             lesson=lesson_strange)[0]
+            if lesson_result.timestamp.date() != datetime.datetime.now().date():
+                print "need study strange words first!"
+                return HttpResponseRedirect('/study/book/'+request.user.username+'/lesson/strange words/show')
+
         words_list = get_words_from_lesson(book, lesson)
         if len(words_list) == 0:
             return render(request, self.template_name,
