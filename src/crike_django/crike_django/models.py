@@ -19,7 +19,8 @@ class Point(models.Model):
       etc.
     '''
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    point = models.IntegerField(default=0)
+    usage_points = models.IntegerField(default=0)
+    total_points = models.IntegerField(default=0)
 
 
 class Prize(models.Model):
