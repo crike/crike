@@ -10,6 +10,10 @@ book包含多个lesson，lesson包含多个word，user包含多个course
 '''
 
 
+class Point(models.Model):
+    pass
+
+
 class Word(models.Model):
     name = models.CharField(max_length=50)
     phonetics = models.CharField(max_length=50)
