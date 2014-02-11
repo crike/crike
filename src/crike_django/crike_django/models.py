@@ -26,16 +26,36 @@ class Prize(models.Model):
     '''
     People buy prize with points.
     '''
-    pass
+    name = models.CharField(max_length=50)
+    date = models.DateField(auto_now_add=True)
+    category = models.CharField(max_length=50, default='prize')
+    tag = models.CharField(max_length=50, default='prize')
+    value = models.IntegerField(default=0)# XXX the default value of a prize is 0
+    amount = models.IntegerField(default=1)
 
 
 class PrizeQuery(models.Model):
     '''
     When a person buys a prize, system generates a prize
     query, and wait for teacher to give the student a real
-    prize.
+    prize. (maybe pending in a wait queue)
     '''
-    pass
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date = models.DateField(auto_now_add=True)
+    category = models.CharField(max_length=50)
+    tag = models.CharField(max_length=50)
+    amount = models.IntegerField(default=0)# XXX
+    cost = models.IntegerField(default=0)
+
+
+class Class(models.Model):
+    '''
+           1    n
+    Lesson ------ Teacher
+    '''
+    lesson = models.ForeignKey("Lesson")
+    teachers = models.ManyToManyField("Teacher")
+    students = models.ManyToManyField("Student")
 
 
 class Word(models.Model):
@@ -45,6 +65,7 @@ class Word(models.Model):
     
     def __unicode__(self):
         return self.name
+
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -89,6 +110,7 @@ class Profile(models.Model):
     last_login_ip = models.IPAddressField(blank=True, null=True)
     last_login_date = models.DateTimeField(blank=True, null=True)
     is_human = models.BooleanField()
+    point = models.IntegerField(default=20)
 
     @property
     def is_student(self):
