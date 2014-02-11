@@ -53,6 +53,7 @@ class Class(models.Model):
            1    n
     Lesson ------ Teacher
     '''
+    date = models.DateField(auto_now_add=True)
     lesson = models.ForeignKey("Lesson")
     teachers = models.ManyToManyField("Teacher")
     students = models.ManyToManyField("Student")
