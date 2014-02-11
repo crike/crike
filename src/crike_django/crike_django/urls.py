@@ -24,6 +24,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
 # accounts management for administrators
     url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'favicon/1.ico')),
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
     url(r'^home$', login_required(HomeView.as_view()), name='home'), #TODO need read current user's learning process info
     url(r'^study$', BooksStudyView.as_view(), name='study'),#TODO need get exam unit from user's info
