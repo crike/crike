@@ -147,7 +147,7 @@ class HomeView(TemplateView):
                 stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
                                                                    lesson=lesson)
                 lesson_stat_update(stat)
-                if stat.percent < 100:
+                if stat.percent: #< 100:
                     lesson.stat = stat
                     todos.append({'book':book, 'lesson':lesson})
                 elif lesson.name != 'strange words' and lesson.tag != 'intest':
