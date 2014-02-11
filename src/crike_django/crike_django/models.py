@@ -9,20 +9,6 @@ from django.conf import settings
 book包含多个lesson，lesson包含多个word，user包含多个course
 '''
 
-
-class Point(models.Model):
-    '''
-    Points are gained from many events:
-      Exam finished;
-      Special events;
-      Exam ranking;
-      etc.
-    '''
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    usage_points = models.IntegerField(default=0)
-    total_points = models.IntegerField(default=0)
-
-
 class Prize(models.Model):
     '''
     People buy prize with points.
@@ -112,7 +98,8 @@ class Profile(models.Model):
     last_login_ip = models.IPAddressField(blank=True, null=True)
     last_login_date = models.DateTimeField(blank=True, null=True)
     is_human = models.BooleanField()
-    point = models.IntegerField(default=20)
+    usage_points = models.IntegerField(default=0)
+    total_points = models.IntegerField(default=0)
 
     @property
     def is_student(self):
