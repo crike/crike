@@ -2,81 +2,88 @@
 {% load staticfiles %}
 
 {% block subcontent %}
-<link href="{% static 'bubbleinfo/bubbleinfo.css' %}" rel="stylesheet" type="text/css"/>
-<script type="text/javascript">
-  $(function(){
-    $('#counter').countdown({
-       image: "{% static 'countdown/img/digits.png' %}",
-       startTime: '03:00',
-       timerEnd: function(){ 
-         var elem = document.getElementById('page_next');
-         if (elem != null)
-           window.location = elem.href;
-       },
-       format: 'mm:ss'
-    });
-  });
-  var gotimer = null;
-  var ready = false;
-  $(document).ready(function (){
-    $("body").keydown(function(e) {
-      if (e.which == 39) { // right
-        if (ready) {
-          var elem = document.getElementById('page_next');
-          if (elem != null)
-            window.location = elem.href;
-          } else {
-            var showtimer = null;
-            var cb = "$('#popup').hide();$('#overlay').hide()"
-            $('#popup')
-            .html("<label style='font-size:300%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
-            .show()
-            $('#overlay').show()
-            shotimer = setTimeout(cb, 2000)
-          }
-      }else if(e.which == 37) { // left
-          var elem = document.getElementById('page_prev');
-          if (elem != null)
-            window.location = elem.href;
-      }
-    });
-  });
-  function readyGo() {
-    {% if words.has_next %}
-    $('.step-links').find('a[id=page_next]')
-      .prop('href', "?page={{ words.next_page_number }}")
-      .find('i').attr('class',"fa fa-arrow-circle-right");
-    {% endif %}
-    ready = true;
-    $('.pagination').attr('class', 'pagination');
-    if ("{{done}}" == "True") {
-      $('#gototest').show();
-    }
-  };
-  function delayGo() {
-      clearTimeout(gotimer);
-      var cb = "readyGo()";
-      gotimer = setTimeout(cb, 500);
-  };
-</script>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<meta name="description" content="Bookblock: A Content Flip Plugin - Demo 4" />
+<meta name="keywords" content="javascript, jquery, plugin, css3, flip, page, 3d, booklet, book, perspective" />
+<link rel="stylesheet" type="text/css" href="{% static 'bookblock/css/default.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'bookblock/css/bookblock.css' %}" />
+<!-- custom demo style -->
+<link rel="stylesheet" type="text/css" href="{% static 'bookblock/css/demo4.css' %}" />
+<script src="{% static 'bookblock/js/modernizr.custom.js' %}"></script>
 
-<div id='overlay'></div>
-<div id='popup' class='pin'></div>
+<div class="container">
+<div class="bb-custom-wrapper">
+	
+	<div id="bb-bookblock" class="bb-bookblock">
+		<div class="bb-item">
+			<div class="bb-custom-firstpage">
+        <p>This is for lesson cover</p>
+			</div>
+			<div class="bb-custom-side">
+				<p>Here we show the lesson status for student</p>
+			</div>
+		</div>
+    {% for word in words %}
+		<div class="bb-item">
+			<div class="bb-custom-side">
+        <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
+          [{{ word.phonetics }}]
+          <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
+              onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
+              onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
+              title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+        </h1>
+        <ul>
+          {% for mean in word.mean %}
+          <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
+          {% endfor %}
+        </ul>
+			</div>
+			<div class="bb-custom-side">
+        <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-captions" data-slide-to="1" class=""></li>
+            <li data-target="#carousel-example-captions" data-slide-to="2" class=""></li>
+          </ol>
+          <div class="carousel-inner" style="height:500px">
+            <div class="item active">
+              <!-- data-src="holder.js/900x500/auto/#777:#777" -->
+              <img alt="900x500" src="/media/images/{{word.name}}/0.jpg">
+            </div>
+            <div class="item">
+              <img alt="900x500" src="/media/images/{{word.name}}/1.jpg">
+            </div>
+            <div class="item">
+              <img alt="900x500" src="/media/images/{{word.name}}/2.jpg">
+            </div>
+          </div>
+          <a class="left carousel-control" href="#carousel-example-captions" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+          </a>
+          <a class="right carousel-control" href="#carousel-example-captions" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </a>
+        </div>
+      </div>
+		</div>
+    {% endfor %}
+	</div>
 
-<div class='jumbotron subject-header-container'>
-  {% for word in words %}
-  <div id="counter" style='float:right;font-size:150%'></div>
-  <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
-    [{{ word.phonetics }}]
-    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
-        onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
-        onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
-        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+	<nav>
+		<a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first">First page</a>
+		<a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
+		<a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">Next</a>
+		<a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last">Last page</a>
+	</nav>
+
     <div class="pagination bubbleInfo" style="float:right">
       <div class="popup pin" style="font-size:30%;width:200px" ><i style="color:red" class="fa fa-minus-square"></i> 未完成全部内容</div>
       <span class="step-links trigger">
         {% if words.has_previous %}
-        <a id="page_prev" href="?page={{ words.previous_page_number }}"><i class="fa fa-arrow-circle-left"></i></a>
+		    <a id="bb-nav-prev" href="?page={{ words.previous_page_number }}" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -84,7 +91,7 @@
         </span>
 
         {% if words.has_next %}
-        <a id="page_next" href="#"><i class="fa fa-times-circle"></i></a>
+		    <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">Next</a>
         {% endif %}
       </span><br>
       <form id="gototest" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
@@ -92,55 +99,155 @@
         <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
       </form>
     </div>
-  </h1>
-  {% endfor %}
+
+
 </div>
 
-<div class='row'>
-  {% for word in words %}
-  <div class="col-md-6 col-lg-6">
-    <div class='pin' style="width:100%">
-      {% for mean in word.mean %}
-      <li style='font-size:200%;margin-left:10px'>{{mean}}</li>
-      {% endfor %}
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-6">
-    <div class='pin' style="width:100%">
-    <!-- Carousel
-    ================================================== -->
-      <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
-          <li data-target="#carousel-example-captions" data-slide-to="1" class=""></li>
-          <li data-target="#carousel-example-captions" data-slide-to="2" class=""></li>
-        </ol>
-        <div class="carousel-inner" style="height:350px">
-          <div class="item active">
-            <!-- data-src="holder.js/900x500/auto/#777:#777" -->
-            <img alt="900x500" src="/media/images/{{word.name}}/0.jpg">
-          </div>
-          <div class="item">
-            <img alt="900x500" src="/media/images/{{word.name}}/1.jpg">
-          </div>
-          <div class="item">
-            <img alt="900x500" src="/media/images/{{word.name}}/2.jpg">
-          </div>
-        </div>
-        <a class="left carousel-control" href="#carousel-example-captions" data-slide="prev">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <a class="right carousel-control" href="#carousel-example-captions" data-slide="next">
-          <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+</div><!-- /container -->
+<script src="{% static 'bookblock/js/jquerypp.custom.js' %}"></script>
+<script src="{% static 'bookblock/js/jquery.bookblock.js' %}"></script>
+<script>
+$(function(){
+  $('#counter').countdown({
+     image: "{% static 'countdown/img/digits.png' %}",
+     startTime: '03:00',
+     timerEnd: function(){ 
+       var elem = document.getElementById('page_next');
+       if (elem != null)
+         window.location = elem.href;
+     },
+     format: 'mm:ss'
+  });
+});
+var gotimer = null;
+var ready = false;
+$(document).ready(function (){
+  $("body").keydown(function(e) {
+    if (e.which == 39) { // right
+      if (ready) {
+        var elem = document.getElementById('page_next');
+        if (elem != null)
+          window.location = elem.href;
+        } else {
+          var showtimer = null;
+          var cb = "$('#popup').hide();$('#overlay').hide()"
+          $('#popup')
+          .html("<label style='font-size:300%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
+          .show()
+          $('#overlay').show()
+          shotimer = setTimeout(cb, 2000)
+        }
+    }else if(e.which == 37) { // left
+        var elem = document.getElementById('page_prev');
+        if (elem != null)
+          window.location = elem.href;
+    }
+  });
+});
+function readyGo() {
+  {% if words.has_next %}
+  $('.step-links').find('a[id=page_next]')
+    .prop('href', "?page={{ words.next_page_number }}")
+    .find('i').attr('class',"fa fa-arrow-circle-right");
+  {% endif %}
+  ready = true;
+  $('.pagination').attr('class', 'pagination');
+  if ("{{done}}" == "True") {
+    $('#gototest').show();
+  }
+};
+function delayGo() {
+    clearTimeout(gotimer);
+    var cb = "readyGo()";
+    gotimer = setTimeout(cb, 500);
+};
+
+var Page = (function() {
+	
+	var config = {
+			$bookBlock : $( '#bb-bookblock' ),
+			$navNext : $( '#bb-nav-next' ),
+			$navPrev : $( '#bb-nav-prev' ),
+			$navFirst : $( '#bb-nav-first' ),
+			$navLast : $( '#bb-nav-last' )
+		},
+		init = function() {
+			config.$bookBlock.bookblock( {
+				speed : 1000,
+				shadowSides : 0.8,
+				shadowFlip : 0.4
+			} );
+			initEvents();
+		},
+		initEvents = function() {
+			
+			var $slides = config.$bookBlock.children();
+
+			// add navigation events
+			config.$navNext.on( 'click touchstart', function() {
+				config.$bookBlock.bookblock( 'next' );
+				return false;
+			} );
+
+			config.$navPrev.on( 'click touchstart', function() {
+				config.$bookBlock.bookblock( 'prev' );
+				return false;
+			} );
+
+			config.$navFirst.on( 'click touchstart', function() {
+				config.$bookBlock.bookblock( 'first' );
+				return false;
+			} );
+
+			config.$navLast.on( 'click touchstart', function() {
+				config.$bookBlock.bookblock( 'last' );
+				return false;
+			} );
+			
+			// add swipe events
+			$slides.on( {
+				'swipeleft' : function( event ) {
+					config.$bookBlock.bookblock( 'next' );
+					return false;
+				},
+				'swiperight' : function( event ) {
+					config.$bookBlock.bookblock( 'prev' );
+					return false;
+				}
+			} );
+
+			// add keyboard events
+			$( document ).keydown( function(e) {
+				var keyCode = e.keyCode || e.which,
+					arrow = {
+						left : 37,
+						up : 38,
+						right : 39,
+						down : 40
+					};
+
+				switch (keyCode) {
+					case arrow.left:
+						config.$bookBlock.bookblock( 'prev' );
+						break;
+					case arrow.right:
+						config.$bookBlock.bookblock( 'next' );
+						break;
+				}
+			} );
+		};
+
+		return { init : init };
+
+})();
+</script>
+<script>
+	Page.init();
+</script>
 {% endblock %}
 
 {% block body_footer %}
 <script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'bubbleinfo/jquery.bubbleinfo.js' %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
+

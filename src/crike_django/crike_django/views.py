@@ -436,12 +436,12 @@ class LessonShowView(TemplateView):
         lesson_success(request, book, lesson, 'show')
 
     def _record(self, request, book, lesson):
-        word_event_recorder(request, book, lesson, 'show')
+        #word_event_recorder(request, book, lesson, 'show')
+        pass
 
     def get(self, request, book, lesson):
-        page = request.GET.get('page')
         lesson_obj = get_lessonemb(book, lesson)
-        if page == None and lesson_obj.name != "strange words":
+        if lesson_obj.name != "strange words":
             lesson_strange = get_lessonemb(request.user.username, "strange words")
             lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                              lesson=lesson_strange)[0]
@@ -449,25 +449,15 @@ class LessonShowView(TemplateView):
                 print "need study strange words first!"
                 return HttpResponseRedirect('/study/book/'+request.user.username+'/lesson/strange words/show')
 
-        words_list = get_words_from_lesson(book, lesson)
-        if len(words_list) == 0:
+        words = get_words_from_lesson(book, lesson)
+        if len(words) == 0:
             return render(request, self.template_name,
                    {'book': book, 'lesson': lesson})
-        paginator = Paginator(words_list, 1)
-        words = get_words_from_paginator(paginator, page)
-        print "nnnnnnnnn"
-        print "word %s show!" % words[0]
-        print "nnnnnnnnn"
 
         self._record(request, book, lesson)
         lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                          lesson=lesson_obj)[0]
-        pick = lesson_result.pick
         print 'Show with LessonStat: ', lesson_result
-        if page and eval(page) == len(words_list) or len(words_list) == 1:
-            return render(request, self.template_name,
-                    {'words': words, 'book': book, 'lesson': lesson, 'done':'True',
-                    'lesson_result': lesson_result})
 
         return render(request, self.template_name,
                {'words': words, 'book': book, 'lesson': lesson,
