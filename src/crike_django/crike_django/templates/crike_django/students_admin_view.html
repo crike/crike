@@ -29,7 +29,8 @@
             <th>年龄</th>
             <th>地址</th>
             <th>电话</th>
-            <th>状态</th>
+            <th>总获得点数</th>
+            <th>可用点数</th>
           </tr>
         </thead>
         <tbody>
@@ -39,8 +40,9 @@
             <td>{{ student.school }}</td>
             <td>{{ student.age }}</td>
             <td>{{ student.location }}</td>
-            <td>{{ null }}</td>
-            <td>{{ null }}</td>
+            <td>{{ student.mobile }}</td>
+            <td>{{ student.total_points }}</td>
+            <td>{{ student.usage_points }}</td>
           </tr>
         {% endfor %}
         </tbody>
