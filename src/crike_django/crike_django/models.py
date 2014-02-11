@@ -11,6 +11,30 @@ book包含多个lesson，lesson包含多个word，user包含多个course
 
 
 class Point(models.Model):
+    '''
+    Points are gained from many events:
+      Exam finished;
+      Special events;
+      Exam ranking;
+      etc.
+    '''
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    point = models.IntegerField(default=0)
+
+
+class Prize(models.Model):
+    '''
+    People buy prize with points.
+    '''
+    pass
+
+
+class PrizeQuery(models.Model):
+    '''
+    When a person buys a prize, system generates a prize
+    query, and wait for teacher to give the student a real
+    prize.
+    '''
     pass
 
 
