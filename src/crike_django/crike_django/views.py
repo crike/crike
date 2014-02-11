@@ -439,8 +439,9 @@ class LessonShowView(TemplateView):
         word_event_recorder(request, book, lesson, 'show')
 
     def get(self, request, book, lesson):
+        page = request.GET.get('page')
         lesson_obj = get_lessonemb(book, lesson)
-        if lesson_obj.name != "strange words":
+        if page == None and lesson_obj.name != "strange words":
             lesson_strange = get_lessonemb(request.user.username, "strange words")
             lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                              lesson=lesson_strange)[0]
@@ -453,7 +454,6 @@ class LessonShowView(TemplateView):
             return render(request, self.template_name,
                    {'book': book, 'lesson': lesson})
         paginator = Paginator(words_list, 1)
-        page = request.GET.get('page')
         words = get_words_from_paginator(paginator, page)
         print "nnnnnnnnn"
         print "word %s show!" % words[0]
