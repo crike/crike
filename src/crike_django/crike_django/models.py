@@ -1,7 +1,11 @@
 #coding:utf-8
+
+import datetime
+
 from django.db import models
 from djangotoolbox.fields import EmbeddedModelField, ListField
 from django.conf import settings
+from django.core.cache import cache
 
 '''
 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
@@ -121,6 +125,20 @@ class Profile(models.Model):
     def point_add(self, point):
         self.usage_points += point
         self.total_points += point
+
+    def last_seen(self):
+        return cache.get('seen_%s' % self.user.username)
+
+    def online(self):
+        if self.last_seen():
+            now = datetime.datetime.now()
+            if now > self.last_seen() + datetime.timedelta(
+                         seconds=settings.USER_ONLINE_TIMEOUT):
+                return False
+            else:
+                return True
+        else:
+            return False
 
     def __unicode__(self):
         return u'Profile of user: %s' % self.user
