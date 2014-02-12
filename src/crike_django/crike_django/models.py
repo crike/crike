@@ -100,6 +100,7 @@ class Profile(models.Model):
     is_human = models.BooleanField()
     usage_points = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
+    last_visit = models.DateTimeField(auto_now=True, null=True)
 
     @property
     def is_student(self):
