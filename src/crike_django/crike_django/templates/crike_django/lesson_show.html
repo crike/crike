@@ -13,21 +13,27 @@
 <link rel="stylesheet" type="text/css" href="{% static 'bookblock/css/demo4.css' %}" />
 <script src="{% static 'bookblock/js/modernizr.custom.js' %}"></script>
 
+<div id='overlay'></div>
+<div id='popup' class='pin'></div>
+
 <div class="container">
 <div class="bb-custom-wrapper">
-	
-	<div id="bb-bookblock" class="bb-bookblock">
-		<div class="bb-item">
-			<div class="bb-custom-firstpage">
+  <nav>
+    <div id="counter" style='float:right;margin-right:100px;font-size:150%'></div>
+  </nav>
+  
+  <div id="bb-bookblock" class="bb-bookblock">
+    <div class="bb-item">
+      <div class="bb-custom-firstpage">
         <p>This is for lesson cover</p>
-			</div>
-			<div class="bb-custom-side">
-				<p>Here we show the lesson status for student</p>
-			</div>
-		</div>
+      </div>
+      <div class="bb-custom-side">
+        <p>Here we show the lesson status for student</p>
+      </div>
+    </div>
     {% for word in words %}
-		<div class="bb-item">
-			<div class="bb-custom-side">
+    <div class="bb-item">
+      <div class="bb-custom-side">
         <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
           [{{ word.phonetics }}]
           <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
@@ -40,8 +46,8 @@
           <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
           {% endfor %}
         </ul>
-			</div>
-			<div class="bb-custom-side">
+      </div>
+      <div class="bb-custom-side">
         <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
           <ol class="carousel-indicators">
             <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
@@ -68,36 +74,28 @@
           </a>
         </div>
       </div>
-		</div>
+    </div>
     {% endfor %}
-	</div>
+    <div class="bb-item">
+      <div class="bb-custom-side">
+        <p>The End</p>
+        <a id="gototest" href="#" onclick="gototest()">开始自测</a>
+        <form id="goForm" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
+          {% csrf_token %}
+        </form>
+      </div>
+    </div>
+  </div>
 
-	<nav>
-		<a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first">First page</a>
-		<a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
-		<a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">Next</a>
-		<a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last">Last page</a>
-	</nav>
+  <nav>
+    <a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first">First page</a>
+    <a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
+    <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">Next</a>
+    <a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last">Last page</a>
+  </nav>
 
-    <div class="pagination bubbleInfo" style="float:right">
+    <div class="pagination bubbleInfo" style="float:right;display:none">
       <div class="popup pin" style="font-size:30%;width:200px" ><i style="color:red" class="fa fa-minus-square"></i> 未完成全部内容</div>
-      <span class="step-links trigger">
-        {% if words.has_previous %}
-		    <a id="bb-nav-prev" href="?page={{ words.previous_page_number }}" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
-        {% endif %}
-
-        <span class="current">
-            {{ words.number }}/{{ words.paginator.num_pages }}
-        </span>
-
-        {% if words.has_next %}
-		    <a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">Next</a>
-        {% endif %}
-      </span><br>
-      <form id="gototest" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
-        {% csrf_token %}
-        <input type="submit" class="btn btn-primary btn-lg" value="开始自测">
-      </form>
     </div>
 
 
@@ -112,23 +110,18 @@ $(function(){
      image: "{% static 'countdown/img/digits.png' %}",
      startTime: '03:00',
      timerEnd: function(){ 
-       var elem = document.getElementById('page_next');
-       if (elem != null)
-         window.location = elem.href;
+       window.location = "/";
      },
      format: 'mm:ss'
   });
 });
+
 var gotimer = null;
 var ready = false;
 $(document).ready(function (){
   $("body").keydown(function(e) {
     if (e.which == 39) { // right
-      if (ready) {
-        var elem = document.getElementById('page_next');
-        if (elem != null)
-          window.location = elem.href;
-        } else {
+      if (!ready) {
           var showtimer = null;
           var cb = "$('#popup').hide();$('#overlay').hide()"
           $('#popup')
@@ -137,21 +130,15 @@ $(document).ready(function (){
           $('#overlay').show()
           shotimer = setTimeout(cb, 2000)
         }
-    }else if(e.which == 37) { // left
-        var elem = document.getElementById('page_prev');
-        if (elem != null)
-          window.location = elem.href;
     }
   });
 });
+
+function gototest() {
+  $('#goForm').submit();
+};
 function readyGo() {
-  {% if words.has_next %}
-  $('.step-links').find('a[id=page_next]')
-    .prop('href', "?page={{ words.next_page_number }}")
-    .find('i').attr('class',"fa fa-arrow-circle-right");
-  {% endif %}
   ready = true;
-  $('.pagination').attr('class', 'pagination');
   if ("{{done}}" == "True") {
     $('#gototest').show();
   }
@@ -163,86 +150,86 @@ function delayGo() {
 };
 
 var Page = (function() {
-	
-	var config = {
-			$bookBlock : $( '#bb-bookblock' ),
-			$navNext : $( '#bb-nav-next' ),
-			$navPrev : $( '#bb-nav-prev' ),
-			$navFirst : $( '#bb-nav-first' ),
-			$navLast : $( '#bb-nav-last' )
-		},
-		init = function() {
-			config.$bookBlock.bookblock( {
-				speed : 1000,
-				shadowSides : 0.8,
-				shadowFlip : 0.4
-			} );
-			initEvents();
-		},
-		initEvents = function() {
-			
-			var $slides = config.$bookBlock.children();
+  
+  var config = {
+      $bookBlock : $( '#bb-bookblock' ),
+      $navNext : $( '#bb-nav-next' ),
+      $navPrev : $( '#bb-nav-prev' ),
+      $navFirst : $( '#bb-nav-first' ),
+      $navLast : $( '#bb-nav-last' )
+    },
+    init = function() {
+      config.$bookBlock.bookblock( {
+        speed : 1000,
+        shadowSides : 0.8,
+        shadowFlip : 0.4
+      } );
+      initEvents();
+    },
+    initEvents = function() {
+      
+      var $slides = config.$bookBlock.children();
 
-			// add navigation events
-			config.$navNext.on( 'click touchstart', function() {
-				config.$bookBlock.bookblock( 'next' );
-				return false;
-			} );
+      // add navigation events
+      config.$navNext.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'next' );
+        return false;
+      } );
 
-			config.$navPrev.on( 'click touchstart', function() {
-				config.$bookBlock.bookblock( 'prev' );
-				return false;
-			} );
+      config.$navPrev.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'prev' );
+        return false;
+      } );
 
-			config.$navFirst.on( 'click touchstart', function() {
-				config.$bookBlock.bookblock( 'first' );
-				return false;
-			} );
+      config.$navFirst.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'first' );
+        return false;
+      } );
 
-			config.$navLast.on( 'click touchstart', function() {
-				config.$bookBlock.bookblock( 'last' );
-				return false;
-			} );
-			
-			// add swipe events
-			$slides.on( {
-				'swipeleft' : function( event ) {
-					config.$bookBlock.bookblock( 'next' );
-					return false;
-				},
-				'swiperight' : function( event ) {
-					config.$bookBlock.bookblock( 'prev' );
-					return false;
-				}
-			} );
+      config.$navLast.on( 'click touchstart', function() {
+        config.$bookBlock.bookblock( 'last' );
+        return false;
+      } );
+      
+      // add swipe events
+      $slides.on( {
+        'swipeleft' : function( event ) {
+          config.$bookBlock.bookblock( 'next' );
+          return false;
+        },
+        'swiperight' : function( event ) {
+          config.$bookBlock.bookblock( 'prev' );
+          return false;
+        }
+      } );
 
-			// add keyboard events
-			$( document ).keydown( function(e) {
-				var keyCode = e.keyCode || e.which,
-					arrow = {
-						left : 37,
-						up : 38,
-						right : 39,
-						down : 40
-					};
+      // add keyboard events
+      $( document ).keydown( function(e) {
+        var keyCode = e.keyCode || e.which,
+          arrow = {
+            left : 37,
+            up : 38,
+            right : 39,
+            down : 40
+          };
 
-				switch (keyCode) {
-					case arrow.left:
-						config.$bookBlock.bookblock( 'prev' );
-						break;
-					case arrow.right:
-						config.$bookBlock.bookblock( 'next' );
-						break;
-				}
-			} );
-		};
+        switch (keyCode) {
+          case arrow.left:
+            config.$bookBlock.bookblock( 'prev' );
+            break;
+          case arrow.right:
+            config.$bookBlock.bookblock( 'next' );
+            break;
+        }
+      } );
+    };
 
-		return { init : init };
+    return { init : init };
 
 })();
 </script>
 <script>
-	Page.init();
+  Page.init();
 </script>
 {% endblock %}
 
