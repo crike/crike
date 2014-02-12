@@ -84,10 +84,24 @@ def get_words_from_paginator(paginator, page):
     return words
 
 
+def today():
+    return datetime.datetime.now().date()
+
+
+def now():
+    return datetime.datetime.now()
+
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
+        if request.user:
+            p = get_profile(request.user)
+            if p.last_visit is None or p.last_visit.date() != today():
+                p.point_add(10)
+                p.save()
+
         books = Book.objects.all()
         return render(request, self.template_name, {'books':books})
 
@@ -133,6 +147,7 @@ def update_strange_words_lesson(request):
     lesson_obj.save()
     book_obj.lessons.append(lesson_obj)
     book_obj.save()
+
 
 class HomeView(TemplateView):
     template_name = 'home.html'
