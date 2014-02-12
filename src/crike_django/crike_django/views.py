@@ -98,7 +98,9 @@ class IndexView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user:
             p = get_profile(request.user)
-            if p.last_visit is None or p.last_visit.date() != today():
+            if p is None:
+                pass
+            elif p.last_visit is None or p.last_visit.date() != today():
                 p.point_add(10)
                 p.save()
 
