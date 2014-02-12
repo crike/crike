@@ -117,6 +117,10 @@ class Profile(models.Model):
         except Student.DoesNotExist:
             return False
 
+    def point_add(self, point):
+        self.usage_points += point
+        self.total_points += point
+
     def __unicode__(self):
         return u'Profile of user: %s' % self.user
     
