@@ -103,7 +103,11 @@
 $(function(){
   $('#counter').countdown({
      image: "{% static 'countdown/img/digits.png' %}",
-     startTime: '03:00',
+     {% if words|length < 10 %}
+     startTime: '0{{words|length}}:00',
+     {% else %}
+     startTime: '{{words|length}}:00',
+     {% endif %}
      timerEnd: function(){ 
        window.location = "/";
      },
@@ -113,21 +117,6 @@ $(function(){
 
 var gotimer = null;
 var ready = false;
-$(document).ready(function (){
-  $("body").keydown(function(e) {
-    if (e.which == 39) { // right
-      if (!ready) {
-          var showtimer = null;
-          var cb = "$('#popup').hide();$('#overlay').hide()"
-          $('#popup')
-          .html("<label style='font-size:250%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
-          .show()
-          $('#overlay').show()
-          shotimer = setTimeout(cb, 2000)
-        }
-    }
-  });
-});
 
 function isGoodtogo() {
   if (!ready) {
