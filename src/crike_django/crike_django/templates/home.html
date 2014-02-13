@@ -96,15 +96,17 @@ background-color: #F3F3F3;
 {% block container %}
 
 <div class="row">
-  <h2>Lesson in progress</h2>
+  <div class="page-header">
+    <h2>正在进行的课程</h2>
+  </div>
   {% for todo in todos %}
   <div class="col-sm-6 col-md-3">
     <a title="开始学习" href="/study/book/{{todo.book.name}}/lesson/{{todo.lesson.name}}/show" class="thumbnail">
       <div class="caption">
-        <h3>{{todo.book.name}}:{{ todo.lesson.name }}</h3>
+        <h3>{{todo.book.name}} -> {{ todo.lesson.name }}</h3>
         <input type="text" value="{{ todo.lesson.stat.percent }}" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
         <p>sum:{{ todo.lesson.words | length }}</p>
-        <p>last progress: {{todo.lesson.stat.timestamp | date }}</p>
+        <p>上次学习： {{todo.lesson.stat.timestamp | date }}</p>
       </div>
     </a>
   </div>
@@ -112,7 +114,9 @@ background-color: #F3F3F3;
 </div>
 
 <div class="row">
-  <h2>Exams to take</h2>
+  <div class="page-header">
+    <h2>需要进行的考试</h2>
+  </div>
   {% for exam in exams %}
   <div class="col-sm-6 col-md-3">
     <a title="开始考试" href="exam/{{exam.id}}/" class="thumbnail">
