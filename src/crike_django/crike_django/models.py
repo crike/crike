@@ -104,7 +104,15 @@ class Profile(models.Model):
     is_human = models.BooleanField()
     usage_points = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
+    biggest_points = models.IntegerField(default=0)
     last_visit = models.DateTimeField(auto_now=True, null=True)
+
+    # Profile Statistics Area:
+    longest_streak = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=0)
+    words_learnt = models.IntegerField(default=0)
+    lessons_learnt = models.IntegerField(default=0)
+    books_learnt = models.IntegerField(default=0)
 
     @property
     def is_student(self):
