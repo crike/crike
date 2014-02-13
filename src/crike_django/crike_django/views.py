@@ -151,11 +151,20 @@ def update_strange_words_lesson(request):
     book_obj.save()
 
 
+def update_user_from_wer(request):
+    profile = get_profile(request.user)
+    if profile is None:
+        return
+    # TODO: update user streak
+
+
 class HomeView(TemplateView):
     template_name = 'home.html'
 
     def get(self, request, *args, **kwargs):
         update_strange_words_lesson(request)
+        # TODO:
+        # update_user_from_wer(request)
 
         books = Book.objects.all()
         todos = []
