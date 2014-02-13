@@ -147,9 +147,13 @@ font-size: 16px; } }
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_healthskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans '学习' %}</div>
             </a></li>
-						<li class="{% active request 'exam' %} subject-item"><a href="{% url 'student' %}">
+            <li class="{% active request 'exam' %} subject-item"><a href="{% url 'student' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_environmentalskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans "考试" %}</div>
+            </a></li>
+            <li class="{% active request 'prize' %} subject-item"><a href="{% url 'prize' %}">
+              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_computerskills_30x30.png' %}"></div>
+              <div class="subject-title">{% trans "奖品" %}</div>
             </a></li>
             <li class="dropdown subject-item">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">

@@ -719,6 +719,13 @@ class ExamView(TemplateView):
             return HttpResponseRedirect('/home')#TODO show exam result
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
+class PrizeView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect('/home')
+
+    def post(self, request, *args, **kwargs):
+        pass
+
 # for management
 class LessonAdminView(TemplateView):
     template_name='crike_django/lesson_admin.html'
