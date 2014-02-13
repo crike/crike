@@ -103,6 +103,13 @@
 	margin: 2px;
 }
 
+.bb-custom-wrapper #counter {
+	width: 100%;
+	position: fixed;
+	top: 50px;
+	z-index: 1000;
+}
+
 .bb-custom-wrapper > nav a:hover {
 	opacity: 0.6;
 }
