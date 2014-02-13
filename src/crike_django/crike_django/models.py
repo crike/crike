@@ -133,6 +133,8 @@ class Profile(models.Model):
     def point_add(self, point):
         self.usage_points += point
         self.total_points += point
+        if self.biggest_points < point:
+            self.biggest_points = point
 
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)
