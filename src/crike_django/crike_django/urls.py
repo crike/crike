@@ -27,9 +27,9 @@ urlpatterns = patterns('',
     url(r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'favicon/1.ico')),
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
     url(r'^home$', login_required(HomeView.as_view()), name='home'), #TODO need read current user's learning process info
-    url(r'^study$', BooksStudyView.as_view(), name='study'),#TODO need get exam unit from user's info
-    url(r'^exam/(?P<id>.*?)/?$', ExamView.as_view(), name='exam'),
-    url(r'^prize/?$', PrizeView.as_view(), name='prize'),
+    url(r'^study$', login_required(BooksStudyView.as_view()), name='study'),#TODO need get exam unit from user's info
+    url(r'^exam/(?P<id>.*?)/?$', login_required(ExamView.as_view()), name='exam'),
+    url(r'^prize/?$', login_required(PrizeView.as_view()), name='prize'),
     url(r'^accounts/register/$',
           RegistrationView.as_view(form_class=CrikeRegistrationForm),
           name='registration_register'),
