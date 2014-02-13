@@ -78,7 +78,7 @@
     {% endfor %}
     <div class="bb-item">
       <div class="bb-custom-side">
-        <p>The End</p>
+        <p>Good Job!!</p><br>
         <a id="gototest" href="#" onclick="gototest()">开始自测</a>
         <form id="goForm" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
           {% csrf_token %}
@@ -117,6 +117,8 @@ $(function(){
 
 var gotimer = null;
 var ready = false;
+var donenum = 0;
+var alldone =false;
 
 function isGoodtogo() {
   if (!ready) {
@@ -129,7 +131,23 @@ function isGoodtogo() {
       shotimer = setTimeout(cb, 2000)
       return false;
   } else
+      donenum++;
+      if (donenum >= {{words|length}})
+        alldone = true;
       return true;
+};
+function canGotolast() {
+  if (alldone)
+    return true;
+  else
+    var showtimer = null;
+    var cb = "$('#popup').hide();$('#overlay').hide()"
+    $('#popup')
+    .html("<label style='font-size:250%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
+    .show()
+    $('#overlay').show()
+    shotimer = setTimeout(cb, 2000)
+    return false;
 };
 function gototest() {
   $('#goForm').submit();
@@ -177,17 +195,20 @@ var Page = (function() {
       } );
 
       config.$navPrev.on( 'click touchstart', function() {
+        donenum--;
         config.$bookBlock.bookblock( 'prev' );
         return false;
       } );
 
       config.$navFirst.on( 'click touchstart', function() {
+        donenum = 0;
         config.$bookBlock.bookblock( 'first' );
         return false;
       } );
 
       config.$navLast.on( 'click touchstart', function() {
-        config.$bookBlock.bookblock( 'last' );
+        if (canGotolast())
+          config.$bookBlock.bookblock( 'last' );
         return false;
       } );
       
@@ -201,6 +222,7 @@ var Page = (function() {
           return false;
         },
         'swiperight' : function( event ) {
+          donenum--;
           config.$bookBlock.bookblock( 'prev' );
           return false;
         }
@@ -218,6 +240,7 @@ var Page = (function() {
 
         switch (keyCode) {
           case arrow.left:
+            donenum--;
             config.$bookBlock.bookblock( 'prev' );
             break;
           case arrow.right:
