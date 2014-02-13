@@ -23,14 +23,14 @@
   </nav>
   
   <div id="bb-bookblock" class="bb-bookblock">
-    <div class="bb-item">
+    <!--<div class="bb-item">
       <div class="bb-custom-firstpage">
         <p>This is for lesson cover</p>
       </div>
       <div class="bb-custom-side">
         <p>Here we show the lesson status for student</p>
       </div>
-    </div>
+    </div>-->
     {% for word in words %}
     <div class="bb-item">
       <div class="bb-custom-side">
@@ -94,11 +94,6 @@
     <a id="bb-nav-last" href="#" class="bb-custom-icon bb-custom-icon-last">Last page</a>
   </nav>
 
-    <div class="pagination bubbleInfo" style="float:right;display:none">
-      <div class="popup pin" style="font-size:30%;width:200px" ><i style="color:red" class="fa fa-minus-square"></i> 未完成全部内容</div>
-    </div>
-
-
 </div>
 
 </div><!-- /container -->
@@ -125,7 +120,7 @@ $(document).ready(function (){
           var showtimer = null;
           var cb = "$('#popup').hide();$('#overlay').hide()"
           $('#popup')
-          .html("<label style='font-size:300%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
+          .html("<label style='font-size:250%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
           .show()
           $('#overlay').show()
           shotimer = setTimeout(cb, 2000)
@@ -134,6 +129,19 @@ $(document).ready(function (){
   });
 });
 
+function isGoodtogo() {
+  if (!ready) {
+      var showtimer = null;
+      var cb = "$('#popup').hide();$('#overlay').hide()"
+      $('#popup')
+      .html("<label style='font-size:250%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
+      .show()
+      $('#overlay').show()
+      shotimer = setTimeout(cb, 2000)
+      return false;
+  } else
+      return true;
+};
 function gototest() {
   $('#goForm').submit();
 };
@@ -172,7 +180,10 @@ var Page = (function() {
 
       // add navigation events
       config.$navNext.on( 'click touchstart', function() {
-        config.$bookBlock.bookblock( 'next' );
+        if (isGoodtogo()) {
+          ready = false;
+          config.$bookBlock.bookblock( 'next' );
+        }
         return false;
       } );
 
@@ -194,7 +205,10 @@ var Page = (function() {
       // add swipe events
       $slides.on( {
         'swipeleft' : function( event ) {
-          config.$bookBlock.bookblock( 'next' );
+          if (isGoodtogo()) {
+            ready = false;
+            config.$bookBlock.bookblock( 'next' );
+          }
           return false;
         },
         'swiperight' : function( event ) {
@@ -218,10 +232,13 @@ var Page = (function() {
             config.$bookBlock.bookblock( 'prev' );
             break;
           case arrow.right:
-            config.$bookBlock.bookblock( 'next' );
+            if (isGoodtogo()) {
+              ready = false;
+              config.$bookBlock.bookblock( 'next' );
+            }
             break;
         }
-      } );
+      });
     };
 
     return { init : init };
