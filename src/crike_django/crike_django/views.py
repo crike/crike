@@ -469,8 +469,7 @@ class LessonShowView(TemplateView):
 
         words = get_words_from_lesson(book, lesson)
         if len(words) == 0:
-            return render(request, self.template_name,
-                   {'book': book, 'lesson': lesson})
+            return redirect(request.META.get('HTTP_REFERER', '/'))
 
         self._record(request, book, lesson)
         lesson_result = LessonStat.objects.get_or_create(user=request.user,
