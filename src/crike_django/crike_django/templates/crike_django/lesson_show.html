@@ -78,11 +78,15 @@
     {% endfor %}
     <div class="bb-item">
       <div class="bb-custom-side">
-        <p>Good Job!!</p><br>
-        <a id="gototest" href="#" onclick="gototest()">开始自测</a>
-        <form id="goForm" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
-          {% csrf_token %}
-        </form>
+        <p>Good Job!!</p>
+      </div>
+      <div class="bb-custom-side">
+        <p>
+          <a id="gototest" href="#" onclick="gototest()">开始自测</a>
+          <form id="goForm" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
+            {% csrf_token %}
+          </form>
+        </p>
       </div>
     </div>
   </div>
