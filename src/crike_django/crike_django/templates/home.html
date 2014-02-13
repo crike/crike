@@ -64,23 +64,26 @@ background-color: #F3F3F3;
       <div class="points-labels">
         <span class="best">最好的分数 <strong class="best-count"> {{ profile.biggest_points }} </strong></span>
       </div>
-
-      <!-- 今天的分数 -->
+      <div class="points-labels">
+        <span class="best">所有分数 <strong class="best-count"> {{ profile.total_points }} </strong></span>
+      </div>
+      <div class="points-labels">
+        <span class="best">可用分数 <strong class="best-count"> {{ profile.usage_points }} </strong></span>
+      </div>
+      <!-- 今天的分数
       <div class="points-bar">
         <span class="points-bar-fill" style="width: 0.0%">今天的分数
           <span class="count-container count-right">
             <span class="points-today-count"> XXX </span>
           </span>
         </span>
-      </div>
+      </div> -->
     </div>
 
-所有分数    <span class="stat-count">{{ profile.total_points }}</span>
-
+<!--
 持续时间    <span class="stat-count"> XXX </span> 天
-
-    <div class="last-coded">上次编码<span class="last-coded-time"> XXX 天前</span>
-    </div>
+<div class="last-coded">上次编码<span class="last-coded-time"> XXX 天前</span></div>
+-->
     </div>
 
 </div>
