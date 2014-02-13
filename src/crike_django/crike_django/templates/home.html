@@ -62,7 +62,7 @@ background-color: #F3F3F3;
     <div class="user-stats col-md-2">
       <div class="user-points-bar-container">
       <div class="points-labels">
-        <span class="best">最好的分数 <strong class="best-count"> XXX </strong></span>
+        <span class="best">最好的分数 <strong class="best-count"> {{ profile.biggest_points }} </strong></span>
       </div>
 
       <!-- 今天的分数 -->
@@ -75,7 +75,7 @@ background-color: #F3F3F3;
       </div>
     </div>
 
-所有分数    <span class="stat-count">{{profile.total_points}}</span>
+所有分数    <span class="stat-count">{{ profile.total_points }}</span>
 
 持续时间    <span class="stat-count"> XXX </span> 天
 
