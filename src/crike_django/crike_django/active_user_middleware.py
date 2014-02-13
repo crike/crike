@@ -11,7 +11,7 @@ class ActiveUserMiddleware:
     hour = 60 * 60
 
     def process_request(self, request):
-        if request.user.is_authenticated() is False:
+        if request.user is None:
             return
 
         current_user = request.user
