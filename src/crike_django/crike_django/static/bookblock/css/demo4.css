@@ -89,6 +89,7 @@
 	bottom: 20px;
 	z-index: 1000;
 	text-align: center;
+	margin-left: -90px
 }
 
 .bb-custom-wrapper > nav a {
