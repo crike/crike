@@ -19,25 +19,17 @@ document.onkeypress = stopRKey;
   <h1>
     鼠标轻抚<i class="fa fa-volume-up"></i>听发音，<br>填写完整单词
   </h1>
-  <span class="current" style="float:right">
-      第{{ words.number }}页 共{{ words.paginator.num_pages }}页.
-  </span>
 </div>
 
 <form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/dictation' method='post'>
   {% csrf_token %}
-  {% if words.has_next %}
-  <input name="page" value="{{words.next_page_number}}" hidden="true">
-  {% else %}
-  <input name="page" value="0" hidden="true">
-  {% endif %}
   <div class='row'>
-    {% for option in options %}
+    {% for word in words %}
     <div class="col-6 col-sm-6 col-lg-3">  
       <input type="text" name="ans{{forloop.counter0}}" autocomplete="off">
-      <a onmouseover="delayPlay('/media/audios/{{ option.name }}.mp3');"
+      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
           onmouseout ="clearTimeout(timer);" 
-          onclick="playSound('/media/audios/{{ option.name }}.mp3');" 
+          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
           title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a><br>
       <input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:5px">
       <strong id='feedback{{forloop.counter0}}'>Fill the blank</strong>
@@ -53,11 +45,11 @@ document.onkeypress = stopRKey;
   var ans = new Array();
   var ret = new Array();
   var numoftry = new Array();
-  {% for option in options %}
-  ques.push('{{option.name}}')
+  {% for word in words %}
+  ques.push('{{word.name}}')
   ans.push('')
   {% endfor %}
-  for (i=0;i<{{options|length}};i++) {
+  for (i=0;i<{{words|length}};i++) {
     numoftry[i] = 0;
     ret[i]=false;
   }
@@ -66,7 +58,11 @@ document.onkeypress = stopRKey;
     var form = $('#DictationForm');
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
-       startTime: '01:00',
+       {% if words|length < 10 %}
+       startTime: '0{{words|length}}:00',
+       {% else %}
+       startTime: '{{words|length}}:00',
+       {% endif %}
        timerEnd: function(){ 
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'></i></label>")
@@ -74,7 +70,7 @@ document.onkeypress = stopRKey;
         $('#overlay').show()
         $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#DictationForm');
         $('<input>').attr({name:'ret', value:ret, hidden:'true'}).appendTo('#DictationForm');
-        $('<input>').attr({name:'options', value:ques, hidden:'true'}).appendTo('#DictationForm');
+        $('<input>').attr({name:'words', value:ques, hidden:'true'}).appendTo('#DictationForm');
         setTimeout( function () { $(form).submit(); }, 1000);
        },
        format: 'mm:ss'
@@ -90,7 +86,7 @@ document.onkeypress = stopRKey;
     {
       ret[index] = true;
       $('#feedback'+index).text('Good job!');
-      for (i=0;i<{{options|length}};i++) {
+      for (i=0;i<{{words|length}};i++) {
         if (ques[i] != ans[i]){
           e.preventDefault();
           return false;
@@ -98,7 +94,7 @@ document.onkeypress = stopRKey;
       }
       $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#DictationForm');
       $('<input>').attr({name:'ret', value:ret, hidden:'true'}).appendTo('#DictationForm');
-      $('<input>').attr({name:'options', value:ques, hidden:'true'}).appendTo('#DictationForm');
+      $('<input>').attr({name:'words', value:ques, hidden:'true'}).appendTo('#DictationForm');
     } else {
       e.preventDefault();
       $('#feedback'+index).text('不对哦，再想一想');

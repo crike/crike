@@ -424,7 +424,7 @@ def word_event_recorder(request, book, lesson, tag):
 def words_event_recorder(request, book, lesson, tag):
     num = request.POST.get('num').split(',')
     ret = request.POST.get('ret').split(',')
-    options = request.POST.get('options').split(',')
+    options = request.POST.get('words').split(',')
 
     for i,option in enumerate(options):
         word = Word.objects.filter(name=option)[0]
@@ -587,35 +587,23 @@ class LessonDictationView(TemplateView):
         words_event_recorder(request, book, lesson, 'dictation')
 
     def get(self, request, book, lesson):
-        words_list = get_words_from_lesson(book, lesson)
-        paginator = Paginator(words_list, 8)
-        page = request.GET.get('page')
-        words = get_words_from_paginator(paginator, page)
+        words = get_words_from_lesson(book, lesson)
 
-        words_list = filter(lambda x: x.name !=words[0].name, words_list)
-        count = len(words_list)
-        if count > 3:
-            options = sample(words_list, 3)
-        else:
-            options = sample(words_list, count)
-        options.insert(randrange(len(options)+1), words[0])
+        words = sample(words, len(words))
 
         return render(request, self.template_name,
-                {'words':words, 'book':book, 'lesson':lesson, 'options':options})
+                {'words':words, 'book':book, 'lesson':lesson})
 
     def post(self, request, book, lesson):
-        page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
-        options = request.POST.get('options')
+        words = request.POST.get('words')
         print "nnnnnnnnnnnnnnnn"
-        print num, ret, options
+        print num, ret, words
         print "nnnnnnnnnnnnnnnn"
         self._record(request, book, lesson)
-        if page == '0':
-            self._success(request, book, lesson)
-            return HttpResponseRedirect('/home')
-        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation?page='+page)
+        self._success(request, book, lesson)
+        return HttpResponseRedirect('/home')
 
 class BooksStudyView(TemplateView):
     template_name='crike_django/books_study.html'
