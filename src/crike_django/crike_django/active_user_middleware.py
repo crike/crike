@@ -30,5 +30,7 @@ class ActiveUserMiddleware:
             else:
                 cache.set('start_seen_%s' % (current_user.username), now,
                           self.hour)
+        else:
+            cache.delete('start_seen_%s' % (current_user.username))
         cache.set('seen_%s' % (current_user.username), now,
                   settings.USER_LASTSEEN_TIMEOUT)
