@@ -172,7 +172,6 @@ class HomeView(TemplateView):
             for lesson in book.lessons:
                 stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
                                                                    lesson=lesson)
-                lesson_stat_update(stat)
                 if stat.percent: #< 100:
                     lesson.stat = stat
                     todos.append({'book':book, 'lesson':lesson})
@@ -376,7 +375,7 @@ def lesson_success(request, book, lesson, tag):
     lesson_result = LessonStat.objects.get_or_create(user=user,
                                                        lesson=lessonobj)[0]
     setattr(lesson_result, tag, 25)
-    lesson_result.save()
+    lesson_stat_update(lesson_result)
     print "user %s complete lesson %s part %s %d" % (user, lesson, tag, 25)
 
 
