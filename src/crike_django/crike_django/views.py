@@ -172,10 +172,10 @@ class HomeView(TemplateView):
             for lesson in book.lessons:
                 stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
                                                                    lesson=lesson)
-                if stat.percent: #< 100:
-                    lesson.stat = stat
-                    todos.append({'book':book, 'lesson':lesson})
-                elif lesson.name != 'strange words' and lesson.tag != 'intest':
+                lesson.stat = stat
+                todos.append({'book':book, 'lesson':lesson})
+
+                if stat.percent == 100 and lesson.name != 'strange words' and lesson.tag != 'intest':
                     exam = Exam.objects.get_or_create(
                             user=request.user, name='Unit test', tag='current')[0]
                     exam.lessons.append(lesson.id)

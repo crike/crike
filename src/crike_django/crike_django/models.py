@@ -84,6 +84,7 @@ class Exam(models.Model):
     length = models.IntegerField(blank=True, default=0)
     score = models.IntegerField(blank=True, null=True)
     tag = models.CharField(max_length=50, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now=True)
 
 
 # This class is to keep compability with other apps
