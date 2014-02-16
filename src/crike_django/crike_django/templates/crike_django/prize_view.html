@@ -2,24 +2,6 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="row">
-  <div class="page-header">
-    <h2>可以兑换的奖品</h2>
-  </div>
-  {% for prize in prizes %}
-  <div class="col-sm-6 col-md-3">
-    <a title="兑换奖品" href="/prize/{{ prize.id }}" class="thumbnail">
-      <div class="caption">
-        <h3>{{ prize.name }}</h4>
-        <h4>分类：{{ prize.category }}</h3>
-        <p>价格：{{ prize.value }}</p>
-        <p>数量：{{ prize.amount }}</p>
-        <p>加入时间：{{ prize.date | date }}</p>
-      </div>
-    </a>
-  </div>
-  {% endfor %}
-</div>
 
 {% if user.teacher %}
 <div class="row">
@@ -42,5 +24,24 @@
 </div>
 </div>
 {% endif %}
+
+<div class="row">
+  <div class="page-header">
+    <h2>可以兑换的奖品</h2>
+  </div>
+  {% for prize in prizes %}
+  <div class="col-sm-6 col-md-3">
+    <a title="兑换奖品" href="/prize/{{ prize.id }}" class="thumbnail">
+      <div class="caption">
+        <h3>{{ prize.name }}</h4>
+        <h4>分类：{{ prize.category }}</h3>
+        <p>价格：{{ prize.value }}</p>
+        <p>数量：{{ prize.amount }}</p>
+        <p>加入时间：{{ prize.date | date }}</p>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
