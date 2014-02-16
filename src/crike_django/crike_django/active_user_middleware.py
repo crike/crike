@@ -14,6 +14,11 @@ class ActiveUserMiddleware:
         if request.user is None:
             return
 
+        p = get_profile(request.user)
+        if p is None: # Maybe the user is an Admin?
+            print(request.user.username)
+            return
+
         current_user = request.user
         now = datetime.datetime.now()
         if cache.get('seen_%s' % (current_user.username)):
@@ -21,7 +26,6 @@ class ActiveUserMiddleware:
             if start_seen:
                 delta = now - start_seen
                 if delta > datetime.timedelta(minutes=30):
-                    p = get_profile(current_user)
                     p.point_add(5)
                     p.save()
                     # Refresh start_seen time after points given.
