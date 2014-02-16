@@ -135,7 +135,8 @@ def update_strange_words_lesson(request):
         for word in strange_list:
             if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
                 lesson_obj.words.append(word.id)
-        familiar_record_list = WordStat.objects.filter(correct_num__gte=2)
+        familiar_record_list = WordStat.objects.filter(correct_num__gte=2,
+                                                         user=request.user)
         for item in familiar_record_list:
             if item.lesson.name == 'strange words':
                 familiar_list.append(item.word)
