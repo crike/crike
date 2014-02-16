@@ -753,11 +753,14 @@ class PrizeView(TemplateView):
                 value=prize.value,
             )
 
+        prize_queries = PrizeQuery.objects.all()
+
         prizes = Prize.objects.all()
         form = PrizeForm()
         return render(request, self.template_name, {
             'prizes':prizes,
             'form': form,
+            'prize_queries': prize_queries,
         })
 
     def post(self, request, *args, **kwargs):

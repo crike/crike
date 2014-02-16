@@ -4,6 +4,30 @@
 {% block content %}
 
 {% if user.teacher %}
+
+<div class="row">
+  <div class="page-header">
+    <h2>教师可见：奖品请求列表</h2>
+  </div>
+  {% for pq in prize_queries %}
+  <div class="col-sm-6 col-md-3">
+    <a title="兑换奖品" href="/prize_query/{{ pq.id }}" class="thumbnail">
+      <div class="caption">
+        <h4>请求者：{{ pq.user.username }}</h4>
+        <h4>奖品名：{{ pq.prize.name }}</h4>
+        <p>奖品分类：{{ pq.prize.category }}</p>
+        <p>请求价格：{{ pq.value }}</p>
+        <p>请求数量：{{ pq.amount }}</p>
+        <p>请求时间：{{ pq.date | date }}</p>
+        <p>当前价格：{{ pq.prize.value }}</p>
+        <p>当前数量：{{ pq.prize.amount }}</p>
+        <p>奖品上架时间：{{ pq.prize.date | date }}</p>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
 <div class="row">
   <div class="page-header">
     <h2>教师可见：管理奖品</h2>
@@ -37,7 +61,7 @@
         <h4>分类：{{ prize.category }}</h3>
         <p>价格：{{ prize.value }}</p>
         <p>数量：{{ prize.amount }}</p>
-        <p>加入时间：{{ prize.date | date }}</p>
+        <p>奖品上架时间：{{ prize.date | date }}</p>
       </div>
     </a>
   </div>
