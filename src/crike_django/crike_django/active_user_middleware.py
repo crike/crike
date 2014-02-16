@@ -16,7 +16,8 @@ class ActiveUserMiddleware:
 
         p = get_profile(request.user)
         if p is None: # Maybe the user is an Admin?
-            print(request.user.username)
+            print 'The role of user ' + request.user.username + ' is unknown.'
+            print 'Maybe he\'s an admin? XXX'
             return
 
         current_user = request.user
