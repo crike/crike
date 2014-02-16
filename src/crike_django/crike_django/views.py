@@ -744,9 +744,14 @@ class PrizeAdminView(TemplateView):
 class PrizeView(TemplateView):
     template_name = 'crike_django/prize_view.html'
 
-    def get(self, request, prize_name, *args, **kwargs):
-        if prize_name is not None:
-            pass
+    def get(self, request, prize_pk, *args, **kwargs):
+        if prize_pk is not None:
+            prize = Prize.objects.get(pk=prize_pk)
+            prize_query = PrizeQuery.objects.create(
+                user=request.user,
+                prize=prize,
+                value=prize.value,
+            )
 
         prizes = Prize.objects.all()
         form = PrizeForm()
