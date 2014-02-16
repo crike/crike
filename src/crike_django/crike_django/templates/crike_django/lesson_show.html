@@ -78,12 +78,16 @@
       <div class="bb-custom-side">
         <img src="{% static 'images/small/efk_icon_healthskills_140x140.png' %}">
         <p>Good Job!!</p>
+        <form id="doneForm" style="display:none;" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
+          {% csrf_token %}
+        </form>
+        </p>
       </div>
       <div class="bb-custom-side">
         <p>
           <img src="{% static 'images/small/efk_icon_lifeskills_140x140.png' %}">
           <a id="gototest" href="#" onclick="gototest()">开始过关</a>
-          <form id="goForm" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
+          <form id="goForm" style="display:none;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
             {% csrf_token %}
           </form>
         </p>
@@ -136,8 +140,12 @@ function isGoodtogo() {
       return false;
   } else
       donenum++;
-      if (donenum >= {{words|length}})
+      if (donenum >= {{words|length}}) {
         alldone = true;
+        var csrfvalue = $('#doneForm').find("input[name='csrfmiddlewaretoken']").val();
+        $.post($('#doneForm').attr('action'),
+              {csrfmiddlewaretoken: csrfvalue});
+      }
       return true;
 };
 function canGotolast() {

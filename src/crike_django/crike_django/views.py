@@ -492,7 +492,7 @@ class LessonShowView(TemplateView):
 
     def post(self, request, book, lesson):
         self._success(request, book, lesson)
-        return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/pick')
+        return HttpResponseRedirect('#')
 
 class LessonPickView(TemplateView):
     template_name = 'crike_django/lesson_pick.html'
