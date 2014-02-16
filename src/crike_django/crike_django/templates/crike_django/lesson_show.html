@@ -125,7 +125,7 @@ var donenum = 0;
 var alldone =false;
 
 function isGoodtogo() {
-  if (!ready) {
+  if (!ready && !alldone) {
       var showtimer = null;
       var cb = "$('#popup').hide();$('#overlay').hide()"
       $('#popup')
