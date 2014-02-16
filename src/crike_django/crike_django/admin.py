@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 
-from models import Teacher, Student, Book, Lesson, Word
+from models import Teacher, Student, Book, Lesson, Word, Prize
 
 
 class TeacherInline(admin.StackedInline):
@@ -23,3 +23,4 @@ admin.site.register(Student)
 admin.site.register(Book)
 admin.site.register(Lesson)
 admin.site.register(Word)
+admin.site.register(Prize)

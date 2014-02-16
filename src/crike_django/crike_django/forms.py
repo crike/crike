@@ -61,3 +61,8 @@ class CrikeLoginForm(forms.Form):
 class UploadHeadSculptureForm(forms.Form):
     image = forms.ImageField(label='上传图片')
 
+
+class PrizeForm(forms.ModelForm):
+    class Meta:
+        model = Prize
+

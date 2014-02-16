@@ -46,6 +46,7 @@ class ClassRelation(models.Model):
            1    n
     Lesson ------ Student
     '''
+    name = models.CharField(max_length=50, blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     lesson = models.ForeignKey("Lesson")
     teachers = models.ManyToManyField("Teacher")

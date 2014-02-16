@@ -729,11 +729,23 @@ class ExamView(TemplateView):
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
 class PrizeView(TemplateView):
+    template_name = 'crike_django/prize_view.html'
+
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect('/home')
+        prizes = Prize.objects.all()
+        form = PrizeForm()
+        return render(request, self.template_name, {
+            'prizes':prizes,
+            'form': form,
+        })
 
     def post(self, request, *args, **kwargs):
-        pass
+        form = PrizeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('prize')
+        return redirect('prize')
+
 
 # for management
 class LessonAdminView(TemplateView):
