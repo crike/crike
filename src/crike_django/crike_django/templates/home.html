@@ -36,7 +36,8 @@ background-color: #F3F3F3;
           <img class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
           {% endif %}
         </div>
-        <form method="post" action="{% url 'user_head_sculpture' %}" enctype="multipart/form-data">
+        <button onclick="showForm('picForm')">更换头像</button>
+        <form method="post" action="{% url 'user_head_sculpture' %}" enctype="multipart/form-data" style='display:none' id='picForm'>
           {% csrf_token %}
           {{ header_form|crispy }}
           <div class="control-group">
@@ -147,6 +148,14 @@ $(function() {
     });
     $(".knob").knob();
 });
+
+function showForm(id) {
+  if ($('#'+id).is(":visible")) {
+    $('#'+id).hide();
+  } else {
+    $('#'+id).show();
+  }
+};
 </script>
 
 {% endblock %}
