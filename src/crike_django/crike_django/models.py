@@ -74,6 +74,7 @@ class Lesson(models.Model):
 class Book(models.Model):
     name = models.CharField(max_length=50)
     lessons = ListField(EmbeddedModelField('Lesson'))
+    is_public = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name

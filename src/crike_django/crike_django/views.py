@@ -124,7 +124,7 @@ def update_strange_words_lesson(request):
     for item in strange_record_list:
         strange_list.append(item.word)
 
-    book_obj = Book.objects.get_or_create(name=request.user.username)[0]
+    book_obj = Book.objects.get_or_create(name=request.user.username, is_public=False)[0]
     lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
     lesson_obj = None
     if len(lesson_embs) > 0:
@@ -168,7 +168,7 @@ class HomeView(TemplateView):
         # TODO:
         # update_user_from_wer(request)
 
-        books = Book.objects.all()
+        books = Book.objects.filter(is_public=True) | Book.objects.filter(name=request.user.username)
         todos = []
         for book in books:
             for lesson in book.lessons:
@@ -636,7 +636,7 @@ class BooksStudyView(TemplateView):
             print e
             return HttpResponseRedirect('/error/')#TODO error page
         """
-        books = Book.objects.all()
+        books = Book.objects.filter(is_public=True) | Book.objects.filter(name=request.user.username)
         if len(books) == 0:
             return render(request, self.template_name,{})
 
