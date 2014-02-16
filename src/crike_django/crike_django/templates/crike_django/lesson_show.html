@@ -76,11 +76,13 @@
     {% endfor %}
     <div class="bb-item">
       <div class="bb-custom-side">
+        <img src="{% static 'images/small/efk_icon_healthskills_140x140.png' %}">
         <p>Good Job!!</p>
       </div>
       <div class="bb-custom-side">
         <p>
-          <a id="gototest" href="#" onclick="gototest()">开始自测</a>
+          <img src="{% static 'images/small/efk_icon_lifeskills_140x140.png' %}">
+          <a id="gototest" href="#" onclick="gototest()">开始过关</a>
           <form id="goForm" style="display:none;float:right;margin-left:10px" method="post" action="/study/book/{{book}}/lesson/{{lesson}}/show">
             {% csrf_token %}
           </form>
