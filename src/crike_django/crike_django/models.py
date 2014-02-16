@@ -60,7 +60,7 @@ class Word(models.Model):
 
 
 class Lesson(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     book = models.ForeignKey('Book')
     words = ListField(models.ForeignKey('Word'))
     tag = models.CharField(max_length=50, blank=True, default='new')
