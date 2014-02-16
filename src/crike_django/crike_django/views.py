@@ -117,7 +117,8 @@ def lesson_stat_update(stat):
 def update_strange_words_lesson(request):
     if request.user.username == '':
         return
-    strange_record_list = WordStat.objects.filter(mistake_num__gte=3)
+    strange_record_list = WordStat.objects.filter(mistake_num__gte=3,
+                                                    user=request.user)
     strange_list = []
     familiar_list = []
     for item in strange_record_list:
