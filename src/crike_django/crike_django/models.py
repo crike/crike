@@ -43,6 +43,8 @@ class Class(models.Model):
     '''
            1    n
     Lesson ------ Teacher
+           1    n
+    Lesson ------ Student
     '''
     date = models.DateField(auto_now_add=True)
     lesson = models.ForeignKey("Lesson")
