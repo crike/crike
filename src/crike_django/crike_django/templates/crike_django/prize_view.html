@@ -18,10 +18,10 @@
         <p>奖品分类：{{ pq.prize.category }}</p>
         <p>请求价格：{{ pq.value }}</p>
         <p>请求数量：{{ pq.amount }}</p>
-        <p>请求时间：{{ pq.date | date }}</p>
+        <p>请求时间：{{ pq.date }}</p>
         <p>当前价格：{{ pq.prize.value }}</p>
         <p>当前数量：{{ pq.prize.amount }}</p>
-        <p>奖品上架时间：{{ pq.prize.date | date }}</p>
+        <p>奖品上架时间：{{ pq.prize.date }}</p>
       </div>
     </a>
   </div>
@@ -57,8 +57,8 @@
   <div class="col-sm-6 col-md-3">
     <a title="兑换奖品" href="/prize/{{ prize.id }}" class="thumbnail">
       <div class="caption">
-        <h3>{{ prize.name }}</h4>
-        <h4>分类：{{ prize.category }}</h3>
+        <h3>{{ prize.name }}</h3>
+        <h4>分类：{{ prize.category }}</h4>
         <p>价格：{{ prize.value }}</p>
         <p>数量：{{ prize.amount }}</p>
         <p>奖品上架时间：{{ prize.date | date }}</p>
