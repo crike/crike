@@ -455,6 +455,17 @@ def words_event_recorder(request, book, lesson, tag):
         print word, request.user, lesson
 
 
+def create_class_if_need(request, book, lesson):
+    # lesson, teachers, students is needed for a Class
+    # but now we only get a lesson and a student.
+    lesson_obj = get_lessonemb(book, lesson)
+    cls, ret = ClassRelation.objects.get_or_create(lesson=lesson_obj)
+    profile = get_profile(request.user)
+    if profile is not None:
+        cls.students.add(profile)
+    cls.save()
+
+
 # for learning
 class LessonShowView(TemplateView):
     template_name = 'crike_django/lesson_show.html'
@@ -464,7 +475,8 @@ class LessonShowView(TemplateView):
 
     def _record(self, request, book, lesson):
         #word_event_recorder(request, book, lesson, 'show')
-        pass
+        create_class_if_need(request, book, lesson)
+
 
     def get(self, request, book, lesson):
         lesson_obj = get_lessonemb(book, lesson)

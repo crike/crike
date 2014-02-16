@@ -39,7 +39,7 @@ class PrizeQuery(models.Model):
     cost = models.IntegerField(default=0)
 
 
-class Class(models.Model):
+class ClassRelation(models.Model):
     '''
            1    n
     Lesson ------ Teacher
