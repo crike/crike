@@ -29,7 +29,8 @@ urlpatterns = patterns('',
     url(r'^home$', login_required(HomeView.as_view()), name='home'), #TODO need read current user's learning process info
     url(r'^study$', login_required(BooksStudyView.as_view()), name='study'),#TODO need get exam unit from user's info
     url(r'^exam/(?P<id>.*?)/?$', login_required(ExamView.as_view()), name='exam'),
-    url(r'^prize/?$', login_required(PrizeView.as_view()), name='prize'),
+    url(r'^prize/(?P<prize_name>.*?)/?$', login_required(PrizeView.as_view()), name='prize'),
+    url(r'^admin/prize/?$', login_required(PrizeAdminView.as_view()), name='prize_admin'),
     url(r'^accounts/register/$',
           RegistrationView.as_view(form_class=CrikeRegistrationForm),
           name='registration_register'),

@@ -28,10 +28,10 @@
   </div>
 <div class="col-lg-3">
 <div class="well">
-<form class="bs-example form-horizontal" method="post" action="{% url 'prize' %}">
+<form class="bs-example form-horizontal" method="post" action="{% url 'prize_admin' %}">
   {% csrf_token %}
   <legend>新增奖品</legend>
-  {% crispy form %}
+  {{ form | crispy }}
   <div class="control-group">
     <div class="controls">
       <button type="submit" class="btn btn-primary">新增奖品</button>

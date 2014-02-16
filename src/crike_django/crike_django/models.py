@@ -21,7 +21,7 @@ class Prize(models.Model):
     date = models.DateField(auto_now_add=True)
     category = models.CharField(max_length=50, default='prize')
     tag = models.CharField(max_length=50, default='prize')
-    value = models.IntegerField(default=0)# XXX the default value of a prize is 0
+    value = models.IntegerField(default=10) # XXX
     amount = models.IntegerField(default=1)
 
 
@@ -33,10 +33,11 @@ class PrizeQuery(models.Model):
     '''
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     date = models.DateField(auto_now_add=True)
-    category = models.CharField(max_length=50)
-    tag = models.CharField(max_length=50)
-    amount = models.IntegerField(default=0)# XXX
-    cost = models.IntegerField(default=0)
+    prize = models.ForeignKey('Prize')
+    tag = models.CharField(max_length=50, default='normal')
+    amount = models.IntegerField(default=1) # XXX
+    # value may change, use the value of current time
+    value = models.IntegerField(default=0)
 
 
 class ClassRelation(models.Model):
