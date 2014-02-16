@@ -31,10 +31,10 @@
 <form class="bs-example form-horizontal" method="post" action="{% url 'prize' %}">
   {% csrf_token %}
   <legend>新增奖品</legend>
-  {{ form|crispy }}
+  {% crispy form %}
   <div class="control-group">
     <div class="controls">
-      <button type="submit" class="btn">XXX</button>
+      <button type="submit" class="btn btn-primary">新增奖品</button>
     </div>
   </div>
 </form>
