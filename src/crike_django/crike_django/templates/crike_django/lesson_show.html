@@ -87,7 +87,6 @@
           <img src="{% static 'images/small/efk_icon_lifeskills_140x140.png' %}">
           <a id="gototest" href="#" onclick="gototest()">开始过关</a>
           <form id="goForm" style="display:none;" method="get" action="/study/book/{{book}}/lesson/{{lesson}}/pick">
-            {% csrf_token %}
           </form>
         </p>
       </div>
