@@ -38,6 +38,7 @@ class PrizeQuery(models.Model):
     amount = models.IntegerField(default=1) # XXX
     # value may change, use the value of current time
     value = models.IntegerField(default=0)
+    done = models.BooleanField(default=False)
 
 
 class ClassRelation(models.Model):
@@ -154,10 +155,13 @@ class Profile(models.Model):
             return False
 
     def point_add(self, point):
+        if self.usage_points + point < 0:
+            return False
         self.usage_points += point
         self.total_points += point
         if self.biggest_points < point:
             self.biggest_points = point
+        return True
 
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)
