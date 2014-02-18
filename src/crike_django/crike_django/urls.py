@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^study$', login_required(BooksStudyView.as_view()), name='study'),#TODO need get exam unit from user's info
     url(r'^exam/(?P<id>.*?)/?$', login_required(ExamView.as_view()), name='exam'),
     url(r'^prize(?:/(?P<prize_pk>.*?))?/$', login_required(PrizeView.as_view()), name='prize'),
+    url(r'^prize_query(?:/(?P<prize_query_pk>.*?))?/$', login_required(PrizeQueryView.as_view()), name='prize_query'),
     url(r'^admin/prize/?$', login_required(PrizeAdminView.as_view()), name='prize_admin'),
     url(r'^accounts/register/$',
           RegistrationView.as_view(form_class=CrikeRegistrationForm),

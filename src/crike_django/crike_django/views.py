@@ -741,6 +741,14 @@ class PrizeAdminView(TemplateView):
         return redirect('prize')
 
 
+class PrizeQueryView(TemplateView):
+    template_name = 'crike_django/prize_query_view.html'
+
+    def get(self, request, prize_query_pk, *args, **kwargs):
+        print prize_query_pk
+        return HttpResponse('xxx')
+
+
 class PrizeView(TemplateView):
     template_name = 'crike_django/prize_view.html'
 
