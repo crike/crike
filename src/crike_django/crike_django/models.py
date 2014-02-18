@@ -62,11 +62,28 @@ class Word(models.Model):
     def __unicode__(self):
         return self.name
 
+class Choicesingle(models.Model):
+    title = models.CharField(max_length=50)
+    question = models.TextField(max_length=50)
+    answers = ListField(models.CharField(max_length=100))
+    rightnum = models.IntegerField()
+    
+    def __unicode__(self):
+        return self.name
+
+class Reading(models.Model):
+    title = models.CharField(max_length=50)
+    article = models.TextField()
+    questions = ListField(models.ForeignKey('Choicesingle'))
+    
+    def __unicode__(self):
+        return self.name
 
 class Lesson(models.Model):
     name = models.CharField(max_length=50)
     book = models.ForeignKey('Book')
     words = ListField(models.ForeignKey('Word'))
+    Readings = ListField(models.ForeignKey('Reading'))
     tag = models.CharField(max_length=50, blank=True, default='new')
 
     def __unicode__(self):
