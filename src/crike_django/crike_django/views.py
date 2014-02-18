@@ -676,7 +676,7 @@ def exam_creator(book, unit):
     return words_list
 
 class ExamView(TemplateView):
-    template_name='crike_django/exam_view.html'
+    template_name='crike_django/exam_words.html'
 
     def get(self, request, id):
         exam = Exam.objects.filter(id=id)[0]
