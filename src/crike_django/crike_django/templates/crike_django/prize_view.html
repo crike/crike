@@ -11,7 +11,7 @@
   </div>
   {% for pq in prize_queries %}
   <div class="col-sm-6 col-md-3">
-    <a title="兑换奖品" href="/prize_query/{{ pq.id }}" class="thumbnail">
+    <div title="兑换奖品" class="thumbnail">
       <div class="caption">
         <h4>请求者：{{ pq.user.username }}</h4>
         <h4>奖品名：{{ pq.prize.name }}</h4>
@@ -22,8 +22,9 @@
         <p>当前价格：{{ pq.prize.value }}</p>
         <p>当前数量：{{ pq.prize.amount }}</p>
         <p>奖品上架时间：{{ pq.prize.date }}</p>
+        <a href="/prize_query/{{ pq.id }}" class="btn btn-primary" role="button">接受</a>
       </div>
-    </a>
+    </div>
   </div>
   {% endfor %}
 </div>
