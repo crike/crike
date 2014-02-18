@@ -745,23 +745,39 @@ class PrizeQueryView(TemplateView):
     template_name = 'crike_django/prize_query_view.html'
 
     def get(self, request, prize_query_pk, *args, **kwargs):
-        print prize_query_pk
-        return HttpResponse('xxx')
+        if prize_query_pk is None:
+            return HttpResponse('err..')
+        prize_query = PrizeQuery.objects.get(pk=prize_query_pk)
+        prize_query.done = True
+        prize_query.save()
+        return HttpResponse(str(prize_query.done))
 
 
 class PrizeView(TemplateView):
     template_name = 'crike_django/prize_view.html'
 
     def get(self, request, prize_pk, *args, **kwargs):
+        '''
+        if prize_pk is valid, here will generate a PrizeQuery,
+        which attached to current User.
+        '''
         if prize_pk is not None:
-            prize = Prize.objects.get(pk=prize_pk)
-            prize_query = PrizeQuery.objects.create(
-                user=request.user,
-                prize=prize,
-                value=prize.value,
-            )
+            profile = get_profile(request.user)
+            if profile is None:
+                pass
+            else:
+                prize = Prize.objects.get(pk=prize_pk)
+                profile.point_add(-prize.value)
+                prize_query = PrizeQuery.objects.create(
+                    user=request.user,
+                    prize=prize,
+                    value=prize.value,
+                )
 
-        prize_queries = PrizeQuery.objects.all()
+        try:
+            prize_queries = PrizeQuery.objects.filter(done=False)
+        except PrizeQuery.DoesNotExist:
+            prize_queries = []
 
         prizes = Prize.objects.all()
         form = PrizeForm()
