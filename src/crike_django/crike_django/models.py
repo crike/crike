@@ -84,7 +84,6 @@ class Lesson(models.Model):
     name = models.CharField(max_length=50)
     book = models.ForeignKey('Book')
     words = ListField(models.ForeignKey('Word'))
-    Readings = ListField(models.ForeignKey('Reading'))
     tag = models.CharField(max_length=50, blank=True, default='new')
 
     def __unicode__(self):
@@ -104,6 +103,7 @@ class Exam(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=50)
     lessons = ListField(models.ForeignKey('Lesson'))
+    Readings = ListField(models.ForeignKey('Reading'))
     length = models.IntegerField(blank=True, default=0)
     score = models.IntegerField(blank=True, null=True)
     tag = models.CharField(max_length=50, blank=True, null=True)
