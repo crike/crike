@@ -730,6 +730,20 @@ class ExamView(TemplateView):
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
 
+class ExamAdminView(TemplateView):
+    template_name = 'crike_django/readings_admin.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        form = PrizeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('prize')
+        return redirect('prize')
+
+
 class PrizeAdminView(TemplateView):
     def get(self, request):
         return HttpResponse('FIXME')
