@@ -462,7 +462,8 @@ def create_class_if_need(request, book, lesson):
     cls, ret = ClassRelation.objects.get_or_create(lesson=lesson_obj)
     profile = get_profile(request.user)
     if profile is not None:
-        cls.students.add(profile)
+        # 课堂上只要有身份的人！
+        cls.students.add(request.user)
     cls.save()
 
 

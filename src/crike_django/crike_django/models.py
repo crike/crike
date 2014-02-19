@@ -46,13 +46,13 @@ class ClassRelation(models.Model):
            1    n
     Lesson ------ Teacher
            1    n
-    Lesson ------ Student
+    Lesson ------ User (standing for student/teacher)
     '''
     name = models.CharField(max_length=50, blank=True, null=True)
     date = models.DateField(auto_now_add=True)
     lesson = models.ForeignKey("Lesson")
     teachers = models.ManyToManyField("Teacher")
-    students = models.ManyToManyField("Student")
+    students = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
 
 class Word(models.Model):
