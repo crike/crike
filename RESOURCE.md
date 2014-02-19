@@ -31,6 +31,9 @@ jquery
 * windy - shuffle animation
  [demo](http://tympanus.net/Development/Windy/index2.html)
  [src](https://github.com/codrops/Windy/tree/master/js)
+* in-place editor
+  http://www.appelsiini.net/projects/jeditable
+  https://code.google.com/p/jquery-in-place-editor/
 
 div + css
 =====
