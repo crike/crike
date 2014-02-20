@@ -7,10 +7,16 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script language="javascript" type="text/javascript">
 $(function() {
-        
-  $(".editable_select").editable("<?php print $url ?>save.php", { 
+
+  var books = "{"+{% for book in books %}"'{{book}}':'{{book}}',"+{% endfor %}"}";
+
+  $(".editable_select").editable(function(value, settings){
+    $(this).html(value)
+    $('div[id^="lessonsOf"]').hide()
+    $('#lessonsOf'+value).show()
+    }, { 
     indicator : '<img src="img/indicator.gif">',
-    data   : "{'Lorem ipsum':'Lorem ipsum','Ipsum dolor':'Ipsum dolor','Dolor sit':'Dolor sit'}",
+    data   : books,
     type   : "select",
     submit : "OK",
     style  : "inherit",
@@ -24,6 +30,12 @@ $(function() {
     type   : "select",
     submit : "OK",
     style  : "inherit"
+  });
+  $(".editable_text").editable(function(value, settings){
+    $(this).html(value)
+    }, { 
+      type   : 'text',
+      select : true,
   });
   $(".editable_textarea").editable("<?php print $url ?>save.php", { 
       indicator : "<img src='img/indicator.gif'>",
@@ -69,6 +81,7 @@ $(function() {
   });
 
 });
+
 function showExamform() {
   if (!$("#examform").is(":visible")) {
     $("#deleteform").hide();
@@ -177,15 +190,21 @@ function checkall(cb,v) {
   <button class="btn btn-danger  btn-lg" onclick="showDeleteform();">删除考试</button>
   <form id='examform' style="display: none" enctype="multipart/form-data" method="post" action="/admin/books/">
 
-    <h2 class="editable_textarea">New Exam</h2>
-    <p><b class="editable_select" id="select_1" style="display: inline"> select content</b>
-    dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
+    <h2><p class="editable_text">New Exam</p></h2>
+    <p><b class="editable_select" id="select_1" style="display: inline"> select a book</b>
+    {% for book in books %}
+    <div id="lessonsOf{{book.name}}" style="display:none">
+      {% for lesson in book.lessons %}
+      <input type='checkbox' name='addlessons' value='{{lesson.name}}'>{{lesson.name}}
+      {% endfor %}
+    </div>
+    {% endfor %}
 
     <div id="checkall{{exam.name}}" style="display:none">
       <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
       <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
     </div>
-    <input type="submit" value="upload" onclick="this.disabled=true; this.value='Please Wait...';$('#examform').submit();">
+    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';$('#examform').submit();">
     <strong>{{ Uploadwarning }}</strong>
   </form>
   {% if Showform == "deleteform" %}

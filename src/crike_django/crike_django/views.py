@@ -735,7 +735,7 @@ class ExamAdminView(TemplateView):
     def get(self, request):
         exams = Exam.objects.all()
         return render(request, self.template_name, 
-                {'exams':exams})
+                {'books':Book.objects.all(),'exams':exams})
 
     def post(self, request, *args, **kwargs):
         for lesson in exam.lessons:
