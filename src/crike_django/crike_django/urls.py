@@ -28,7 +28,6 @@ urlpatterns = patterns('',
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
     url(r'^home$', login_required(HomeView.as_view()), name='home'), #TODO need read current user's learning process info
     url(r'^study$', login_required(BooksStudyView.as_view()), name='study'),#TODO need get exam unit from user's info
-    url(r'^exam$', login_required(ExamAdminView.as_view()), name='exam'),#TODO current only for readings
     url(r'^prize(?:/(?P<prize_pk>.*?))?/$', login_required(PrizeView.as_view()), name='prize'),
     url(r'^prize_query(?:/(?P<prize_query_pk>.*?))?/$', login_required(PrizeQueryView.as_view()), name='prize_query'),
     url(r'^admin/prize/?$', login_required(PrizeAdminView.as_view()), name='prize_admin'),
@@ -49,6 +48,7 @@ urlpatterns = patterns('',
 # resource management for teachers
     url(r'^admin/books/', BooksAdminView.as_view(), name='books'),
     url(r'^admin/words/', WordsAdminView.as_view(), name='words'),
+    url(r'^admin/exams/', login_required(ExamAdminView.as_view()), name='exam'),#TODO current only for readings
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),

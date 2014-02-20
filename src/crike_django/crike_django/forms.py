@@ -21,6 +21,13 @@ class AddWordForm(forms.Form):
     image1  = forms.FileField(required=False)
     image2  = forms.FileField(required=False)
 
+class ExamForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    book = forms.ModelMultipleChoiceField(queryset=Book.objects.all())
+    lessons = forms.ModelMultipleChoiceField(queryset=Lesson.objects.all())
+    readings = forms.ModelMultipleChoiceField(queryset=Reading.objects.all())
+
+
 class CrikeRegistrationForm(forms.Form):
     required_css_class = 'required'
 

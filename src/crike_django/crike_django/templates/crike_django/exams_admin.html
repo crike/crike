@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<link href="/static/index.css" rel="stylesheet" type="text/css"/>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script language="javascript" type="text/javascript">
+$(function() {
+        
+  $(".editable_select").editable("<?php print $url ?>save.php", { 
+    indicator : '<img src="img/indicator.gif">',
+    data   : "{'Lorem ipsum':'Lorem ipsum','Ipsum dolor':'Ipsum dolor','Dolor sit':'Dolor sit'}",
+    type   : "select",
+    submit : "OK",
+    style  : "inherit",
+    submitdata : function() {
+      return {id : 2};
+    }
+  });
+  $(".editable_select_json").editable("<?php print $url ?>save.php", { 
+    indicator : '<img src="img/indicator.gif">',
+    loadurl : "<?php print $url ?>json.php",
+    type   : "select",
+    submit : "OK",
+    style  : "inherit"
+  });
+  $(".editable_textarea").editable("<?php print $url ?>save.php", { 
+      indicator : "<img src='img/indicator.gif'>",
+      type   : 'textarea',
+      submitdata: { _method: "put" },
+      select : true,
+      submit : 'OK',
+      cancel : 'cancel',
+      cssclass : "editable"
+  });
+  $(".editable_textile").editable("<?php print $url ?>save.php?renderer=textile", { 
+      indicator : "<img src='img/indicator.gif'>",
+      loadurl   : "<?php print $url ?>load.php",
+      type      : "textarea",
+      submit    : "OK",
+      cancel    : "Cancel",
+      tooltip   : "Click to edit..."
+  });
+  
+  $(".click").editable("<?php print $url ?>echo.php", { 
+      indicator : "<img src='img/indicator.gif'>",
+      tooltip   : "Click to edit...",
+      style  : "inherit"
+  });
+  $(".dblclick").editable("<?php print $url ?>echo.php", { 
+      indicator : "<img src='img/indicator.gif'>",
+      tooltip   : "Doubleclick to edit...",
+      event     : "dblclick",
+      style  : "inherit"
+  });
+  $(".mouseover").editable("<?php print $url ?>echo.php", { 
+      indicator : "<img src='img/indicator.gif'>",
+      tooltip   : "Move mouseover to edit...",
+      event     : "mouseover",
+      style  : "inherit"
+  });
+  
+  /* Should not cause error. */
+  $("#nosuch").editable("<?php print $url ?>echo.php", { 
+      indicator : "<img src='img/indicator.gif'>",
+      type   : 'textarea',
+      submit : 'OK'
+  });
+
+});
+function showExamform() {
+  if (!$("#examform").is(":visible")) {
+    $("#deleteform").hide();
+    $(".checkexam").hide();
+    $("#examform").show();
+  } else {
+    $("#examform").hide();
+  }
+};
+function showDeleteform() {
+  if (!$("#deleteform").is(":visible")) {
+    $("#examform").hide();
+    $("#deleteform").show();
+    $(".checkexam").show();
+
+  } else {
+    $("#deleteform").hide();
+    $(".checkexam").hide();
+  }
+};
+function appendexam(cb) {
+  var n = cb.name;
+  var v = cb.value;
+  if (cb.checked) { 
+    $(cb).clone().attr({id:v+'inform',class:'checkexaminform',style:'display:none'}).prependTo('#deleteform');
+    $("."+v+"lesson").show();
+    $("#checkall"+v).show();
+    $(".checkexam").prop('disabled', true);
+    cb.disabled=false;
+    $("#deletesubmit").prop('disabled', false);
+  } else {
+    $('#'+v+'inform').remove();
+    $("."+v+"lessoninform").remove();
+    $("."+v+"lesson").prop('checked',false);
+    $("."+v+"lesson").hide();
+    $(".checkall").prop('checked',false);
+    $("#checkall"+v).hide();
+    $(".checkexam").prop('disabled', false);
+    $("#deletesubmit").prop('disabled', true);
+  }
+};
+function appendlesson(cb) {
+  if (cb.checked) { 
+    $(cb).clone().attr({id:cb.value+'inform',class:cb.class+'inform',style:'display:none'}).prependTo('#deleteform');
+  } else {
+    $('.checkall').prop('checked', false);
+    $('#'+cb.value+'inform').remove();
+  }
+};
+function checkall(cb,v) {
+  if (cb.checked) {
+    $("."+v+"lessoninform").remove();//need remove added lessons then add all
+    $("."+v+"lesson").prop('checked',true);
+    $("."+v+"lesson").each(function() {
+        $(this).clone().attr({id:this.value+'inform','class':v+"lessoninform",style:'display:none'}).prependTo('#deleteform');
+     });
+  } else {
+    $("."+v+"lesson").prop('checked',false);
+    $("."+v+"lessoninform").remove();
+  }
+};
+</script>
+<div class="jumbotron">
+  <h1>Crike -- 试题管理</h1>
+</div>
+<!-- Cycle through entries -->
+{% for exam in exams %}
+<div class='row'>
+  <h2>
+    <input class="checkexam" style="display:none" type="checkbox" name='delexam' value='{{exam.name}}' onclick="appendexam(this);">
+    {{ exam.name }}
+    <div id="checkall{{exam.name}}" style="display:none">
+      <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
+      <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
+    </div>
+  </h2>
+  
+  <!-- vocabularies -->
+  {% for lesson in exam.lessons|dictsort:"name" %}
+  <div class="col-6 col-sm-6 col-lg-2">  
+    <a class="pin" title="删除" style="width:100%;" href='/admin/exam/{{exam.name}}/lesson/{{lesson.name}}/'>
+      {{lesson.name}}
+      <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
+    </a>
+  </div>
+  {% endfor %}
+
+  <!-- reading comprehensions -->
+  {% for reading in exam.readings %}
+  <form>
+    {% csrf_token %}
+    {{reading.name}}<br><!--TODO editable reading areas-->
+  </form>
+  {% endfor %}
+  <button class="btn btn-success btn-lg" onclick="showExamform();">添加</button>
+  <form>
+    {% csrf_token %}
+    <input hidden='true' name='extra' value='add'>
+  <!--add reading form here-->
+  </form>
+</div>
+{% endfor %}
+<!-- add new item -->
+<div class='row'>
+  <button class="btn btn-success btn-lg" onclick="showExamform();">添加考试</button>
+  <button class="btn btn-danger  btn-lg" onclick="showDeleteform();">删除考试</button>
+  <form id='examform' style="display: none" enctype="multipart/form-data" method="post" action="/admin/books/">
+
+    <h2 class="editable_textarea">New Exam</h2>
+    <p><b class="editable_select" id="select_1" style="display: inline"> select content</b>
+    dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
+
+    <div id="checkall{{exam.name}}" style="display:none">
+      <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
+      <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
+    </div>
+    <input type="submit" value="upload" onclick="this.disabled=true; this.value='Please Wait...';$('#examform').submit();">
+    <strong>{{ Uploadwarning }}</strong>
+  </form>
+  {% if Showform == "deleteform" %}
+  <form id="deleteform" style="display:block" enctype="multipart/form-data" method="post" action="/admin/exams/">
+  {% else %}
+  <form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/admin/exams/">
+  {% endif %}
+    {% csrf_token %}
+    <label>请选择要删除的课程（先勾选所属课本）</label>
+    <input hidden='true' name='extra' value='delete'>
+    <input id="deletesubmit" type="submit" disabled="true" value="delete">
+    <strong>{{ Deletewarning }}</strong>
+  </form>
+</div>
+
+<span id="dummy"></span>
+{% block body_footer %}
+<script src="{% static 'jeditable/jquery.jeditable.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% endblock %}

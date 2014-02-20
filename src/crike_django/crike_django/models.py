@@ -100,14 +100,12 @@ class Book(models.Model):
 
 
 class Exam(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=50)
+    book = models.ForeignKey('Book')
     lessons = ListField(models.ForeignKey('Lesson'))
-    Readings = ListField(models.ForeignKey('Reading'))
-    length = models.IntegerField(blank=True, default=0)
-    score = models.IntegerField(blank=True, null=True)
+    readings = ListField(models.ForeignKey('Reading'))
+    totalpoints = models.IntegerField(blank=True, default=0)
     tag = models.CharField(max_length=50, blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now=True)
 
 
 # This class is to keep compability with other apps
@@ -255,6 +253,8 @@ class ExamStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
     score = models.IntegerField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now=True)
+    tag = models.CharField(max_length=140, blank=True, null=True)
 
 
 class WordStat(models.Model):

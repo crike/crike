@@ -177,23 +177,22 @@ class HomeView(TemplateView):
                 lesson.stat = stat
                 todos.append({'book':book, 'lesson':lesson})
 
-                if stat.percent == 100 and lesson.name != 'strange words' and lesson.tag != 'intest':
-                    exam = Exam.objects.get_or_create(
-                            user=request.user, name='Unit test', tag='current')[0]
-                    exam.lessons.append(lesson.id)
-                    exam.length += len(lesson.words)
-                    if len(exam.lessons) == 3:
-                        exam.tag = 'todo'
-                    exam.save()
-                    book.lessons.remove(lesson)
-                    lesson.tag = 'intest'
-                    lesson.save()
-                    book.lessons.append(lesson)
-                    book.save()
+                if stat.percent == 100 and lesson.name != 'strange words':
+                    for exam in Exam.objects.all():
+                        ready = True
+                        for lesson in exam.lessons:
+                            stat = lesson.lessonstat_set.filter(user=request.user)
+                            if stat.percent != 100:
+                                ready = False
+                                break
+                        if ready:
+                            examstat = ExamStat.objects.get_or_create(
+                                    user=request.user, exam=exam, tag='todo')[0]
+                            examstat.save()
 
         return render(request, self.template_name, {
             'todos': todos,
-            'exams': Exam.objects.filter(tag='todo'),
+            'examstats': ExamStat.objects.filter(tag='todo'),
             'header_form': UploadHeadSculptureForm
         })
 
@@ -731,15 +730,21 @@ class ExamView(TemplateView):
 
 
 class ExamAdminView(TemplateView):
-    template_name = 'crike_django/readings_admin.html'
+    template_name = 'crike_django/exams_admin.html'
 
     def get(self, request):
-        return render(request, self.template_name, {})
+        exams = Exam.objects.all()
+        return render(request, self.template_name, 
+                {'exams':exams})
 
     def post(self, request, *args, **kwargs):
-        form = PrizeForm(request.POST)
+        for lesson in exam.lessons:
+            exam.totalpoints += len(lesson.words)
+
+        exam.totalpoints += len(exam.readings)
+        form = ExamForm(request.POST)
         if form.is_valid():
-            form.save()
+            #form.save()
             return redirect('prize')
         return redirect('prize')
 
