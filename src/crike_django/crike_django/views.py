@@ -738,15 +738,22 @@ class ExamAdminView(TemplateView):
                 {'books':Book.objects.all(),'exams':exams})
 
     def post(self, request, *args, **kwargs):
-        for lesson in exam.lessons:
+        examname = request.POST['name']
+        bookname = request.POST['book']
+        lessonnames = request.POST.getlist('addlessons')
+        book = Book.objects.filter(name=bookname)[0]
+        exam = Exam.objects.get_or_create(name=examname, book=book)[0]
+        for lessonname in lessonnames:
+            print "xxxxxxxxxxxxxxxxxx"
+            print bookname,lessonname
+            print "xxxxxxxxxxxxxxxxxx"
+            lesson = get_lessonemb(bookname, lessonname)
+            exam.lessons.append(lesson.id)
             exam.totalpoints += len(lesson.words)
 
-        exam.totalpoints += len(exam.readings)
-        form = ExamForm(request.POST)
-        if form.is_valid():
-            #form.save()
-            return redirect('prize')
-        return redirect('prize')
+        exam.totalpoints += len(exam.readings)*5
+        exam.save()
+        return HttpResponseRedirect("/admin/exams")
 
 
 class PrizeAdminView(TemplateView):
