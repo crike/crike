@@ -766,11 +766,13 @@ class PrizeQueryView(TemplateView):
 
     def get(self, request, prize_query_pk, *args, **kwargs):
         if prize_query_pk is None:
-            return HttpResponse('err..')
+            kwargs.update({'error_message': '请求无效！'})
+            return render(request, self.template_name, kwargs)
         prize_query = PrizeQuery.objects.get(pk=prize_query_pk)
         prize_query.done = True
         prize_query.save()
-        return HttpResponse(str(prize_query.done))
+        kwargs.update({'success_message': '已成功执行你的请求！'})
+        return render(request, self.template_name, kwargs)
 
 
 class PrizeView(TemplateView):
