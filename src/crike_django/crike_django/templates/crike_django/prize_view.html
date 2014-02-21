@@ -3,6 +3,10 @@
 
 {% block content %}
 
+{% if message %}
+<div class="alert alert-success .alert-dismissable">已成功执行你的请求！</div>
+{% endif %}
+
 {% if user.teacher %}
 
 <div class="row">
