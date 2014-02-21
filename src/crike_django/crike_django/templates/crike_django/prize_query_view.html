@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block body_footer %}
-{% if success_message %}
+{% if success_message or error_message %}
 <script>
 window.setTimeout(function() {
     window.location.href = '{% url "prize" %}';

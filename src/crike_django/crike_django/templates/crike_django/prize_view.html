@@ -9,7 +9,14 @@
 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 {{ success_message }}
 </div>
+{% endif %}
 
+{% if error_message %}
+<br/>
+<div class="alert alert-error alert-dismissable">
+<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+{{ error_message }}
+</div>
 {% endif %}
 
 {% if user.teacher %}
@@ -96,7 +103,7 @@
 
 {% block body_footer %}
 
-{% if success_message %}
+{% if success_message or error_message %}
 <script>
 window.setTimeout(function() {
     window.location.href = '{% url "prize" %}';

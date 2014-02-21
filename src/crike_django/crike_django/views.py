@@ -787,11 +787,13 @@ class PrizeView(TemplateView):
         prizes = Prize.objects.all()
         form = PrizeForm()
         success_message = kwargs.get('success_message', None)
+        error_message = kwargs.get('error_message', None)
         return render(request, self.template_name, {
             'prizes':prizes,
             'form': form,
             'prize_queries': prize_queries,
             'success_message': success_message,
+            'error_message': error_message,
         })
 
     def get(self, request, prize_pk, *args, **kwargs):
@@ -806,13 +808,17 @@ class PrizeView(TemplateView):
                 pass
             else:
                 prize = Prize.objects.get(pk=prize_pk)
-                profile.point_add(-prize.value)
-                prize_query = PrizeQuery.objects.create(
-                    user=request.user,
-                    prize=prize,
-                    value=prize.value,
-                )
-                kwargs.update({'success_message': '已成功执行你的请求！'})
+                ret = profile.point_add(-prize.value)
+                if ret is True:
+                    profile.save()
+                    PrizeQuery.objects.create(
+                        user=request.user,
+                        prize=prize,
+                        value=prize.value,
+                    )
+                    kwargs.update({'success_message': '已成功执行你的请求！'})
+                elif ret is False:
+                    kwargs.update({'error_message': '点数不足！'})
 
         return self.get_all(request, prize_pk, *args, **kwargs)
 
