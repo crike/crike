@@ -9,6 +9,7 @@
 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 {{ success_message }}
 </div>
+
 {% endif %}
 
 {% if user.teacher %}
@@ -91,4 +92,12 @@
 	</div>
 </div>
 
+{% endblock %}
+
+{% block body_footer %}
+<script>
+window.setTimeout(function() {
+    window.location.href = '{% url "prize" %}';
+}, 5000);
+</script>
 {% endblock %}
