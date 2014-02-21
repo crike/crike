@@ -776,10 +776,27 @@ class PrizeQueryView(TemplateView):
 class PrizeView(TemplateView):
     template_name = 'crike_django/prize_view.html'
 
+    def get_all(self, request, prize_pk, *args, **kwargs):
+        try:
+            prize_queries = PrizeQuery.objects.filter(done=False)
+        except PrizeQuery.DoesNotExist:
+            prize_queries = []
+
+        prizes = Prize.objects.all()
+        form = PrizeForm()
+        success_message = kwargs.get('success_message', None)
+        return render(request, self.template_name, {
+            'prizes':prizes,
+            'form': form,
+            'prize_queries': prize_queries,
+            'success_message': success_message,
+        })
+
     def get(self, request, prize_pk, *args, **kwargs):
         '''
         if prize_pk is valid, here will generate a PrizeQuery,
         which attached to current User.
+        if prize_pk is null, just show all Prizes.
         '''
         if prize_pk is not None:
             profile = get_profile(request.user)
@@ -793,27 +810,20 @@ class PrizeView(TemplateView):
                     prize=prize,
                     value=prize.value,
                 )
+                kwargs.update({'success_message': '已成功执行你的请求！'})
 
-        try:
-            prize_queries = PrizeQuery.objects.filter(done=False)
-        except PrizeQuery.DoesNotExist:
-            prize_queries = []
-
-        prizes = Prize.objects.all()
-        form = PrizeForm()
-        return render(request, self.template_name, {
-            'prizes':prizes,
-            'form': form,
-            'prize_queries': prize_queries,
-            'success_message': '已成功执行你的请求！'
-        })
+        return self.get_all(request, prize_pk, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        '''
+        Create a new Prize.
+        '''
         form = PrizeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('prize')
-        return redirect('prize')
+
+        kwargs.update({'success_message': '已成功执行你的请求！'})
+        return self.get_all(request, None, *args, **kwargs)
 
 
 # for management
