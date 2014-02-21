@@ -805,6 +805,7 @@ class PrizeView(TemplateView):
             'prizes':prizes,
             'form': form,
             'prize_queries': prize_queries,
+            'success_message': '已成功执行你的请求！'
         })
 
     def post(self, request, *args, **kwargs):

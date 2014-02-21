@@ -3,8 +3,8 @@
 
 {% block content %}
 
-{% if message %}
-<div class="alert alert-success .alert-dismissable">已成功执行你的请求！</div>
+{% if success_message %}
+<div class="alert alert-success .alert-dismissable">{{ success_message }}</div>
 {% endif %}
 
 {% if user.teacher %}
