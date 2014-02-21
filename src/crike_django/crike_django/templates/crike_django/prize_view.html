@@ -95,9 +95,12 @@
 {% endblock %}
 
 {% block body_footer %}
+
+{% if success_message %}
 <script>
 window.setTimeout(function() {
     window.location.href = '{% url "prize" %}';
 }, 5000);
 </script>
+{% endif %}
 {% endblock %}
