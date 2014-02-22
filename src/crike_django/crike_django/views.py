@@ -83,6 +83,24 @@ def get_words_from_paginator(paginator, page):
 
     return words
 
+def update_book_lesson(lessonemb, lessonobj):
+    bookobj = lessonobj.book
+    bookobj.lessons.remove(lessonemb)
+    bookobj.lessons.append(lessonobj)
+    bookobj.save()
+
+def update_exam_lesson(lessonemb, lessonobj):
+    examobjs = Exam.objects.filter(lessons_contains=lessonemb)
+    for examobj in examobjs:
+        examobj.lessons.remove(lessonemb)
+        examobj.lessons.append(lessonobj)
+        examobj.save()
+
+def delete_exam_lesson(lessonemb):
+    examobjs = Exam.objects.filter(lessons_contains=lessonemb)
+    for exam in examobjs:
+        exam.lessons.remove(lessonemb)
+        exam.save()
 
 def today():
     return datetime.datetime.now().date()
@@ -748,7 +766,7 @@ class ExamAdminView(TemplateView):
             print bookname,lessonname
             print "xxxxxxxxxxxxxxxxxx"
             lesson = get_lessonemb(bookname, lessonname)
-            exam.lessons.append(lesson.id)
+            exam.lessons.append(lesson)
             exam.totalpoints += len(lesson.words)
 
         exam.totalpoints += len(exam.readings)*5
@@ -857,16 +875,14 @@ class LessonAdminView(TemplateView):
 
     def post(self, request, book, lesson):
         if request.POST['extra'] == 'rename':
-            bookobj = Book.objects.filter(name=book)[0]
             lessonemb = get_lessonemb(book, lesson)
             lessonobj = get_lessonobj(lessonemb)
             newname = request.POST['newname']
             if not get_lessonemb(book, newname):
-                bookobj.lessons.remove(lessonemb)
                 lessonobj.name = newname
                 lessonobj.save()
-                bookobj.lessons.append(lessonobj)
-                bookobj.save()
+                update_exam_lesson(lessonemb, lessonobj)
+                update_book_lesson(lessonemb, lessonobj)
                 return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+newname)
             else:
                 words = get_words_from_lesson(book, lesson)
@@ -890,10 +906,8 @@ class LessonAdminView(TemplateView):
                             'AddWordForm':self.addwordform, 'showform':'AddWordForm',
                             'warning':'已经存在，可以使用修改功能哦'})
 
-            bookobj = Book.objects.filter(name=book)[0]
             lessonemb = get_lessonemb(book, lesson)
             lessonobj = get_lessonobj(lessonemb)
-            bookobj.lessons.remove(lessonemb)
             word = None
             words = Word.objects.filter(name=request.POST['name'])
             if len(words) > 0:
@@ -918,15 +932,13 @@ class LessonAdminView(TemplateView):
 
             lessonobj.words.append(word.id)
             lessonobj.save()
-            bookobj.lessons.append(lessonobj)
-            bookobj.save()
+            update_exam_lesson(lessonemb, lessonobj)
+            update_book_lesson(lessonemb, lessonobj)
 
         if request.POST['extra'] == 'delword':
             words = request.POST.getlist('delwords')
-            bookobj = Book.objects.filter(name=book)[0]
             lessonemb = get_lessonemb(book, lesson)
             lessonobj = get_lessonobj(lessonemb)
-            bookobj.lessons.remove(lessonemb)
             for word in words:
                 wordobj = Word.objects.filter(name=word)[0]
                 lessonobj.words.remove(wordobj.id)
@@ -941,8 +953,8 @@ class LessonAdminView(TemplateView):
                     imagepath = MEDIA_ROOT+'/images/'+word
                     if os.path.exists(imagepath):
                         shutil.rmtree(imagepath)
-            bookobj.lessons.append(lessonobj)
-            bookobj.save()
+            update_exam_lesson(lessonemb, lessonobj)
+            update_book_lesson(lessonemb, lessonobj)
 
         if request.POST['extra'] == 'updword':
             words = get_words_from_lesson(book, lesson)
@@ -1031,6 +1043,7 @@ class BooksAdminView(TemplateView):
                     if lessonemb.name == lesson:
                         get_lessonobj(lessonemb).delete()
                         bookob.lessons.remove(lessonemb)
+                        delete_exam_lesson(lessonemb)
             bookob.save()
             if len(bookob.lessons) == 0:
                 bookob.delete()
