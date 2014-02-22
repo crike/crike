@@ -90,14 +90,14 @@ def update_book_lesson(lessonemb, lessonobj):
     bookobj.save()
 
 def update_exam_lesson(lessonemb, lessonobj):
-    examobjs = Exam.objects.filter(lessons_contains=lessonemb)
+    examobjs = filter(lambda x: lessonemb in x.lessons, Exam.objects.all())
     for examobj in examobjs:
         examobj.lessons.remove(lessonemb)
         examobj.lessons.append(lessonobj)
         examobj.save()
 
 def delete_exam_lesson(lessonemb):
-    examobjs = Exam.objects.filter(lessons_contains=lessonemb)
+    examobjs = filter(lambda x: lessonemb in x.lessons, Exam.objects.all())
     for exam in examobjs:
         exam.lessons.remove(lessonemb)
         exam.save()
@@ -196,16 +196,18 @@ class HomeView(TemplateView):
                 todos.append({'book':book, 'lesson':lesson})
 
                 if stat.percent == 100 and lesson.name != 'strange words':
-                    for exam in Exam.objects.all():
+                    exams = filter(lambda x: lesson in x.lessons, Exam.objects.all())
+                    for exam in exams:
                         ready = True
                         for lesson in exam.lessons:
-                            stat = lesson.lessonstat_set.filter(user=request.user)
+                            stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
+                                                                   lesson=lesson)
                             if stat.percent != 100:
                                 ready = False
                                 break
                         if ready:
-                            examstat = ExamStat.objects.get_or_create(
-                                    user=request.user, exam=exam, tag='todo')[0]
+                            examstat, retval = ExamStat.objects.get_or_create(
+                                    user=request.user, exam=exam, tag='todo')
                             examstat.save()
 
         return render(request, self.template_name, {
