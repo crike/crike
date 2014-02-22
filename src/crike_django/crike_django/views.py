@@ -802,6 +802,15 @@ class PrizeQueryView(TemplateView):
         return render(request, self.template_name, kwargs)
 
 
+class PrizeDeleteView(TemplateView):
+
+    def get(self, request, prize_pk, *args, **kwargs):
+        prize = Prize.objects.get(pk=prize_pk)
+        if prize is not None:
+            prize.delete()
+        return redirect('prize')
+
+
 class PrizeView(TemplateView):
     template_name = 'crike_django/prize_view.html'
 
