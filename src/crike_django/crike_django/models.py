@@ -101,7 +101,6 @@ class Book(models.Model):
 
 class Exam(models.Model):
     name = models.CharField(max_length=50)
-    book = models.ForeignKey('Book')
     lessons = ListField(EmbeddedModelField('Lesson'))
     readings = ListField(EmbeddedModelField('Reading'))
     totalpoints = models.IntegerField(blank=True, default=0)
