@@ -157,10 +157,12 @@ function onClickpin(pin) {
   $(pin).find("input:checkbox").prop('checked',true);
 };
 function onChecklesson(me, book, name, length) {
-  $('<div class="col-6 col-sm-6 col-lg-2"><div class="pin" style="width:100%" name="addlessons" value='+name+
-      ' onclick="onClickpin(this)"><a>'+book+'/'+name+
-      '<label style="color:sienna;float:right;">sum:'+length+
-      '</label></a></div></div>').appendTo($(me).parents('form'));
+  if (me.checked) {
+    $('<div class="col-6 col-sm-6 col-lg-2"><div class="pin" style="width:100%" name="addlessons" value='+name+
+        ' onclick="onClickpin(this)"><a>'+book+'/'+name+
+        '<label style="color:sienna;float:right;">sum:'+length+
+        '</label></a></div></div>').appendTo($(me).parents('form'));
+  }
 }
 </script>
 <div class="jumbotron">
@@ -174,10 +176,11 @@ function onChecklesson(me, book, name, length) {
     {% csrf_token %}
     <h2><p class="editable_text" id="text_1">New Exam</p></h2>
     <h3>词汇测验</h3>
+    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';addExam();" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
     {% for book in books %}
     <div id="lessonsOf{{book.name}}" style="display:none">
-      <b>选择课程</b>
+      选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
       <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
       {% endfor %}
@@ -188,7 +191,6 @@ function onChecklesson(me, book, name, length) {
       <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
       <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
     </div>
-    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';addExam();">
     <strong>{{ Uploadwarning }}</strong>
   </form>
 
