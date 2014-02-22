@@ -26,8 +26,8 @@ urlpatterns = patterns('',
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'favicon/1.ico')),
     url(r'^auth', TemplateView.as_view(template_name='registration/auth.html'), name='auth'),
-    url(r'^home$', login_required(HomeView.as_view()), name='home'), #TODO need read current user's learning process info
-    url(r'^study$', login_required(BooksStudyView.as_view()), name='study'),#TODO need get exam unit from user's info
+    url(r'^home$', login_required(HomeView.as_view()), name='home'),
+    url(r'^study$', login_required(BooksStudyView.as_view()), name='study'),
     url(r'^prize(?:/(?P<prize_pk>.*?))?/$', login_required(PrizeView.as_view()), name='prize'),
     url(r'^prize_query(?:/(?P<prize_query_pk>.*?))?/$', login_required(PrizeQueryView.as_view()), name='prize_query'),
     url(r'^admin/prize/?$', login_required(PrizeAdminView.as_view()), name='prize_admin'),
@@ -63,6 +63,7 @@ urlpatterns = patterns('',
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/fill/?$', login_required(LessonFillView.as_view()), name='lesson_fill_view'),
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/dictation/?$', login_required(LessonDictationView.as_view()), name='lesson_dictation_view'),
     url(r'^study/books/$', BooksStudyView.as_view(), name='books_study_view'),
+    url(r'^exam/(?P<id>.*?)/?$', ExamView.as_view(), name='exam_view'),
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

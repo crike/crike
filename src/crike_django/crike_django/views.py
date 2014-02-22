@@ -206,13 +206,13 @@ class HomeView(TemplateView):
                                 ready = False
                                 break
                         if ready:
-                            examstat, retval = ExamStat.objects.get_or_create(
-                                    user=request.user, exam=exam, tag='todo')
+                            examstat = ExamStat.objects.get_or_create(
+                                    user=request.user, exam=exam)[0]
                             examstat.save()
 
         return render(request, self.template_name, {
             'todos': todos,
-            'examstats': ExamStat.objects.filter(tag='todo'),
+            'examstats': ExamStat.objects.filter(user=request.user),
             'header_form': UploadHeadSculptureForm
         })
 
@@ -702,8 +702,7 @@ class ExamView(TemplateView):
         exam = Exam.objects.filter(id=id)[0]
         name = exam.name
         words_list = []
-        for lesson in exam.lessons:
-            lessonobj = Lesson.objects.filter(id=lesson)[0]
+        for lessonobj in exam.lessons:
             words_list += Word.objects.filter(id__in=lessonobj.words)
 
         if len(words_list) == 0:
@@ -743,9 +742,10 @@ class ExamView(TemplateView):
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
             exam = Exam.objects.filter(id=id)[0]
-            exam.score = score
-            exam.save()
-            return HttpResponseRedirect('/home')#TODO show exam result
+            examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+            examstat.score = score
+            examstat.save()
+            return HttpResponseRedirect('/home')
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
 

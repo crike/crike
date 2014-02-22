@@ -156,21 +156,21 @@ function addExam() {
 </script>
 <div class="jumbotron">
   <h1>Crike -- 试题管理</h1>
-  <button class="btn btn-success btn-lg" onclick="showExamform();">添加考试</button>
-  <button class="btn btn-danger  btn-lg" onclick="showDeleteform();">删除考试</button>
+  <button class="btn btn-success btn-lg" onclick="showExamform();">添加试卷</button>
+  <button class="btn btn-danger  btn-lg" onclick="showDeleteform();">删除试卷</button>
 </div>
 <!-- add new item -->
 <div class='row'>
   <form id='examform' style="display: none" enctype="multipart/form-data" method="post" action="/admin/exams/">
     {% csrf_token %}
     <h2><p class="editable_text" id="text_1">New Exam</p></h2>
-    <p><b class="editable_select" id="select_1" style="display: inline"> select a book</b>
+    <p>选择<b class="editable_select" id="select_1" style="display: inline">课本</b>中课程
     {% for book in books %}
-    <div id="lessonsOf{{book.name}}" style="display:none">
+    <div id="lessonsOf{{book.name}}" style="display:none,inline">
       {% for lesson in book.lessons %}
       <input type='checkbox' name='addlessons' value='{{lesson.name}}'>{{lesson.name}}
       {% endfor %}
-    </div>
+    </div>生成词汇题<br>
     {% endfor %}
     <div id="checkall{{exam.name}}" style="display:none">
       <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
@@ -186,7 +186,7 @@ function addExam() {
   <form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/admin/exams/">
   {% endif %}
     {% csrf_token %}
-    <label>请选择要删除的课程（先勾选所属课本）</label>
+    <label>请选择要删除的试卷</label>
     <input hidden='true' name='extra' value='delete'>
     <input id="deletesubmit" type="submit" disabled="true" value="delete">
     <strong>{{ Deletewarning }}</strong>
