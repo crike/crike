@@ -153,6 +153,15 @@ function addExam() {
   $('<input>').attr({name:'book', value:book, hidden:'true'}).appendTo(form);
   form.submit();
 };
+function onClickpin(pin) {
+  $(pin).find("input:checkbox").prop('checked',true);
+};
+function onChecklesson(me, book, name, length) {
+  $('<div class="col-6 col-sm-6 col-lg-2"><div class="pin" style="width:100%" name="addlessons" value='+name+
+      ' onclick="onClickpin(this)"><a>'+book+'/'+name+
+      '<label style="color:sienna;float:right;">sum:'+length+
+      '</label></a></div></div>').appendTo($(me).parents('form'));
+}
 </script>
 <div class="jumbotron">
   <h1>Crike -- 试题管理</h1>
@@ -164,14 +173,17 @@ function addExam() {
   <form id='examform' style="display: none" enctype="multipart/form-data" method="post" action="/admin/exams/">
     {% csrf_token %}
     <h2><p class="editable_text" id="text_1">New Exam</p></h2>
-    <p>选择<b class="editable_select" id="select_1" style="display: inline">课本</b>中课程
+    <h3>词汇测验</h3>
+    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
     {% for book in books %}
-    <div id="lessonsOf{{book.name}}" style="display:none,inline">
-      {% for lesson in book.lessons %}
-      <input type='checkbox' name='addlessons' value='{{lesson.name}}'>{{lesson.name}}
+    <div id="lessonsOf{{book.name}}" style="display:none">
+      <b>选择课程</b>
+      {% for lesson in book.lessons|dictsort:"name" %}
+      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
       {% endfor %}
-    </div>生成词汇题<br>
+    </div>
     {% endfor %}
+
     <div id="checkall{{exam.name}}" style="display:none">
       <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
       <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
