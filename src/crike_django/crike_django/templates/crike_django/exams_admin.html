@@ -10,22 +10,10 @@ $(function() {
 
   var books = "{"+{% for book in books %}"'{{book}}':'{{book}}',"+{% endfor %}"}";
 
-  $(".editable_bookselect").editable(function(value, settings){
+  $(".editable_select").editable(function(value, settings){
     $(this).html(value);
     $('p[id^="lessonsOf"]').hide();
     $(this).parents('form').find('#lessonsOf'+value).show();
-    }, {
-    indicator : '<img src="img/indicator.gif">',
-    data   : books,
-    type   : "select",
-    submit : "OK",
-    style  : "inherit",
-    submitdata : function() {
-      return {id : 2};
-    }
-  });
-  $(".editable_lessonselect").editable(function(value, settings){
-    $(this).html(value);
     }, {
     indicator : '<img src="img/indicator.gif">',
     data   : books,
@@ -177,13 +165,16 @@ function saveExam(me) {
     $(form).find('.editable_examname').html("名称已存在，请重命名");
 };
 function onDoubleclickpin(pin) {
+  var id = $(pin).find('input').attr('value');
+  var form = $(pin).parents('form'); 
+  $(form).find( "input:checkbox[id="+id+"]" ).prop('checked', false);
   $(pin).remove();
 };
-function onChecklesson(me, book, name, id, length) {
+function onChecklesson(me, book, name, length) {
   if (me.checked) {
     $('<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
         '<a class="pin" style="width:100%" title="双击删除">'+
-        '<input name="addlessons" value='+id+' hidden="true">'
+        '<input name="addlessons" value='+me.id+' hidden="true">'
         +book+'/'+name+
         '<label style="color:sienna;float:right;">sum:'+length+
         '</label></a></div>').appendTo($(me).parents('form'));
@@ -199,15 +190,15 @@ function onChecklesson(me, book, name, id, length) {
 <div class='row'>
   <form id='newexamform' style="display: none" method="post" action="/admin/exams/">
     {% csrf_token %}
-    <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp未保存
-    <input type="submit" value="save" onclick="saveExam(this);" style="float:right"></h2>
+    <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp*
+      <button onclick="saveExam(this);" class="btn btn-success" style="float:right">save</button></h2>
     <h3>词汇测验</h3>
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
     <p id="lessonsOf{{book.name}}" style="display:none">
       选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
-      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.id}}','{{lesson.words|length}}');">
+      <input type='checkbox' id="{{lesson.id}}" onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">
       {{lesson.name}}
       {% endfor %}
     </p>
@@ -240,7 +231,7 @@ function onChecklesson(me, book, name, id, length) {
     <p id="lessonsOf{{book.name}}" style="display:none">
       选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
-      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.id}}','{{lesson.words|length}}');">
+      <input type='checkbox' id="{{lesson.id}}" onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">
       {{lesson.name}}
       {% endfor %}
     </p>
