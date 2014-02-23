@@ -10,10 +10,22 @@ $(function() {
 
   var books = "{"+{% for book in books %}"'{{book}}':'{{book}}',"+{% endfor %}"}";
 
-  $(".editable_select").editable(function(value, settings){
+  $(".editable_bookselect").editable(function(value, settings){
     $(this).html(value);
     $('p[id^="lessonsOf"]').hide();
     $(this).parents('form').find('#lessonsOf'+value).show();
+    }, {
+    indicator : '<img src="img/indicator.gif">',
+    data   : books,
+    type   : "select",
+    submit : "OK",
+    style  : "inherit",
+    submitdata : function() {
+      return {id : 2};
+    }
+  });
+  $(".editable_lessonselect").editable(function(value, settings){
+    $(this).html(value);
     }, {
     indicator : '<img src="img/indicator.gif">',
     data   : books,
@@ -153,13 +165,11 @@ function checkall(cb,v) {
 };
 function saveExam(me) {
   var form = $(me).parent('form');
-  //var form = $('#newexamform');
   var name = $(form).find('.editable_examname').html();
-  var names = $('.editable_examname')
+  var names = $('.editable_examname').not($(form).find('.editable_examname'))
               .map(function() {
                      return $(this).text();
                    }).get();
-  names.splice(0,1);
   if ($.inArray(name, names) == -1) {
     $('<input>').attr({name:'name', value:name, hidden:'true'}).appendTo(form);
     $(form).submit();
@@ -191,7 +201,7 @@ function onChecklesson(me, book, name, id, length) {
     {% csrf_token %}
     <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp未保存</h2>
     <h3>词汇测验</h3>
-    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...'; saveExam(this);" style="float:right">
+    <input type="submit" value="save" onclick="saveExam(this);" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
     <p id="lessonsOf{{book.name}}" style="display:none">
@@ -221,9 +231,10 @@ function onChecklesson(me, book, name, id, length) {
 <div class='row'>
   <form id='examform' method="post" action="/admin/exams/">
     {% csrf_token %}
+    <input name='id' value="{{exam.id}}" hidden="true">
     <h2><p class="editable_examname" id="text_1">{{exam.name}}</p></h2>
     <h3>词汇测验</h3>
-    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';saveExam();" style="float:right">
+    <input type="submit" value="save" onclick="saveExam(this);" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
     <p id="lessonsOf{{book.name}}" style="display:none">

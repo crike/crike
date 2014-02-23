@@ -758,9 +758,17 @@ class ExamAdminView(TemplateView):
                 {'books':Book.objects.all(),'exams':exams})
 
     def post(self, request, *args, **kwargs):
+        examid = request.POST.get('id', None)
         examname = request.POST['name']
         lessonids = request.POST.getlist('addlessons')
-        exam = Exam.objects.get_or_create(name=examname)[0]
+        if examid:
+            exam = Exam.objects.filter(id=examid)[0]
+            exam.name = examname
+            exam.lessons[:] = []
+            exam.totalpoints = 0
+        else:
+            exam = Exam.objects.get_or_create(name=examname)[0]
+
         for lessonid in lessonids:
             lesson = Lesson.objects.filter(id=lessonid)[0]
             exam.lessons.append(lesson)
