@@ -63,7 +63,7 @@ urlpatterns = patterns('',
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/pick/?$', login_required(LessonPickView.as_view()), name='lesson_pick_view'),
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/fill/?$', login_required(LessonFillView.as_view()), name='lesson_fill_view'),
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/dictation/?$', login_required(LessonDictationView.as_view()), name='lesson_dictation_view'),
-    url(r'^study/books/$', BooksStudyView.as_view(), name='books_study_view'),
+    url(r'^study/books/$', login_required(BooksStudyView.as_view()), name='books_study_view'),
     url(r'^exam/(?P<id>.*?)/?$', ExamView.as_view(), name='exam_view'),
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
