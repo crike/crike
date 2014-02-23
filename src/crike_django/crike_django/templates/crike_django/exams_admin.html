@@ -11,10 +11,10 @@ $(function() {
   var books = "{"+{% for book in books %}"'{{book}}':'{{book}}',"+{% endfor %}"}";
 
   $(".editable_select").editable(function(value, settings){
-    $(this).html(value)
-    $('div[id^="lessonsOf"]').hide()
-    $('#lessonsOf'+value).show()
-    }, { 
+    $(this).html(value);
+    $('div[id^="lessonsOf"]').hide();
+    $(this).parents('form').find('#lessonsOf'+value).show();
+    }, {
     indicator : '<img src="img/indicator.gif">',
     data   : books,
     type   : "select",
@@ -32,7 +32,12 @@ $(function() {
     style  : "inherit"
   });
   $(".editable_text").editable(function(value, settings){
-    $(this).html(value)
+    console.log($('.editable_text').not(this).text());
+    if ($.inArray(value, $('.row').find('h2').html()) == -1)
+      $(this).html(value);
+    else
+      ;
+      //Alert("Duplicated name!");//TODO use popup
     }, { 
       type   : 'text',
       select : true,
@@ -85,17 +90,17 @@ $(function() {
 });
 
 function showExamform() {
-  if (!$("#examform").is(":visible")) {
+  if (!$("#newexamform").is(":visible")) {
     $("#deleteform").hide();
     $(".checkexam").hide();
-    $("#examform").show();
+    $("#newexamform").show();
   } else {
-    $("#examform").hide();
+    $("#newexamform").hide();
   }
 };
 function showDeleteform() {
   if (!$("#deleteform").is(":visible")) {
-    $("#examform").hide();
+    $("#newexamform").hide();
     $("#deleteform").show();
     $(".checkexam").show();
 
@@ -145,25 +150,25 @@ function checkall(cb,v) {
     $("."+v+"lessoninform").remove();
   }
 };
-function addExam() {
-  var form = $('#examform');
-  var name = $('#text_1').html();
-  var book = $('#select_1').html();
+function saveExam() {
+  var form = $(this).parents('form');
+  var name = $(form).find('#text_1').html();
   $('<input>').attr({name:'name', value:name, hidden:'true'}).appendTo(form);
-  $('<input>').attr({name:'book', value:book, hidden:'true'}).appendTo(form);
   form.submit();
 };
-function onClickpin(pin) {
-  $(pin).find("input:checkbox").prop('checked',true);
+function onDoubleclickpin(pin) {
+  $(pin).remove();
 };
 function onChecklesson(me, book, name, length) {
   if (me.checked) {
-    $('<div class="col-6 col-sm-6 col-lg-2"><div class="pin" style="width:100%" name="addlessons" value='+name+
-        ' onclick="onClickpin(this)"><a>'+book+'/'+name+
+    $('<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
+        '<a class="pin" style="width:100%" title="双击删除">'+
+        '<input name="addlessons" value='+name+' hidden="true">'
+        +book+'/'+name+
         '<label style="color:sienna;float:right;">sum:'+length+
-        '</label></a></div></div>').appendTo($(me).parents('form'));
+        '</label></a></div>').appendTo($(me).parents('form'));
   }
-}
+};
 </script>
 <div class="jumbotron">
   <h1>Crike -- 试题管理</h1>
@@ -172,7 +177,7 @@ function onChecklesson(me, book, name, length) {
 </div>
 <!-- add new item -->
 <div class='row'>
-  <form id='examform' style="display: none" enctype="multipart/form-data" method="post" action="/admin/exams/">
+  <form id='newexamform' style="display: none" method="post" action="/admin/exams/">
     {% csrf_token %}
     <h2><p class="editable_text" id="text_1">New Exam</p></h2>
     <h3>词汇测验</h3>
@@ -186,12 +191,6 @@ function onChecklesson(me, book, name, length) {
       {% endfor %}
     </div>
     {% endfor %}
-
-    <div id="checkall{{exam.name}}" style="display:none">
-      <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
-      <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
-    </div>
-    <strong>{{ Uploadwarning }}</strong>
   </form>
 
   {% if Showform == "deleteform" %}
@@ -209,24 +208,31 @@ function onChecklesson(me, book, name, length) {
 <!-- Cycle through entries -->
 {% for exam in exams %}
 <div class='row'>
-  <h2>
-    <input class="checkexam" style="display:none" type="checkbox" name='delexam' value='{{exam.name}}' onclick="appendexam(this);">
-    {{ exam.name }}
-    <div id="checkall{{exam.name}}" style="display:none">
-      <input class="checkall" type="checkbox" onclick="checkall(this,'{{exam.name}}')">
-      <label style="font-size:50%" for="checkall{{exam.name}}">全选</label>
+  <form id='examform' method="post" action="/admin/exams/">
+    {% csrf_token %}
+    <h2><p class="editable_text" id="text_1">{{exam.name}}</p></h2>
+    <h3>词汇测验</h3>
+    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';saveExam();" style="float:right">
+    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
+    {% for book in books %}
+    <div id="lessonsOf{{book.name}}" style="display:none">
+      选择课程
+      {% for lesson in book.lessons|dictsort:"name" %}
+      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
+      {% endfor %}
     </div>
-  </h2>
-  
+    {% endfor %}
   <!-- vocabularies -->
-  {% for lesson in exam.lessons|dictsort:"name" %}
-  <div class="col-6 col-sm-6 col-lg-2">  
-    <a class="pin" title="删除" style="width:100%;" href='/admin/exam/{{exam.name}}/lesson/{{lesson.name}}/'>
-      {{lesson.name}}
-      <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
-    </a>
-  </div>
-  {% endfor %}
+    {% for lesson in exam.lessons|dictsort:"name" %}
+    <div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">
+      <a class="pin" style="width:100%" title="双击删除">
+        <input name="addlessons" value='{{lesson.name}}' hidden="true">
+        {{lesson.book.name}}/{{lesson.name}}
+        <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
+      </a>
+    </div>
+    {% endfor %}
+  </form>
 
   <!-- reading comprehensions -->
   {% for reading in exam.readings %}
