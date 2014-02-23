@@ -164,7 +164,7 @@ function checkall(cb,v) {
   }
 };
 function saveExam(me) {
-  var form = $(me).parent('form');
+  var form = $(me).parents('form');//or closest('form')
   var name = $(form).find('.editable_examname').html();
   var names = $('.editable_examname').not($(form).find('.editable_examname'))
               .map(function() {
@@ -199,9 +199,9 @@ function onChecklesson(me, book, name, id, length) {
 <div class='row'>
   <form id='newexamform' style="display: none" method="post" action="/admin/exams/">
     {% csrf_token %}
-    <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp未保存</h2>
+    <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp未保存
+    <input type="submit" value="save" onclick="saveExam(this);" style="float:right"></h2>
     <h3>词汇测验</h3>
-    <input type="submit" value="save" onclick="saveExam(this);" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
     <p id="lessonsOf{{book.name}}" style="display:none">
@@ -232,9 +232,9 @@ function onChecklesson(me, book, name, id, length) {
   <form id='examform' method="post" action="/admin/exams/">
     {% csrf_token %}
     <input name='id' value="{{exam.id}}" hidden="true">
-    <h2><p class="editable_examname" id="text_1">{{exam.name}}</p></h2>
+    <h2><b class="editable_examname" id="text_1">{{exam.name}}</b>
+      <button onclick="saveExam(this);" class="btn btn-success" style="float:right">save</button></h2>
     <h3>词汇测验</h3>
-    <input type="submit" value="save" onclick="saveExam(this);" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
     <p id="lessonsOf{{book.name}}" style="display:none">
