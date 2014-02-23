@@ -68,7 +68,7 @@
 
 <div class="row">
   <div class="page-header">
-    <h2>可以兑换的奖品</h2>
+    <h2>兑换奖品{% if user.teacher %}（管理）{% endif %}</h2>
   </div>
   {% for prize in prizes %}
   <div class="col-sm-6 col-md-3">
