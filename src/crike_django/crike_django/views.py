@@ -760,7 +760,6 @@ class ExamAdminView(TemplateView):
     def post(self, request, *args, **kwargs):
         examname = request.POST['name']
         lessonnames = request.POST.getlist('addlessons')
-        book = Book.objects.filter(name=bookname)[0]
         exam = Exam.objects.get_or_create(name=examname)[0]
         for lessonname in lessonnames:
             print "xxxxxxxxxxxxxxxxxx"

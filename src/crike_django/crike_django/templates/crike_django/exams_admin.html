@@ -12,7 +12,7 @@ $(function() {
 
   $(".editable_select").editable(function(value, settings){
     $(this).html(value);
-    $('div[id^="lessonsOf"]').hide();
+    $('p[id^="lessonsOf"]').hide();
     $(this).parents('form').find('#lessonsOf'+value).show();
     }, {
     indicator : '<img src="img/indicator.gif">',
@@ -151,8 +151,9 @@ function checkall(cb,v) {
     $("."+v+"lessoninform").remove();
   }
 };
-function saveExam() {
-  var form = $(this).parents('form');
+function saveExam(me) {
+  var form = $(me).parent('form');
+  //var form = $('#newexamform');
   var name = $(form).find('.editable_examname').html();
   var names = $('.editable_examname')
               .map(function() {
@@ -190,15 +191,15 @@ function onChecklesson(me, book, name, length) {
     {% csrf_token %}
     <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp未保存</h2>
     <h3>词汇测验</h3>
-    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';saveExam();" style="float:right">
-    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
+    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...'; saveExam(this);" style="float:right">
+    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
-    <div id="lessonsOf{{book.name}}" style="display:none">
+    <p id="lessonsOf{{book.name}}" style="display:none">
       选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
       <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
       {% endfor %}
-    </div>
+    </p>
     {% endfor %}
   </form>
 
@@ -222,14 +223,14 @@ function onChecklesson(me, book, name, length) {
     <h2><p class="editable_examname" id="text_1">{{exam.name}}</p></h2>
     <h3>词汇测验</h3>
     <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';saveExam();" style="float:right">
-    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
+    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
-    <div id="lessonsOf{{book.name}}" style="display:none">
+    <p id="lessonsOf{{book.name}}" style="display:none">
       选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
       <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
       {% endfor %}
-    </div>
+    </p>
     {% endfor %}
   <!-- vocabularies -->
     {% for lesson in exam.lessons|dictsort:"name" %}
