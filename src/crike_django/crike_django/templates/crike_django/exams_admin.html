@@ -169,11 +169,11 @@ function saveExam(me) {
 function onDoubleclickpin(pin) {
   $(pin).remove();
 };
-function onChecklesson(me, book, name, length) {
+function onChecklesson(me, book, name, id, length) {
   if (me.checked) {
     $('<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
         '<a class="pin" style="width:100%" title="双击删除">'+
-        '<input name="addlessons" value='+name+' hidden="true">'
+        '<input name="addlessons" value='+id+' hidden="true">'
         +book+'/'+name+
         '<label style="color:sienna;float:right;">sum:'+length+
         '</label></a></div>').appendTo($(me).parents('form'));
@@ -197,7 +197,8 @@ function onChecklesson(me, book, name, length) {
     <p id="lessonsOf{{book.name}}" style="display:none">
       选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
-      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
+      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.id}}','{{lesson.words|length}}');">
+      {{lesson.name}}
       {% endfor %}
     </p>
     {% endfor %}
@@ -228,7 +229,8 @@ function onChecklesson(me, book, name, length) {
     <p id="lessonsOf{{book.name}}" style="display:none">
       选择课程
       {% for lesson in book.lessons|dictsort:"name" %}
-      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">{{lesson.name}}
+      <input type='checkbox' onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.id}}','{{lesson.words|length}}');">
+      {{lesson.name}}
       {% endfor %}
     </p>
     {% endfor %}
@@ -236,7 +238,7 @@ function onChecklesson(me, book, name, length) {
     {% for lesson in exam.lessons|dictsort:"name" %}
     <div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">
       <a class="pin" style="width:100%" title="双击删除">
-        <input name="addlessons" value='{{lesson.name}}' hidden="true">
+        <input name="addlessons" value='{{lesson.id}}' hidden="true">
         {{lesson.book.name}}/{{lesson.name}}
         <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
       </a>

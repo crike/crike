@@ -759,13 +759,10 @@ class ExamAdminView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         examname = request.POST['name']
-        lessonnames = request.POST.getlist('addlessons')
+        lessonids = request.POST.getlist('addlessons')
         exam = Exam.objects.get_or_create(name=examname)[0]
-        for lessonname in lessonnames:
-            print "xxxxxxxxxxxxxxxxxx"
-            print bookname,lessonname
-            print "xxxxxxxxxxxxxxxxxx"
-            lesson = get_lessonemb(bookname, lessonname)
+        for lessonid in lessonids:
+            lesson = Lesson.objects.filter(id=lessonid)[0]
             exam.lessons.append(lesson)
             exam.totalpoints += len(lesson.words)
 
