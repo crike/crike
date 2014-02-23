@@ -31,13 +31,14 @@ $(function() {
     submit : "OK",
     style  : "inherit"
   });
-  $(".editable_text").editable(function(value, settings){
-    console.log($('.editable_text').not(this).text());
-    if ($.inArray(value, $('.row').find('h2').html()) == -1)
+  $(".editable_examname").editable(function(value, settings){
+    var names = $('.editable_examname').not(this).map(function() {
+                                                    return $(this).text();
+                                                  }).get();
+    if ($.inArray(value, names) == -1)
       $(this).html(value);
     else
-      ;
-      //Alert("Duplicated name!");//TODO use popup
+      $(this).html("名称已存在，请重命名");
     }, { 
       type   : 'text',
       select : true,
@@ -152,9 +153,17 @@ function checkall(cb,v) {
 };
 function saveExam() {
   var form = $(this).parents('form');
-  var name = $(form).find('#text_1').html();
-  $('<input>').attr({name:'name', value:name, hidden:'true'}).appendTo(form);
-  form.submit();
+  var name = $(form).find('.editable_examname').html();
+  var names = $('.editable_examname')
+              .map(function() {
+                     return $(this).text();
+                   }).get();
+  names.splice(0,1);
+  if ($.inArray(name, names) == -1) {
+    $('<input>').attr({name:'name', value:name, hidden:'true'}).appendTo(form);
+    $(form).submit();
+  }else
+    $(form).find('.editable_examname').html("名称已存在，请重命名");
 };
 function onDoubleclickpin(pin) {
   $(pin).remove();
@@ -179,9 +188,9 @@ function onChecklesson(me, book, name, length) {
 <div class='row'>
   <form id='newexamform' style="display: none" method="post" action="/admin/exams/">
     {% csrf_token %}
-    <h2><p class="editable_text" id="text_1">New Exam</p></h2>
+    <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp未保存</h2>
     <h3>词汇测验</h3>
-    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';addExam();" style="float:right">
+    <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';saveExam();" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
     {% for book in books %}
     <div id="lessonsOf{{book.name}}" style="display:none">
@@ -210,7 +219,7 @@ function onChecklesson(me, book, name, length) {
 <div class='row'>
   <form id='examform' method="post" action="/admin/exams/">
     {% csrf_token %}
-    <h2><p class="editable_text" id="text_1">{{exam.name}}</p></h2>
+    <h2><p class="editable_examname" id="text_1">{{exam.name}}</p></h2>
     <h3>词汇测验</h3>
     <input type="submit" value="save" onclick="this.disabled=true; this.value='Please Wait...';saveExam();" style="float:right">
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b>
