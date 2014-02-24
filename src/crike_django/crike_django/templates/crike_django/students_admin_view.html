@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block header %}
-<link href="http://cdn.bootcss.com/datatables/1.9.4/css/demo_page.min.css" rel="stylesheet">
-<link href="http://cdn.bootcss.com/datatables/1.9.4/css/demo_table.min.css" rel="stylesheet">
+<link href="{% static 'datatables/1.9.4/css/demo_page.min.css' %}" rel="stylesheet">
+<link href="{% static 'datatables/1.9.4/css/demo_table.min.css' %}" rel="stylesheet">
+
+<!-- <link href="http://cdn.bootcss.com/datatables/1.9.4/css/demo_page.min.css" rel="stylesheet">
+<link href="http://cdn.bootcss.com/datatables/1.9.4/css/demo_table.min.css" rel="stylesheet"> -->
 {% endblock %}
 
 {% block content %}
@@ -63,7 +67,8 @@
 {% endblock %}
 
 {% block body_footer %}
-<script src="http://cdn.bootcss.com/datatables/1.9.4/jquery.dataTables.min.js"></script>
+<script src="{% static 'datatables/1.9.4/jquery.dataTables.min.js' %}"></script>
+<!-- <script src="http://cdn.bootcss.com/datatables/1.9.4/jquery.dataTables.min.js"></script> -->
 <script>
 $(document).ready(function() {
     $('#example').dataTable();

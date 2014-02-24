@@ -61,10 +61,15 @@ text-align:center;
 {% endblock %}
 
 {% block body_footer%}
-<script src="http://cdn.jsdelivr.net/jquery.knob/1.2.2/jquery.knob.min.js"></script>
+<script src="{% static 'jquery.knob/1.2.2/jquery.knob.min.js' %}"></script>
+<script src="{% static 'flot/0.8.1/jquery.flot.min.js' %}"></script>
+<script src="{% static 'flot/0.8.1/jquery.flot.time.min.js' %}"></script>
+<script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script>
+
+<!-- <script src="http://cdn.jsdelivr.net/jquery.knob/1.2.2/jquery.knob.min.js"></script>
 <script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.min.js"></script>
 <script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.time.min.js"></script>
-<script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script>
+<script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script> -->
 
 <script>
 {% include 'js/csrf.js' %}
