@@ -29,14 +29,15 @@ background-color: #F3F3F3;
 
     <div id="user-info-view" class="col-md-2 pull-left">
       <div class="avatar-wrapper">
-        <div class="avatar-image-container">
-          {% if profile.profile_picture %}
-           <img class="avatar large border" src="{{ profile.profile_picture.url }}" style="max-width:100%; max-height:100%;">
-          {% else %} <!-- no head sculpture -->
-          <img class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
-          {% endif %}
-        </div>
-        <button onclick="showForm('picForm')">更换头像</button>
+        <a onclick="showForm(this, 'picForm')" title="更换头像" href='#'>
+          <div class="avatar-image-container">
+            {% if profile.profile_picture %}
+             <img class="avatar large border" src="{{ profile.profile_picture.url }}" style="max-width:100%; max-height:100%;">
+            {% else %} <!-- no head sculpture -->
+            <img class="avatar large border" src="http://www.gravatar.com/avatar/73c2759e2936bc26746d0d26375aed31?d=retro&amp;s=140">
+            {% endif %}
+          </div>
+        </a>
         <form method="post" action="{% url 'user_head_sculpture' %}" enctype="multipart/form-data" style='display:none' id='picForm'>
           {% csrf_token %}
           {{ header_form|crispy }}
@@ -143,16 +144,18 @@ $(function() {
     	readOnly:true,
         'draw': function () {
           if (this.cv.indexOf('%') == -1)
-            $(this.i).val(this.cv + '%')
+            $(this.i).val(this.cv + '%');
         }
     });
     $(".knob").knob();
 });
 
-function showForm(id) {
+function showForm(me, id) {
   if ($('#'+id).is(":visible")) {
+    $(me).attr('title', "更换头像");
     $('#'+id).hide();
   } else {
+    $(me).attr('title', "收起表单");
     $('#'+id).show();
   }
 };
