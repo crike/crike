@@ -18,7 +18,7 @@ $(function() {
     indicator : '<img src="img/indicator.gif">',
     data   : books,
     type   : "select",
-    submit : "OK",
+    submit : '<i class="fa fa-check"></i>',
     style  : "inherit",
     submitdata : function() {
       return {id : 2};
@@ -32,18 +32,23 @@ $(function() {
     style  : "inherit"
   });
   $(".editable_examname").editable(function(value, settings){
-    var names = $('.editable_examname').not(this).map(function() {
-                                                    return $(this).text();
-                                                  }).get();
-    if ($.inArray(value, names) == -1)
-      $(this).html(value);
+      var names = $('.editable_examname').not(this)
+                                         .map(function() {
+                                                return $(this).text();
+                                              }).get();
+      if ($.inArray(value, names) == -1){
+        $(this).html(value);
+        $(this).parent('h2').find('#modified').show();
+        $(this).parent('h2').find('button').show();
+      }
     else
       $(this).html("名称已存在，请重命名");
     }, { 
       type   : 'text',
       select : true,
-      submit : 'OK',
-      cancel : 'cancel',
+      submit : "√",
+      cancel : "×",
+      tooltip : "点击修改",
   });
   $(".editable_textarea").editable("<?php print $url ?>save.php", { 
       indicator : "<img src='img/indicator.gif'>",
@@ -168,10 +173,12 @@ function onDoubleclickpin(pin) {
   var id = $(pin).find('input').attr('value');
   var form = $(pin).parents('form'); 
   $(form).find( "input:checkbox[id="+id+"]" ).prop('checked', false);
+  $(pin).parents('form').find('h2 button').show();
   $(pin).remove();
 };
 function onChecklesson(me, book, name, length) {
   if (me.checked) {
+    $(me).parents('form').find('h2 button').show();
     $('<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
         '<a class="pin" style="width:100%" title="双击删除">'+
         '<input name="addlessons" value='+me.id+' hidden="true">'
@@ -191,7 +198,9 @@ function onChecklesson(me, book, name, length) {
   <form id='newexamform' style="display: none" method="post" action="/admin/exams/">
     {% csrf_token %}
     <h2>新增：<b class="editable_examname" id="text_1">Click to input a name</b>&nbsp&nbsp*
-      <button onclick="saveExam(this);" class="btn btn-success" style="float:right">save</button></h2>
+      <button onclick="saveExam(this);" class="btn btn-success" style="float:right;display=none">
+        <i class="fa fa-save"></i></button>
+    </h2>
     <h3>词汇测验</h3>
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
@@ -224,7 +233,10 @@ function onChecklesson(me, book, name, length) {
     {% csrf_token %}
     <input name='id' value="{{exam.id}}" hidden="true">
     <h2><b class="editable_examname" id="text_1">{{exam.name}}</b>
-      <button onclick="saveExam(this);" class="btn btn-success" style="float:right">save</button></h2>
+      <b id="modified" style="display:none">&nbsp&nbsp*</b>
+      <button onclick="saveExam(this);" class="btn btn-success" style="float:right;display:none">
+        <i class="fa fa-save"></i></button>
+    </h2>
     <h3>词汇测验</h3>
     <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
     {% for book in books %}
