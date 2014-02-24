@@ -66,6 +66,16 @@
           $("."+v+"lessoninform").remove();
         }
       };
+      function expandBook(me, book) {
+        var content = $('#contentOf'+book);
+        if (content.is(":visible")) {
+          content.hide();
+          $(me).prop('class','fa fa-plus');
+        } else {
+          content.show();
+          $(me).prop('class','fa fa-minus');
+        }
+      };
     </script>
     <div class="jumbotron">
       <h1>Crike -- 课程管理</h1>
@@ -96,15 +106,15 @@
     </div>
 <!-- Cycle through entries -->
     {% for book in books %}
-    <div class='row'>
-      <h2>
-        <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
-        {{ book.name }}
-        <div id="checkall{{book.name}}" style="display:none">
-          <input class="checkall" type="checkbox" onclick="checkall(this,'{{book.name}}')">
-          <label style="font-size:50%" for="checkall{{book.name}}">全选</label>
-        </div>
-      </h2>
+    <h2><a href="#"><i class="fa fa-plus" style="font-size:80%" onclick="expandBook(this, '{{book.name}}')"></i></a>
+      <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
+      {{ book.name }}
+      <div id="checkall{{book.name}}" style="display:none">
+        <input class="checkall" type="checkbox" onclick="checkall(this,'{{book.name}}')">
+        <label style="font-size:50%" for="checkall{{book.name}}">全选</label>
+      </div>
+    </h2>
+    <div class="row" id="contentOf{{book.name}}" style="display:none">
       {% for lesson in book.lessons|dictsort:"name" %}
       <div class="col-6 col-sm-6 col-lg-2">  
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
