@@ -243,7 +243,7 @@ function expandExam(me) {
 <form id='examform' method="post" action="/admin/exams/">
   {% csrf_token %}
   <input name='id' value="{{exam.id}}" hidden="true">
-  <h2><a href="#"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandExam(this)"></i></a>
+  <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandExam(this)"></i></a>
     <b class="editable_examname" id="text_1">{{exam.name}}</b>
     <b id="modified" style="display:none">&nbsp&nbsp*</b>
     <button onclick="saveExam(this);" class="btn btn-success" style="float:right;display:none">
