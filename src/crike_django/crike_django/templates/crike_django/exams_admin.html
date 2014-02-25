@@ -170,23 +170,23 @@ function saveExam(me) {
   }else
     $(form).find('.editable_examname').html("名称已存在，请重命名");
 };
-function onDoubleclickpin(pin) {
-  var id = $(pin).find('input').attr('value');
-  var form = $(pin).parents('form'); 
+function onDoubleclickthumbnail(thumbnail) {
+  var id = $(thumbnail).find('input').attr('value');
+  var form = $(thumbnail).parents('form'); 
   $(form).find( "input:checkbox[id="+id+"]" ).prop('checked', false);
-  $(pin).parents('form').find('h2 button').show();
-  $(pin).remove();
+  $(thumbnail).parents('form').find('h2 button').show();
+  $(thumbnail).remove();
 };
 function onChecklesson(me, book, name, length) {
   if (me.checked) {
     $(me).parents('form').find('h2 button').show();
     $(me).parents('form').find('#addnew').before(
-        '<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
-        '<a class="pin" style="width:100%" title="双击删除">'+
-        '<input name="addlessons" value='+me.id+' hidden="true">'
-        +book+'/'+name+
-        '<label style="color:sienna;float:right;">sum:'+length+
-        '</label></a></div>');
+        '<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickthumbnail(this)">'+
+        '<a class="thumbnail" style="width:100%;cursor:pointer;" title="双击删除">'+
+        '<input name="addlessons" value='+me.id+' hidden="true"><p>'
+        +book+'</p><p><b>'+name+
+        '</b></p><p style="color:sienna;">sum:'+length+
+        '</p></a></div>');
   }
 };
 function expandExam(me) {
@@ -255,11 +255,11 @@ function expandExam(me) {
   <!-- vocabularies -->
     <div class='row'>
       {% for lesson in exam.lessons|dictsort:"name" %}
-      <div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">
-        <a class="pin" style="width:100%" title="双击删除">
-          <input name="addlessons" value='{{lesson.id}}' hidden="true">
-          {{lesson.book.name}}/{{lesson.name}}
-          <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
+      <div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickthumbnail(this)">
+        <a class="thumbnail" style="width:100%;cursor:pointer;" title="双击删除">
+          <p><input name="addlessons" value='{{lesson.id}}' hidden="true">{{lesson.book.name}}</p>
+          <p><b>{{lesson.name}}</b></p>
+          <p style="color:sienna;">sum:{{lesson.words|length}}</p>
         </a>
       </div>
       {% endfor %}
