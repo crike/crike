@@ -6,6 +6,11 @@
 #padding-top {
     padding-top: 20px;
 }
+.thumbnail p {
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
 </style>
 <!-- <link href="/static/index.css" rel="stylesheet" type="text/css"/> -->
 {% endblock %}
@@ -45,11 +50,10 @@
     {% for lesson in book.lessons|dictsort:"name" %}
       <div class="col-6 col-sm-6 col-lg-3">  
         <a class="thumbnail" style="width:100%" title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">
-          <div class="caption">
-            <span>课程：{{lesson.name}}</span>
-            <label style="color:sienna;margin-left:10px;">sum:{{lesson.words|length}}</label>
-          </div>
+          <div class="caption"></div>
+          <p>课程：{{lesson.name}}</p>
           <div>{% include 'crike_django/lesson_result.html' %}</div>
+          <p style="color:sienna;margin-left:10px;">sum:{{lesson.words|length}}</p>
           <!-- <button style="" onclick="location.href='#'">学习状态</button> -->
         </a>
       </div>

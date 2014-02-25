@@ -118,9 +118,10 @@
       {% for lesson in book.lessons|dictsort:"name" %}
       <div class="col-6 col-sm-6 col-lg-2">  
         <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
-        <a class="pin" title="修改" style="width:100%;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
-          {{lesson.name}}
-          <label style="color:sienna;float:right;">sum:{{lesson.words|length}}</label>
+        <a class="thumbnail" title="修改" style="width:100%;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
+          <div class="caption"></div>
+          <p><b>{{lesson.name}}</b></p>
+          <p style="color:sienna;">sum:{{lesson.words|length}}</p>
         </a>
       </div>
       {% endfor %}
