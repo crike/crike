@@ -180,12 +180,13 @@ function onDoubleclickpin(pin) {
 function onChecklesson(me, book, name, length) {
   if (me.checked) {
     $(me).parents('form').find('h2 button').show();
-    $('<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
+    $(me).parents('form').find('#addnew').before(
+        '<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickpin(this)">'+
         '<a class="pin" style="width:100%" title="双击删除">'+
         '<input name="addlessons" value='+me.id+' hidden="true">'
         +book+'/'+name+
         '<label style="color:sienna;float:right;">sum:'+length+
-        '</label></a></div>').appendTo($(me).parents('form').find('.row'));
+        '</label></a></div>');
   }
 };
 function expandExam(me) {
@@ -251,16 +252,6 @@ function expandExam(me) {
   </h2>
   <div class="content" style="display:none">
     <h4>词汇测验</h4>
-    <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
-    {% for book in books %}
-    <p id="lessonsOf{{book.name}}" style="display:none">
-      选择课程
-      {% for lesson in book.lessons|dictsort:"name" %}
-      <input type='checkbox' id="{{lesson.id}}" onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">
-      {{lesson.name}}
-      {% endfor %}
-    </p>
-    {% endfor %}
   <!-- vocabularies -->
     <div class='row'>
       {% for lesson in exam.lessons|dictsort:"name" %}
@@ -272,6 +263,18 @@ function expandExam(me) {
         </a>
       </div>
       {% endfor %}
+      <div id="addnew" class="col-6 col-sm-6 col-lg-2">
+        <p>课本:<b class="editable_select" id="select_1" style="display: inline">点击选择</b></p>
+        {% for book in books %}
+        <p id="lessonsOf{{book.name}}" style="display:none">
+          选择课程
+          {% for lesson in book.lessons|dictsort:"name" %}
+          <input type='checkbox' id="{{lesson.id}}" onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">
+          {{lesson.name}}
+          {% endfor %}
+        </p>
+        {% endfor %}
+      </div>
     </div>
   <!-- reading comprehensions -->
     <h4>阅读理解</h4>
