@@ -759,6 +759,11 @@ class ExamAdminView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         examid = request.POST.get('id', None)
+        if request.POST.get('delexam', None):
+            exam = Exam.objects.filter(id=examid)[0]
+            exam.delete()
+            return HttpResponseRedirect("/admin/exams")
+
         examname = request.POST['name']
         lessonids = request.POST.getlist('addlessons')
         if examid:
