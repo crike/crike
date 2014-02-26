@@ -10,7 +10,10 @@
   var lessons = "";
   var lessonsOfbooks = {
     {% for book in books %}
-    "{{book.name}}":"{"+{% for lesson in book.lessons %}"'{{lesson}}':'{{lesson}}',"+{% endfor %}"}",
+    "{{book.name}}":"{"+
+      {% for lesson in book.lessons %}
+      "'{{lesson}}:{{lesson.words|length}}':'{{lesson}}:{{lesson.words|length}}',"+
+      {% endfor %}"}",
     {% endfor %}
   };
 
@@ -187,14 +190,16 @@ function onDoubleclickthumbnail(thumbnail) {
   $(thumbnail).parents('form').find('h2 button').show();
   $(thumbnail).remove();
 };
-function onSelectlesson(me, book, name) {
+function onSelectlesson(me, book, value) {
+  var index = value.lastIndexOf(':');
+  var name = value.substring(0,index);
+  var length = value.substring(index+1);
   $(me).parents('form').find('h2 button').show();
   $(me).parents('form').find('#addnew').before(
       '<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickthumbnail(this)">'+
       '<a class="thumbnail" style="width:100%;cursor:pointer;" title="双击删除">'+
       '<input name="addlessons" value='+me.id+' hidden="true"><p>'
-      +book+'</p><p><b>'+name+
-      '</b></p></a></div>');
+      +book+'</p><p><b>'+name+'</b></p><p style="color:sienna;">sum:'+length+'</p></a></div>');
 };
 function expandExam(me) {
   var content = $(me).parents('form').find('.content');
@@ -267,15 +272,6 @@ function expandExam(me) {
       {% endfor %}
       <div id="addnew" class="col-6 col-sm-6 col-lg-2">
         <p>课本:<b class="editable_selectbook" id="select_1" style="display:inline">点击选择</b></p>
-        {% for book in books %}
-        <p id="lessonsOf{{book.name}}" style="display:none">
-          选择课程
-          {% for lesson in book.lessons|dictsort:"name" %}
-          <input type='checkbox' id="{{lesson.id}}" onclick="onChecklesson(this,'{{book.name}}','{{lesson.name}}','{{lesson.words|length}}');">
-          {{lesson.name}}
-          {% endfor %}
-        </p>
-        {% endfor %}
       </div>
     </div>
   <!-- reading comprehensions -->
