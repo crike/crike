@@ -12,7 +12,7 @@
     {% for book in books %}
     "{{book.name}}":"{"+
       {% for lesson in book.lessons %}
-      "'{{lesson}}:{{lesson.words|length}}':'{{lesson}}:{{lesson.words|length}}',"+
+    "'{{lesson}}:{{lesson.words|length}}|{{lesson.id}}':'{{lesson}}:{{lesson.words|length}}',"+
       {% endfor %}"}",
     {% endfor %}
   };
@@ -191,14 +191,16 @@ function onDoubleclickthumbnail(thumbnail) {
   $(thumbnail).remove();
 };
 function onSelectlesson(me, book, value) {
-  var index = value.lastIndexOf(':');
-  var name = value.substring(0,index);
-  var length = value.substring(index+1);
+  var index1 = value.lastIndexOf(':');
+  var index2 = value.lastIndexOf('|');
+  var name = value.substring(0,index1);
+  var length = value.substring(index1+1,index2);
+  var id = value.substring(index2+1);
   $(me).parents('form').find('h2 button').show();
   $(me).parents('form').find('#addnew').before(
       '<div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickthumbnail(this)">'+
       '<a class="thumbnail" style="width:100%;cursor:pointer;" title="双击删除">'+
-      '<input name="addlessons" value='+me.id+' hidden="true"><p>'
+      '<input name="addlessons" value='+id+' hidden="true"><p>'
       +book+'</p><p><b>'+name+'</b></p><p style="color:sienna;">sum:'+length+'</p></a></div>');
 };
 function expandExam(me) {
