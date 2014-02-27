@@ -202,6 +202,8 @@ function onSelectlesson(me, book, value) {
       '<a class="thumbnail" style="width:100%;cursor:pointer;" title="双击删除">'+
       '<input name="addlessons" value='+id+' hidden="true"><p>'
       +book+'</p><p><b>'+name+'</b></p><p style="color:sienna;">sum:'+length+'</p></a></div>');
+  $(me).parents('form').find('#select_1').text("点击选择");
+  $(me).parents('form').find('#select_2').text("点击选择");
 };
 function expandExam(me) {
   var content = $(me).parents('form').find('.content');
@@ -279,6 +281,7 @@ function deleteExam(me) {
       </div>
       {% endfor %}
       <div id="addnew" class="col-6 col-sm-6 col-lg-2">
+        <p>新增</p>
         <p>课本:<b class="editable_selectbook" id="select_1" style="display:inline">点击选择</b></p>
       </div>
     </div>
