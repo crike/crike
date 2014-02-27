@@ -118,58 +118,6 @@ function showExamform() {
     $("#newexamform").hide();
   }
 };
-function showDeleteform() {
-  if (!$("#deleteform").is(":visible")) {
-    $("#newexamform").hide();
-    $("#deleteform").show();
-    $(".checkexam").show();
-
-  } else {
-    $("#deleteform").hide();
-    $(".checkexam").hide();
-  }
-};
-function appendexam(cb) {
-  var n = cb.name;
-  var v = cb.value;
-  if (cb.checked) { 
-    $(cb).clone().attr({id:v+'inform',class:'checkexaminform',style:'display:none'}).prependTo('#deleteform');
-    $("."+v+"lesson").show();
-    $("#checkall"+v).show();
-    $(".checkexam").prop('disabled', true);
-    cb.disabled=false;
-    $("#deletesubmit").prop('disabled', false);
-  } else {
-    $('#'+v+'inform').remove();
-    $("."+v+"lessoninform").remove();
-    $("."+v+"lesson").prop('checked',false);
-    $("."+v+"lesson").hide();
-    $(".checkall").prop('checked',false);
-    $("#checkall"+v).hide();
-    $(".checkexam").prop('disabled', false);
-    $("#deletesubmit").prop('disabled', true);
-  }
-};
-function appendlesson(cb) {
-  if (cb.checked) { 
-    $(cb).clone().attr({id:cb.value+'inform',class:cb.class+'inform',style:'display:none'}).prependTo('#deleteform');
-  } else {
-    $('.checkall').prop('checked', false);
-    $('#'+cb.value+'inform').remove();
-  }
-};
-function checkall(cb,v) {
-  if (cb.checked) {
-    $("."+v+"lessoninform").remove();//need remove added lessons then add all
-    $("."+v+"lesson").prop('checked',true);
-    $("."+v+"lesson").each(function() {
-        $(this).clone().attr({id:this.value+'inform','class':v+"lessoninform",style:'display:none'}).prependTo('#deleteform');
-     });
-  } else {
-    $("."+v+"lesson").prop('checked',false);
-    $("."+v+"lessoninform").remove();
-  }
-};
 function saveExam(me) {
   var form = $(me).parents('form');//or closest('form')
   var name = $(form).find('.editable_examname').html();
