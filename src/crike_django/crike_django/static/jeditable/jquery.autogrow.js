@@ -100,8 +100,8 @@
 			var html = this.textarea.val().replace(/(<|>)/g, '');
 			
 			// IE is different, as per usual
-			if ($.browser.msie)
-			{
+			if (msieversion())
+            {
 				html = html.replace(/\n/g, '<BR>new');
 			}
 			else
@@ -130,3 +130,16 @@
 						 
 	 });
 })(jQuery);
+
+function msieversion() {
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    if (msie > 0)      // If Internet Explorer, return version number
+        //alert(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
+        return true;
+    else                 // If another browser, return 0
+        //alert('otherbrowser');
+        return false;
+}
+
