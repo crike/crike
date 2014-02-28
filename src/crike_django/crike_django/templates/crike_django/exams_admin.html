@@ -38,13 +38,6 @@ $(function() {
       return {id : 2};
     }
   });
-  $(".editable_select_json").editable("#", { 
-    indicator : '<img src="img/indicator.gif">',
-    loadurl : "#",
-    type   : "select",
-    submit : "OK",
-    style  : "inherit"
-  });
   $(".editable_examname").editable(function(value, settings){
       var names = $('.editable_examname').not(this)
                                          .map(function() {
@@ -54,15 +47,31 @@ $(function() {
         $(this).html(value);
         $(this).parent('h2').find('#modified').show();
         $(this).parent('h2').find('button').show();
-      }
-    else
-      $(this).html("名称已存在，请重命名");
+      } else
+        $(this).html("名称已存在，请重命名");
     }, { 
       type   : 'text',
       select : true,
       submit : "√",
       cancel : "×",
       tooltip : "点击修改",
+  });
+  $(".autogrow").editable(function(value, settings) {
+        $(this).html(value);
+      }, { 
+      indicator : "<img src='img/indicator.gif'>",
+      type      : "autogrow",
+      submit    : 'OK',
+      cancel    : 'cancel',
+      tooltip   : "Click to edit...",
+      onblur    : "ignore",
+      autogrow : {
+         lineHeight : 16,
+         minHeight  : 32
+      },
+    submitdata : function() {
+      return {id : 2};
+    }
   });
   $(".editable_textarea").editable("#", { 
       indicator : "<img src='img/indicator.gif'>",
@@ -189,6 +198,10 @@ function deleteExam(me) {
     </div>
   </div>
   <h4>阅读理解</h4>
+    <button class="btn btn-success" onclick=";">添加</button>
+      {{reading.name}}<br><!--TODO editable reading areas-->
+       <p class="autogrow">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidun t ut laoreet dolore magna aliquam erat volutpat.</p>
+       <p>Depends on by Chrys Bader.</p>
 </form>
 
 {% if Showform == "deleteform" %}
@@ -235,10 +248,12 @@ function deleteExam(me) {
     </div>
   <!-- reading comprehensions -->
     <h4>阅读理解</h4>
-    {% for reading in exam.readings %}
-      {{reading.name}}<br><!--TODO editable reading areas-->
       <button class="btn btn-success" onclick="showExamform();">添加</button>
-    {% endfor %}
+      {% for reading in exam.readings %}
+        {{reading.name}}<br><!--TODO editable reading areas-->
+         <p class="autogrow" style="width: 300px">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidun t ut laoreet dolore magna aliquam erat volutpat.</p>
+         <p>Depends on by Chrys Bader.</p>
+      {% endfor %}
   </div>
 </form>
 {% endfor %}
@@ -246,6 +261,8 @@ function deleteExam(me) {
 <span id="dummy"></span>
 {% block body_footer %}
 <script src="{% static 'jeditable/jquery.jeditable.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'jeditable/jquery.jeditable.autogrow.js' %}"></script>
+<script src="{% static 'jeditable/jquery.autogrow.js' %}"></script>
 {% endblock %}
 
 {% endblock %}
