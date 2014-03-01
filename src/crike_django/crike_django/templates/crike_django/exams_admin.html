@@ -75,18 +75,56 @@ $(function() {
       cancel : "×",
       tooltip : "点击修改",
   });
-  $(".autogrow").editable(function(value, settings) {
+  $(".autogrow_article").editable(function(value, settings) {
         //console.log(value.indexOf('\n'));
         //value.replaceAll('\n', '<br>new');
         $(this).html(value);
       }, { 
       indicator : "<img src='img/indicator.gif'>",
       type      : "autogrow",
+      select    : true,
       submit    : 'OK',
       cancel    : 'cancel',
       tooltip   : "Click to edit...",
       onblur    : "ignore",
       autogrow : {
+         lineHeight : 32,
+         minHeight  : 32
+      },
+    submitdata : function() {
+      return {id : 2};
+    }
+  });
+  $(".autogrow_question").editable(function(value, settings) {
+        $(this).html(value);
+      }, { 
+      indicator : "<img src='img/indicator.gif'>",
+      type      : "autogrow",
+      select    : true,
+      submit    : 'OK',
+      cancel    : 'cancel',
+      tooltip   : "Click to edit...",
+      onblur    : "ignore",
+      autogrow : {
+         lineHeight : 32,
+         minHeight  : 32
+      },
+    submitdata : function() {
+      return {id : 2};
+    }
+  });
+  $(".autogrow_choice").editable(function(value, settings) {
+        $(this).html(value);
+      }, { 
+      indicator : "<img src='img/indicator.gif'>",
+      type      : "autogrow",
+      select    : true,
+      submit    : 'OK',
+      cancel    : 'cancel',
+      tooltip   : "Click to edit...",
+      onblur    : "ignore",
+      autogrow : {
+         linewidth  : 64,
          lineHeight : 32,
          minHeight  : 32
       },
@@ -219,15 +257,38 @@ function deleteExam(me) {
     </div>
   </div>
   <h4>阅读理解</h4>
-    <button class="btn btn-success" onclick=";">添加</button>
-      <p><b class="editable_readingname" id="text_reading_name"></b></p>
-      <p class="autogrow">click to input an <br>article</p>
-      <p>=========================</p>
-      <p>question 1</p>
-      <p>question 2</p>
-      <p>question 3</p>
-      <p>question 4</p>
-      <p>question 5</p>
+  <a style="cursor:pointer;" onclick="event.preventDefault();return;"><i class="fa fa-plus"></i></a>
+  <div class='row'>
+    <p>Article: </p>
+    <div class="col-12 col-sm-12 col-lg-12">
+      <div class="thumbnail">
+        <p><b class="editable_readingname" id="text_reading_name">Click to input title</b></p>
+        <p class="autogrow_article">click to input article</p>
+      </div>
+    </div>
+    <p>Questions: </p>
+    <div class="col-12 col-sm-12 col-lg-12">
+      <div class="thumbnail">
+        <p class="autogrow_question">question</p>
+      </div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3">
+      <input type="radio" name="answer">
+      <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3">
+      <input type="radio" name="answer">
+      <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3">
+      <input type="radio" name="answer">
+      <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3">
+      <input type="radio" name="answer">
+      <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
+    </div>
+  </div>
 </form>
 
 {% if Showform == "deleteform" %}
