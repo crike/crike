@@ -10,7 +10,7 @@ Todo
 * 禁止通过修改browser地址栏直接进入某页面，禁止刷新清零错误次数
 * 美化：活泼
 * 发布 1.0 版本
-* 部署，局域网DNS，数据备份
+* 部署nginx，局域网DNS/dhcp，数据备份(distributed mongodb)
 * 阅读理解题型模板
 
 需求
