@@ -26,7 +26,7 @@ $(function() {
     $(this).parent('p').after('<p><script>$(".editable_selectlesson").editable(function(value, settings){'+
         '$(this).html(value);onSelectlesson(this,"'+value+'",value);}, {data:'+lessons+
         ',type:"select",submit:"OK",style:"inherit",tooltip:"点击修改",});'+
-        '<\/script>课程:<b class="editable_selectlesson" id="select_2" style="display:inline;">点击选择</b></p>');
+        '<\/script><b class="editable_selectlesson" id="select_2" style="display:inline;">点击选择课程</b></p>');
     }, {
     indicator : '<img src="img/indicator.gif">',
     data   : books,
@@ -218,8 +218,8 @@ function onSelectlesson(me, book, value) {
       '<a class="thumbnail" style="width:100%;cursor:pointer;" title="双击删除">'+
       '<input name="addlessons" value='+id+' hidden="true"><p>'
       +book+'</p><p><b>'+name+'</b></p><p style="color:sienna;">sum:'+length+'</p></a></div>');
-  $(me).parents('form').find('#select_1').text("点击选择");
-  $(me).parents('form').find('#select_2').text("点击选择");
+  $(me).parents('form').find('#select_1').text("点击选择课本");
+  $(me).parents('form').find('#select_2').remove();
 };
 function expandExam(me) {
   var content = $(me).parents('form').find('.content');
@@ -252,8 +252,10 @@ function deleteExam(me) {
   <h4>词汇测验</h4>
   <div class='row'>
     <div id="addnew" class="col-6 col-sm-6 col-lg-2">
-      <p>新增</p>
-      <p>课本:<b class="editable_selectbook" id="select_1" style="display:inline">点击选择</b></p>
+      <div class="thumbnail">
+        <p>新增</p>
+        <p><b class="editable_selectbook" id="select_1" style="display:inline">点击选择课本</b></p>
+      </div>
     </div>
   </div>
   <h4>阅读理解</h4>
