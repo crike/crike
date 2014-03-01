@@ -56,7 +56,28 @@ $(function() {
       cancel : "×",
       tooltip : "点击修改",
   });
+  $(".editable_readingname").editable(function(value, settings){
+      var names = $(this).parents('form')
+                         .find('.editable_readingname').not(this)
+                                                    .map(function() {
+                                                           return $(this).text();
+                                                         }).get();
+      if ($.inArray(value, names) == -1){
+        $(this).html(value);
+        $(this).parent('h2').find('#modified').show();
+        $(this).parent('h2').find('button').show();
+      } else
+        $(this).html("名称已存在，请重命名");
+    }, { 
+      type   : 'text',
+      select : true,
+      submit : "√",
+      cancel : "×",
+      tooltip : "点击修改",
+  });
   $(".autogrow").editable(function(value, settings) {
+        //console.log(value.indexOf('\n'));
+        //value.replaceAll('\n', '<br>new');
         $(this).html(value);
       }, { 
       indicator : "<img src='img/indicator.gif'>",
@@ -66,7 +87,7 @@ $(function() {
       tooltip   : "Click to edit...",
       onblur    : "ignore",
       autogrow : {
-         lineHeight : 16,
+         lineHeight : 32,
          minHeight  : 32
       },
     submitdata : function() {
@@ -199,9 +220,14 @@ function deleteExam(me) {
   </div>
   <h4>阅读理解</h4>
     <button class="btn btn-success" onclick=";">添加</button>
-      {{reading.name}}<br><!--TODO editable reading areas-->
-       <p class="autogrow">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidun t ut laoreet dolore magna aliquam erat volutpat.</p>
-       <p>Depends on by Chrys Bader.</p>
+      <p><b class="editable_readingname" id="text_reading_name"></b></p>
+      <p class="autogrow">click to input an <br>article</p>
+      <p>=========================</p>
+      <p>question 1</p>
+      <p>question 2</p>
+      <p>question 3</p>
+      <p>question 4</p>
+      <p>question 5</p>
 </form>
 
 {% if Showform == "deleteform" %}
