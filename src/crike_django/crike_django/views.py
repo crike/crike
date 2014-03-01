@@ -400,6 +400,18 @@ def lesson_success(request, book, lesson, tag):
     print "user %s complete lesson %s part %s %d" % (user, lesson, tag, 25)
 
 
+def profile_record_right(profile, correct_num):
+    if profile:
+        if correct_num > 0:
+            profile.continuous_right += 1
+        else:
+            profile.continuous_right = 0
+
+        if profile.continuous_right >= 10:
+            profile.point_add(25)
+            profile.continuous_right = 0
+
+
 def word_event_recorder(request, book, lesson, tag):
     '''
     Update word stat, word event recorder, profile continuous right and points.
@@ -443,14 +455,7 @@ def word_event_recorder(request, book, lesson, tag):
     
     profile = get_profile(request.user)
     if profile:
-        if correct_num > 0:
-            profile.continuous_right += 1
-        else:
-            profile.continuous_right = 0
-
-        if profile.continuous_right >= 10:
-            profile.point_add(25)
-            profile.continuous_right = 0
+        profile_record_right(profile, correct_num)
 
     print word, request.user, lesson
 
@@ -751,6 +756,11 @@ class ExamView(TemplateView):
             score = 0
         if ret == 'true':
             score += 1
+            if score % 10 == 0:
+                profile = get_profile(request.user)
+                if profile:
+                    profile.point_add(50)
+
         print "nnnnnnnnnnnnnnnn"
         print num, page, ret, score
         print "nnnnnnnnnnnnnnnn"
