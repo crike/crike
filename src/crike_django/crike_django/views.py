@@ -401,6 +401,9 @@ def lesson_success(request, book, lesson, tag):
 
 
 def word_event_recorder(request, book, lesson, tag):
+    '''
+    Update word stat, word event recorder, profile continuous right and points.
+    '''
     try:
         page_str = request.POST.get('page') or request.GET.get('page')
         page = int(page_str) - 1
@@ -437,6 +440,17 @@ def word_event_recorder(request, book, lesson, tag):
                                            mistake_num=mistake_num,
                                            tag=tag)
     wer.save()
+    
+    profile = get_profile(request.user)
+    if profile:
+        if correct_num > 0:
+            profile.continuous_right += 1
+        else:
+            profile.continuous_right = 0
+
+        if profile.continuous_right >= 10:
+            profile.point_add(25)
+            profile.continuous_right = 0
 
     print word, request.user, lesson
 
