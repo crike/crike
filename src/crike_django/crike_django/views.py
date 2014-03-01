@@ -410,7 +410,7 @@ def profile_record_right(profile, correct_num):
         if profile.continuous_right >= 10:
             profile.point_add(25)
             profile.continuous_right = 0
-
+        profile.save()
 
 def word_event_recorder(request, book, lesson, tag):
     '''
@@ -760,6 +760,7 @@ class ExamView(TemplateView):
                 profile = get_profile(request.user)
                 if profile:
                     profile.point_add(50)
+                    profile.save()
 
         print "nnnnnnnnnnnnnnnn"
         print num, page, ret, score
