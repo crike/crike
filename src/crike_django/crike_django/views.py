@@ -822,8 +822,9 @@ class ExamAdminView(TemplateView):
         readings_raw = request.POST.getlist('reading')
         for reading_raw in readings_raw:
             reading = json.loads(reading_raw)
+            article = reading['article'].replace("<br>","\n")
             readingobj = Reading(name=reading['name'], 
-                                        article=reading['article'])
+                                        article=article)
             for question in reading['questions']:
                 questionobj = Choicesingle(question=question['question'])
                 questionobj.answers = question['choices']
