@@ -76,8 +76,7 @@ $(function() {
       tooltip : "点击修改",
   });
   $(".autogrow_article").editable(function(value, settings) {
-        //console.log(value.indexOf('\n'));
-        //value.replaceAll('\n', '<br>new');
+        value = value.replace(/\n/g, '<br>');
         $(this).html(value);
       }, { 
       indicator : "<img src='img/indicator.gif'>",
@@ -91,11 +90,9 @@ $(function() {
          lineHeight : 32,
          minHeight  : 32
       },
-    submitdata : function() {
-      return {id : 2};
-    }
   });
   $(".autogrow_question").editable(function(value, settings) {
+        value = value.replace(/\n/g, '<br>');
         $(this).html(value);
       }, { 
       indicator : "<img src='img/indicator.gif'>",
@@ -109,11 +106,9 @@ $(function() {
          lineHeight : 32,
          minHeight  : 32
       },
-    submitdata : function() {
-      return {id : 2};
-    }
   });
   $(".autogrow_choice").editable(function(value, settings) {
+        value = value.replace(/\n/g, '<br>');
         $(this).html(value);
       }, { 
       indicator : "<img src='img/indicator.gif'>",
@@ -128,9 +123,6 @@ $(function() {
          lineHeight : 32,
          minHeight  : 32
       },
-    submitdata : function() {
-      return {id : 2};
-    }
   });
   $(".editable_textarea").editable("#", { 
       indicator : "<img src='img/indicator.gif'>",
@@ -249,7 +241,9 @@ function deleteExam(me) {
     <button onclick="saveExam(this);" class="btn btn-success" style="float:right;display=none">
       <i class="fa fa-save"></i></button>
   </h2>
-  <h4>词汇测验</h4>
+  <div class="page-header">
+    <h4>词汇测验</h4>
+  </div>
   <div class='row'>
     <div id="addnew" class="col-6 col-sm-6 col-lg-2">
       <div class="thumbnail">
@@ -258,7 +252,9 @@ function deleteExam(me) {
       </div>
     </div>
   </div>
-  <h4>阅读理解</h4>
+  <div class="page-header">
+    <h4>阅读理解</h4>
+  </div>
   <a style="cursor:pointer;" onclick="event.preventDefault();return;"><i class="fa fa-plus"></i></a>
   <div class='row'>
     <p>Article: </p>
@@ -318,7 +314,9 @@ function deleteExam(me) {
       <i class="fa fa-minus"></i></button>
   </h2>
   <div class="content" style="display:none">
-    <h4>词汇测验</h4>
+    <div class="page-header">
+      <h4>词汇测验</h4>
+    </div>
   <!-- vocabularies -->
     <div class='row'>
       {% for lesson in exam.lessons|dictsort:"name" %}
@@ -336,7 +334,10 @@ function deleteExam(me) {
       </div>
     </div>
   <!-- reading comprehensions -->
-    <h4>阅读理解</h4>
+    <div class="page-header">
+      <h4>阅读理解</h4>
+    </div>
+    <a style="cursor:pointer;" onclick="event.preventDefault();return;"><i class="fa fa-plus"></i></a>
       <button class="btn btn-success" onclick="showExamform();">添加</button>
       {% for reading in exam.readings %}
         {{reading.name}}<br><!--TODO editable reading areas-->

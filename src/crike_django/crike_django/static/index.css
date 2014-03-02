@@ -95,4 +95,9 @@ ul {
     text-overflow:ellipsis;
 }
 
-
+.thumbnail .autogrow_article{
+   text-align:left;
+}
+.thumbnail .autogrow_question {
+   text-align:left;
+ }
