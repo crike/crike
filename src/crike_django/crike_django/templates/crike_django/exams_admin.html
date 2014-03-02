@@ -510,24 +510,24 @@ function deleteExam(me) {
       <div id='question{{forloop.counter}}'>
         <div class="col-12 col-sm-12 col-lg-12">
           <div class="thumbnail">
-            <p class="autogrow_question">{{question.question}}</p>
+            <p class="autogrow_question">{{question.question|linebreaksbr}}</p>
           </div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
           <input type="radio" name="answer{{forloop.counter}}" value=1 {% if question.rightindex == 1 %}checked=true{% endif %}>
-          <div class="thumbnail">A<p id="choice_1" class="autogrow_choice">{{question.answers.0}}</p></div>
+          <div class="thumbnail">A<p id="choice_1" class="autogrow_choice">{{question.answers.0|linebreaksbr}}</p></div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
           <input type="radio" name="answer{{forloop.counter}}" value=2 {% if question.rightindex == 2 %}checked=true{% endif %}>
-          <div class="thumbnail">B<p id="choice_2" class="autogrow_choice">{{question.answers.1}}</p></div>
+          <div class="thumbnail">B<p id="choice_2" class="autogrow_choice">{{question.answers.1|linebreaksbr}}</p></div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
           <input type="radio" name="answer{{forloop.counter}}" value=3 {% if question.rightindex == 3 %}checked=true{% endif %}>
-          <div class="thumbnail">C<p id="choice_3" class="autogrow_choice">{{question.answers.2}}</p></div>
+          <div class="thumbnail">C<p id="choice_3" class="autogrow_choice">{{question.answers.2|linebreaksbr}}</p></div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
           <input type="radio" name="answer{{forloop.counter}}" value=4 {% if question.rightindex == 4 %}checked=true{% endif %}>
-          <div class="thumbnail">D<p id="choice_4" class="autogrow_choice">{{question.answers.3}}</p></div>
+          <div class="thumbnail">D<p id="choice_4" class="autogrow_choice">{{question.answers.3|linebreaksbr}}</p></div>
         </div>
       </div>
       {% endfor %}
