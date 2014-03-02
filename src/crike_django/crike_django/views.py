@@ -413,6 +413,19 @@ def profile_record_right(profile, correct_num):
             profile.continuous_right = 0
         profile.save()
 
+
+def count_words_learnt(profile):
+    pass
+
+
+def count_lessons_learnt(profile):
+    pass
+
+
+def count_books_learnt(profile):
+    pass
+
+
 def word_event_recorder(request, book, lesson, tag):
     '''
     Update word stat, word event recorder, profile continuous right and points.
