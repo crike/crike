@@ -49,6 +49,10 @@
 		
 		if(this.line_height == NaN)
 		  this.line_height = 0;
+        
+        var html = this.textarea.val();
+
+        this.textarea.val(html.replace(/\<br\>/g, "\n"));
 		
 		// Only one textarea activated at a time, the one being used
 		this.init();
