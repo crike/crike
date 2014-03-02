@@ -64,18 +64,18 @@ class Word(models.Model):
         return self.name
 
 class Choicesingle(models.Model):
-    title = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, blank=True)
     question = models.TextField(max_length=50)
     answers = ListField(models.CharField(max_length=100))
-    rightnum = models.IntegerField()
+    rightindex = models.IntegerField()
     
     def __unicode__(self):
         return self.name
 
 class Reading(models.Model):
-    title = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     article = models.TextField()
-    questions = ListField(models.ForeignKey('Choicesingle'))
+    questions = ListField(EmbeddedModelField('Choicesingle'))
     
     def __unicode__(self):
         return self.name

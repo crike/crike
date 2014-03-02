@@ -8,6 +8,7 @@ import shutil
 import os
 import time
 import datetime
+import json
 
 
 from django.views.generic import *
@@ -803,6 +804,20 @@ class ExamAdminView(TemplateView):
             lesson = Lesson.objects.filter(id=lessonid)[0]
             exam.lessons.append(lesson)
             exam.totalpoints += len(lesson.words)
+
+        exam.readings[:] = []
+        readings_raw = request.POST.getlist('reading')
+        for reading_raw in readings_raw:
+            reading = json.loads(reading_raw)
+            readingobj = Reading(name=reading['name'], 
+                                        article=reading['article'])
+            for question in reading['questions']:
+                questionobj = Choicesingle(question=question['question'])
+                questionobj.answers = question['choices']
+                questionobj.rightindex = question['rightindex']
+                readingobj.questions.append(questionobj)
+
+            exam.readings.append(readingobj)
 
         exam.totalpoints += len(exam.readings)*5
         exam.save()
