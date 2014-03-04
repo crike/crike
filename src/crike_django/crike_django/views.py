@@ -828,7 +828,12 @@ class ExamAdminView(TemplateView):
             for question in reading['questions']:
                 questionobj = Choicesingle(question=question['question'])
                 questionobj.answers = question['choices']
-                questionobj.rightindex = question['rightindex']
+                rightindex = question.get('rightindex', None)
+                if rightindex:
+                    questionobj.rightindex = rightindex;
+                else:
+                    questionobj.rightindex = 0;
+
                 readingobj.questions.append(questionobj)
 
             exam.readings.append(readingobj)

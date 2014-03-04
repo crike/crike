@@ -201,8 +201,8 @@ function saveExam(e, me) {
                  $(this).find('#question1 #choice_2').html(),
                  $(this).find('#question1 #choice_3').html(),
                  $(this).find('#question1 #choice_4').html(),
-                 ],
-               'rightindex':$(this).find("#question1 input:radio[name='answer1']:checked" ).prop('value'),
+              ],
+              'rightindex':$(this).find("#question1 input:radio:checked" ).prop('value'),
             },
             {
               'question':$(this).find('#question2 .autogrow_question').html(),
@@ -212,7 +212,7 @@ function saveExam(e, me) {
                  $(this).find('#question2 #choice_3').html(),
                  $(this).find('#question2 #choice_4').html(),
               ],
-              'rightindex':$(this).find("#question2 input:radio[name='answer2']:checked" ).prop('value'),
+              'rightindex':$(this).find("#question2 input:radio:checked" ).prop('value'),
             },
             {
               'question':$(this).find('#question3 .autogrow_question').html(),
@@ -222,7 +222,7 @@ function saveExam(e, me) {
                  $(this).find('#question3 #choice_3').html(),
                  $(this).find('#question3 #choice_4').html(),
               ],
-              'rightindex':$(this).find("#question3 input:radio[name='answer3']:checked" ).prop('value'),
+              'rightindex':$(this).find("#question3 input:radio:checked" ).prop('value'),
             },
             {
               'question':$(this).find('#question4 .autogrow_question').html(),
@@ -232,7 +232,7 @@ function saveExam(e, me) {
                  $(this).find('#question4 #choice_3').html(),
                  $(this).find('#question4 #choice_4').html(),
               ],
-              'rightindex':$(this).find("#question4 input:radio[name='answer4']:checked" ).prop('value'),
+              'rightindex':$(this).find("#question4 input:radio:checked" ).prop('value'),
             },
             {
               'question':$(this).find('#question5 .autogrow_question').html(),
@@ -242,7 +242,7 @@ function saveExam(e, me) {
                  $(this).find('#question5 #choice_3').html(),
                  $(this).find('#question5 #choice_4').html(),
               ],
-              'rightindex':$(this).find("#question5 input:radio[name='answer5']:checked" ).prop('value'),
+              'rightindex':$(this).find("#question5 input:radio:checked" ).prop('value'),
             },
           ], 
         });
@@ -317,9 +317,8 @@ function deleteExam(me) {
     </div>
   </div>
   <div class="page-header">
-    <h4>阅读理解</h4>
+    <h4>阅读理解1</h4>
   </div>
-  <a style="cursor:pointer;" onclick="event.preventDefault();return;"><i class="fa fa-plus"></i></a>
   <div class='row reading'>
     <p>Article: </p>
     <div class="col-12 col-sm-12 col-lg-12">
@@ -336,19 +335,19 @@ function deleteExam(me) {
         </div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer1" value=1 checked=true>
+        <input type="radio" name="answer11" value=1 checked=true>
         <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer1" value=2>
+        <input type="radio" name="answer11" value=2>
         <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer1" value=3>
+        <input type="radio" name="answer11" value=3>
         <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer1" value=4>
+        <input type="radio" name="answer11" value=4>
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
       </div>
     </div>
@@ -359,19 +358,19 @@ function deleteExam(me) {
         </div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer2" value=1 checked=true>
+        <input type="radio" name="answer12" value=1 checked=true>
         <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer2" value=2>
+        <input type="radio" name="answer12" value=2>
         <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer2" value=3>
+        <input type="radio" name="answer12" value=3>
         <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer2" value=4>
+        <input type="radio" name="answer12" value=4>
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
       </div>
     </div>
@@ -382,19 +381,19 @@ function deleteExam(me) {
         </div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer3" value=1 checked=true>
+        <input type="radio" name="answer13" value=1 checked=true>
         <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer3" value=2>
+        <input type="radio" name="answer13" value=2>
         <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer3" value=3>
+        <input type="radio" name="answer13" value=3>
         <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer3" value=4>
+        <input type="radio" name="answer13" value=4>
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
       </div>
     </div>
@@ -405,19 +404,19 @@ function deleteExam(me) {
         </div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer4" value=1 checked=true>
+        <input type="radio" name="answer14" value=1 checked=true>
         <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer4" value=2>
+        <input type="radio" name="answer14" value=2>
         <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer4" value=3>
+        <input type="radio" name="answer14" value=3>
         <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer4" value=4>
+        <input type="radio" name="answer14" value=4>
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
       </div>
     </div>
@@ -428,36 +427,153 @@ function deleteExam(me) {
         </div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer5" value=1 checked=true>
+        <input type="radio" name="answer15" value=1 checked=true>
         <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer5" value=2>
+        <input type="radio" name="answer15" value=2>
         <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer5" value=3>
+        <input type="radio" name="answer15" value=3>
         <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
       </div>
       <div class="col-6 col-sm-6 col-lg-3">
-        <input type="radio" name="answer5" value=4>
+        <input type="radio" name="answer15" value=4>
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
+      </div>
+    </div>
+  </div>
+  <div class="page-header">
+    <h4>阅读理解2</h4>
+  </div>
+  <div class='row reading'>
+    <p>Article: </p>
+    <div class="col-12 col-sm-12 col-lg-12">
+      <div class="thumbnail">
+        <p><b class="editable_readingname" id="text_reading_name">Click to input title</b></p>
+        <p class="autogrow_article">click to input article</p>
+      </div>
+    </div>
+    <p>Questions: </p>
+    <div id='question1'>
+      <div class="col-12 col-sm-12 col-lg-12">
+        <div class="thumbnail">
+          <p class="autogrow_question">question</p>
+        </div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer21" value=1 checked=true>
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer21" value=2>
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer21" value=3>
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer21" value=4>
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
+      </div>
+    </div>
+    <div id='question2'>
+      <div class="col-12 col-sm-12 col-lg-12">
+        <div class="thumbnail">
+          <p class="autogrow_question">question</p>
+        </div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer22" value=1 checked=true>
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer22" value=2>
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer22" value=3>
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer22" value=4>
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
+      </div>
+    </div>
+    <div id='question3'>
+      <div class="col-12 col-sm-12 col-lg-12">
+        <div class="thumbnail">
+          <p class="autogrow_question">question</p>
+        </div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer23" value=1 checked=true>
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer23" value=2>
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer23" value=3>
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer23" value=4>
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
+      </div>
+    </div>
+    <div id='question4'>
+      <div class="col-12 col-sm-12 col-lg-12">
+        <div class="thumbnail">
+          <p class="autogrow_question">question</p>
+        </div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer24" value=1 checked=true>
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer24" value=2>
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer24" value=3>
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer24" value=4>
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
+      </div>
+    </div>
+    <div id='question5'>
+      <div class="col-12 col-sm-12 col-lg-12">
+        <div class="thumbnail">
+          <p class="autogrow_question">question</p>
+        </div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer25" value=1 checked=true>
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer25" value=2>
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer25" value=3>
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer25" value=4>
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div>
       </div>
     </div>
   </div>
 </form>
 
-{% if Showform == "deleteform" %}
-<form id="deleteform" style="display:block" enctype="multipart/form-data" method="post" action="/admin/exams/">
-{% else %}
-<form id="deleteform" style="display:none" enctype="multipart/form-data" method="post" action="/admin/exams/">
-{% endif %}
-  {% csrf_token %}
-  <label>请选择要删除的试卷</label>
-  <input hidden='true' name='extra' value='delete'>
-  <input id="deletesubmit" type="submit" disabled="true" value="delete">
-  <strong>{{ Deletewarning }}</strong>
-</form>
 <!-- Cycle through entries -->
 {% for exam in exams %}
 <form id='examform' method="post" enctype="multipart/form-data" action="/admin/exams/">
@@ -494,11 +610,10 @@ function deleteExam(me) {
       </div>
     </div>
   <!-- reading comprehensions -->
-    <div class="page-header">
-      <h4>阅读理解</h4>
-    </div>
-    <a style="cursor:pointer;" onclick="event.preventDefault();return;"><i class="fa fa-plus"></i></a>
     {% for reading in exam.readings %}
+    <div class="page-header">
+      <h4>阅读理解{{forloop.counter}}</h4>
+    </div>
     <div class='row reading'>
       <p>Article: </p>
       <div class="col-12 col-sm-12 col-lg-12">
@@ -516,19 +631,19 @@ function deleteExam(me) {
           </div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
-          <input type="radio" name="answer{{forloop.counter}}" value=1 {% if question.rightindex == 1 %}checked=true{% endif %}>
+          <input type="radio" name="answer{{forloop.parentloop.counter}}{{forloop.counter}}" value=1 {% if question.rightindex == 1 %}checked=true{% endif %}>
           <div class="thumbnail">A<p id="choice_1" class="autogrow_choice">{{question.answers.0|linebreaksbr}}</p></div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
-          <input type="radio" name="answer{{forloop.counter}}" value=2 {% if question.rightindex == 2 %}checked=true{% endif %}>
+          <input type="radio" name="answer{{forloop.parentloop.counter}}{{forloop.counter}}" value=2 {% if question.rightindex == 2 %}checked=true{% endif %}>
           <div class="thumbnail">B<p id="choice_2" class="autogrow_choice">{{question.answers.1|linebreaksbr}}</p></div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
-          <input type="radio" name="answer{{forloop.counter}}" value=3 {% if question.rightindex == 3 %}checked=true{% endif %}>
+          <input type="radio" name="answer{{forloop.parentloop.counter}}{{forloop.counter}}" value=3 {% if question.rightindex == 3 %}checked=true{% endif %}>
           <div class="thumbnail">C<p id="choice_3" class="autogrow_choice">{{question.answers.2|linebreaksbr}}</p></div>
         </div>
         <div class="col-6 col-sm-6 col-lg-3">
-          <input type="radio" name="answer{{forloop.counter}}" value=4 {% if question.rightindex == 4 %}checked=true{% endif %}>
+          <input type="radio" name="answer{{forloop.parentloop.counter}}{{forloop.counter}}" value=4 {% if question.rightindex == 4 %}checked=true{% endif %}>
           <div class="thumbnail">D<p id="choice_4" class="autogrow_choice">{{question.answers.3|linebreaksbr}}</p></div>
         </div>
       </div>
