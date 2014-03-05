@@ -84,6 +84,20 @@ def get_words_from_paginator(paginator, page):
 
     return words
 
+def get_readings_from_paginator(paginator, page):
+    try:
+        if page is -1:
+            return paginator.page(paginator.num_pages)
+        readings = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        readings = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        readings = paginator.page(paginator.num_pages)
+
+    return readings
+
 def update_book_lesson(lessonemb, lessonobj):
     bookobj = lessonobj.book
     bookobj.lessons.remove(lessonemb)
@@ -784,8 +798,60 @@ class ExamView(TemplateView):
             examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
             examstat.score = score
             examstat.save()
-            return HttpResponseRedirect('/home')
+            return HttpResponseRedirect('/reading/'+id)
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
+
+
+class ReadingView(TemplateView):
+    template_name='crike_django/exam_readings.html'
+
+    def get(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        name = exam.name
+        readings_list = exam.readings
+
+        if len(readings_list) == 0:
+            return HttpResponseRedirect('/home/')
+
+        paginator = Paginator(readings_list, 1)
+        page = request.GET.get('page')
+        readings = get_readings_from_paginator(paginator, page)
+
+        return render(request, self.template_name,
+                {'reading':readings[0],'id':id,'name':name})
+
+    def post(self, request, id):
+        page = request.POST.get('page')
+        exam = Exam.objects.filter(id=id)[0]
+        length = len(exam.readings)
+        reading = None
+        curpage = 0
+        if page != None:
+            curpage = eval(page)-2
+        reading = exam.readings[curpage]
+        if curpage+1 == length:
+            page = '0'
+        else:
+            page = str(curpage+1)
+
+        score = 0
+        for i in range(5):
+            ans = request.POST.get('answer'+str(i+1), None)
+            print ans
+            if ans != 'None':
+                if reading.questions[i].rightindex == eval(ans):
+                    score += 5
+
+        print "-----------------"
+        print score
+        print "-----------------"
+        examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+        examstat.score += score
+        examstat.save()
+
+        if page == '0':
+            return HttpResponseRedirect('/home/')
+        return HttpResponseRedirect('/reading/'+id+'/?page='+page)
 
 
 class ExamAdminView(TemplateView):
@@ -838,7 +904,7 @@ class ExamAdminView(TemplateView):
 
             exam.readings.append(readingobj)
 
-        exam.totalpoints += len(exam.readings)*5
+        exam.totalpoints += len(exam.readings)*25
         exam.save()
         return HttpResponseRedirect("/admin/exams")
 
