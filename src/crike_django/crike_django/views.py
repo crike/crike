@@ -818,7 +818,7 @@ class ReadingView(TemplateView):
         readings = get_readings_from_paginator(paginator, page)
 
         return render(request, self.template_name,
-                {'reading':readings[0],'id':id,'name':name})
+                {'readings':readings,'id':id,'name':name})
 
     def post(self, request, id):
         page = request.POST.get('page')
@@ -826,25 +826,19 @@ class ReadingView(TemplateView):
         length = len(exam.readings)
         reading = None
         curpage = 0
-        if page != None:
+        if page != None and page != '0':
             curpage = eval(page)-2
+        elif page == '0':
+            curpage = length-1
         reading = exam.readings[curpage]
-        if curpage+1 == length:
-            page = '0'
-        else:
-            page = str(curpage+1)
 
         score = 0
         for i in range(5):
             ans = request.POST.get('answer'+str(i+1), None)
-            print ans
-            if ans != 'None':
+            if ans != None:
                 if reading.questions[i].rightindex == eval(ans):
                     score += 5
 
-        print "-----------------"
-        print score
-        print "-----------------"
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.save()
