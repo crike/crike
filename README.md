@@ -10,7 +10,6 @@ Todo
 * 美化：活泼
 * 发布 1.0 版本
 * 部署nginx，局域网DNS/DHCP，数据备份(distributed mongodb)
-* 阅读理解题型模板
 
 需求
 -----
