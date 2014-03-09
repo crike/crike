@@ -551,6 +551,10 @@ def words_event_recorder(request, book, lesson, tag):
                                                tag=tag)
         wer.save()
 
+        profile = get_profile(request.user)
+        if profile:
+            profile_record_right(profile, correct_num)
+
         print word, request.user, lesson
 
 
