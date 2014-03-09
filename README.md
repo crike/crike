@@ -5,11 +5,13 @@ English online teaching and testing system.
 
 Todo
 -----
+* 将考试分数加入学生积分中，但重复同一考试将不加分或少加分
 * 统计信息：对教师所教的所有学生建立图表，包括直方图，排名表等信息
 * 美化：活泼
 * 发布 1.0 版本
 * 部署nginx，局域网DNS/DHCP，数据备份(distributed mongodb)
 * 禁止通过修改browser地址栏直接进入某页面，禁止刷新清零错误次数
+* 提供积分增加提示信息，积分增加或减少的历史记录
 
 需求
 -----
