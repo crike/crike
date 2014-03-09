@@ -868,13 +868,26 @@ class ReadingView(TemplateView):
         score = 0
         for i in range(5):
             ans = request.POST.get('answer'+str(i+1), None)
-            if ans != None:
-                if reading.questions[i].rightindex == eval(ans):
-                    score += 5
+            profile = get_profile(request.user)
+            if ans != None and reading.questions[i].rightindex == eval(ans):
+                score += 5
+                if profile:
+                    profile.continuous_right += 1
+                    if profile.continuous_right % 10 == 0:
+                        profile.point_add(10)
+                    profile.save()
+            else:
+                if profile:
+                    profile.continuous_right = 0
+                    profile.save()
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.save()
+
+        print "nnnnnnnnnnnnnnnn"
+        print score,profile.continuous_right,profile.total_points
+        print "nnnnnnnnnnnnnnnn"
 
         if page == '0':
             return HttpResponseRedirect('/home/')
