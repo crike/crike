@@ -437,7 +437,7 @@ def profile_record_exam_ret(profile, ret):
         profile.exam_cright = 0
     if profile.exam_cright == 10:
         profile.exam_cright = 0
-        profile.point_add(50)
+        profile.point_add(10)
     profile.save()
 
 
@@ -815,6 +815,7 @@ class ExamView(TemplateView):
             score = eval(score)
         else:
             score = 0
+        profile = get_profile(request.user)
         if ret == 'true':
             score += 1
         
@@ -823,7 +824,7 @@ class ExamView(TemplateView):
             profile_record_exam_ret(profile, ret)
 
         print "nnnnnnnnnnnnnnnn"
-        print num, page, ret, score
+        print num, page, ret, score,profile.continuous_right,profile.total_points
         print "nnnnnnnnnnnnnnnn"
         if page == '0':
             exam = Exam.objects.filter(id=id)[0]
