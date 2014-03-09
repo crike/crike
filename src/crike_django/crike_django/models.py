@@ -134,6 +134,8 @@ class Profile(models.Model):
     longest_streak = models.IntegerField(default=0)
     current_streak = models.IntegerField(default=0)
     words_learnt = models.IntegerField(default=0)
+    words_mistake_num = models.IntegerField(default=0)
+    words_correct_num = models.IntegerField(default=0)
     lessons_learnt = models.IntegerField(default=0)
     books_learnt = models.IntegerField(default=0)
 

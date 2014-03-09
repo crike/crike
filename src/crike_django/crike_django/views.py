@@ -442,7 +442,27 @@ def profile_record_exam_ret(profile, ret):
 
 
 def count_words_learnt(profile):
-    pass
+    if profile is None:
+        return
+
+    try:
+        stats = WordStat.objects.filter(user=request.user)
+    except WordStat.DoesNotExist:
+        pass
+    
+    words_learnt = 0
+    words_mistake_num = 0
+    words_correct_num = 0
+    for stat in stats:
+        words_mistake_num += stat.mistake_num
+        words_correct_num += stat.correct_num
+        if stat.correct_num > 0:
+            words_learnt += 1
+    profile.words_learnt = words_learnt
+    profile.words_correct_num = words_correct_num
+    profile.words_mistake_num = words_mistake_num
+
+    return
 
 
 def count_lessons_learnt(profile):
