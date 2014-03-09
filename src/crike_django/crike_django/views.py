@@ -437,7 +437,7 @@ def profile_record_exam_ret(profile, ret):
         profile.exam_cright = 0
     if profile.exam_cright == 10:
         profile.exam_cright = 0
-        profile.point_add(10)
+        profile.point_add(50)
     profile.save()
 
 
