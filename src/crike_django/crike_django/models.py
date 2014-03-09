@@ -127,7 +127,8 @@ class Profile(models.Model):
     total_points = models.IntegerField(default=0)
     biggest_points = models.IntegerField(default=0)
     last_visit = models.DateTimeField(auto_now=True, null=True)
-    continuous_right = models.IntegerField(default=0)
+    study_cright = models.IntegerField(default=0)
+    exam_cright = models.IntegerField(default=0)
 
     # Profile Statistics Area:
     longest_streak = models.IntegerField(default=0)

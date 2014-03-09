@@ -418,14 +418,27 @@ def lesson_success(request, book, lesson, tag):
 def profile_record_right(profile, correct_num):
     if profile:
         if correct_num > 0:
-            profile.continuous_right += 1
+            profile.study_cright += 1
         else:
-            profile.continuous_right = 0
+            profile.study_cright = 0
 
-        if profile.continuous_right >= 10:
+        if profile.study_cright >= 10:
             profile.point_add(25)
-            profile.continuous_right = 0
+            profile.study_cright = 0
         profile.save()
+
+
+def profile_record_exam_ret(profile, ret):
+    if profile is None:
+        return
+    if ret == 'true':
+        profile.exam_cright += 1
+    else:
+        profile.exam_cright = 0
+    if profile.exam_cright == 10:
+        profile.exam_cright = 0
+        profile.point_add(50)
+    profile.save()
 
 
 def count_words_learnt(profile):
@@ -784,11 +797,10 @@ class ExamView(TemplateView):
             score = 0
         if ret == 'true':
             score += 1
-            if score % 10 == 0:
-                profile = get_profile(request.user)
-                if profile:
-                    profile.point_add(50)
-                    profile.save()
+        
+        profile = get_profile(request.user)
+        if profile:
+            profile_record_exam_ret(profile, ret)
 
         print "nnnnnnnnnnnnnnnn"
         print num, page, ret, score
