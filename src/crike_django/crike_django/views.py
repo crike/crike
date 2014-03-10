@@ -134,7 +134,7 @@ class IndexView(TemplateView):
             if p is None:
                 pass
             elif p.last_visit is None or p.last_visit.date() != today():
-                p.point_add(10)
+                p.point_add(5)
                 p.save()
 
         books = Book.objects.all()
@@ -423,7 +423,7 @@ def profile_record_right(profile, correct_num):
             profile.study_cright = 0
 
         if profile.study_cright >= 10:
-            profile.point_add(25)
+            profile.point_add(5)
             profile.study_cright = 0
         profile.save()
 
@@ -437,7 +437,7 @@ def profile_record_exam_ret(profile, ret):
         profile.exam_cright = 0
     if profile.exam_cright == 10:
         profile.exam_cright = 0
-        profile.point_add(50)
+        profile.point_add(10)
     profile.save()
 
 
