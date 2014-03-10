@@ -831,6 +831,18 @@ class ExamView(TemplateView):
             examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
             examstat.score = score
             examstat.save()
+            if len(exam.readings) == 0:
+                profile = get_profile(request.user)
+                if examstat.tag == "done":
+                    if profile and examstat.score/exam.totalpoints == 1:
+                        profile.point_add(5)
+                else:
+                    examstat.tag = "done"
+                    if profile:
+                        profile.point_add(examstat.score)
+                examstat.save()
+                profile.save()
+
             return HttpResponseRedirect('/reading/'+id)
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
 
@@ -879,7 +891,18 @@ class ReadingView(TemplateView):
         examstat.save()
 
         if page == '0':
+            profile = get_profile(request.user)
+            if examstat.tag == "done":
+                if profile and examstat.score/exam.totalpoints == 1:
+                    profile.point_add(5)
+            else:
+                examstat.tag = "done"
+                if profile:
+                    profile.point_add(examstat.score)
+            examstat.save()
+            profile.save()
             return HttpResponseRedirect('/home/')
+
         return HttpResponseRedirect('/reading/'+id+'/?page='+page)
 
 
