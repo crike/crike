@@ -517,6 +517,9 @@ def word_event_recorder(request, book, lesson, tag):
     profile = get_profile(request.user)
     if profile:
         profile_record_right(profile, correct_num)
+        if correct_num > 0:
+            profile.point_add(5/word_stat.correct_num)
+            profile.save()
 
     print word, request.user, lesson
 
@@ -554,6 +557,9 @@ def words_event_recorder(request, book, lesson, tag):
         profile = get_profile(request.user)
         if profile:
             profile_record_right(profile, correct_num)
+            if correct_num > 0:
+                profile.point_add(5/word_stat.correct_num)
+                profile.save()
 
         print word, request.user, lesson
 
