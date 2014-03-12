@@ -48,11 +48,14 @@
   function selectWord(e) {
     var start = e.target.selectionStart;
     var end = e.target.selectionEnd;
-    alert(e.target.value.substring(start, end));
+    var word = e.target.value.substring(start, end);
+    var x = e.pageX;
+    var y = e.pageY;
+    console.log(x);
+    console.log(y);
+    $('#popup').html(word).css({'margin-left':x+'px','margin-top':y+'px'}).show();
   };
 </script>
-
-<div class="popup" id="wordmean"></div>
 
 <div id='overlay'></div>
 <div id='popup'></div>
