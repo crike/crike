@@ -19,6 +19,9 @@
        },
        format: 'mm:ss'
     });
+
+    $('.autogrow_article').autogrow();
+
   });
 
   function onSubmit(e) {
@@ -41,8 +44,15 @@
   };
   function onPick(me) {
     $(me).find("input:radio").prop('checked',true);
-  }
+  };
+  function selectWord(e) {
+    var start = e.target.selectionStart;
+    var end = e.target.selectionEnd;
+    alert(e.target.value.substring(start, end));
+  };
 </script>
+
+<div class="popup" id="wordmean"></div>
 
 <div id='overlay'></div>
 <div id='popup'></div>
@@ -62,7 +72,7 @@
   <div class="col-12 col-sm-12 col-lg-12">
     <div class="thumbnail">
       <p><b id="text_reading_name">{{reading.name}}</b></p>
-      <p class="autogrow_article">{{reading.article|linebreaksbr}}</p>
+      <textarea disabled style="width:100%" class="autogrow_article" onselect="selectWord(event);">{{reading.article}}</textarea>
     </div>
   </div>
   {% for ques in reading.questions %}
@@ -103,6 +113,7 @@
 
 {% block body_footer %}
 <script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'jeditable/jquery.autogrow.js' %}"></script>
 {% endblock %}
 
 {% endblock %}
