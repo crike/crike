@@ -75,7 +75,7 @@
   <div class="col-12 col-sm-12 col-lg-12">
     <div class="thumbnail">
       <p><b id="text_reading_name">{{reading.name}}</b></p>
-      <textarea disabled style="width:100%" class="autogrow_article" onselect="selectWord(event);">{{reading.article}}</textarea>
+      <textarea readonly style="width:100%" class="autogrow_article" onselect="selectWord(event);">{{reading.article}}</textarea>
     </div>
   </div>
   {% for ques in reading.questions %}
