@@ -1261,11 +1261,13 @@ class WordPopupView(TemplateView):
 
     def get(self, request, wordname):
         print "pppppppppppppppp"
-        word = None
         data = None
         words = Word.objects.filter(name=wordname)
         if not words:
-            download_single_word(wordname)
+            mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
+            if os.path.exists(mp3path):
+                os.remove(mp3path)
+            download_word(wordname)
             words = Word.objects.filter(name=wordname)
 
         if words:

@@ -55,11 +55,12 @@
     var x = selectX + 150;
     var y = selectY + 80;
     $('#popup').html('<a herf="#"><i class="fa fa-times-circle-o" style="float:right;cursor:pointer" onclick="cancelPopup()"></i></a>'+
-                     '<p><b>'+word+'</b></p>')
-               .css({'left':x+'px','top':y+'px'});
+                     '<p><b>'+word+'</b></p><p id="loading">Loading...</p>')
+               .css({'left':x+'px','top':y+'px'}).show();
     $.get("/wordpopup/"+word, function(data){
+      $('#loading').remove();
       $('#popup').append('<p>'+data.phonetics+'</p>')
-                 .append('<textarea readonly style="width:100%">'+data.mean+'</textarea>').show();
+                 .append('<textarea readonly style="width:100%">'+data.mean+'</textarea>');
     }, "json");
   };
   function selectPosition(e) {
