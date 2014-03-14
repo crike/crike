@@ -54,12 +54,16 @@
     //TODO on edge of the page
     var x = selectX + 150;
     var y = selectY + 80;
-    $('#popup').html('<i class="fa fa-times-circle-o" style="float:right"></i><p><b>'+word+'</b></p>');
+    $('#popup').html('<a herf="#"><i class="fa fa-times-circle-o" style="float:right;cursor:pointer" onclick="cancelPopup()"></i></a>'+
+                     '<p><b>'+word+'</b></p>');
     $('#popup').css({'left':x+'px','top':y+'px'}).show();
   };
   function selectPosition(e) {
     selectX = e.clientX;
     selectY = e.clientY;
+  };
+  function cancelPopup() {
+    $('#popup').hide();
   };
 </script>
 
