@@ -68,4 +68,5 @@ urlpatterns = patterns('',
     url(r'^reading/(?P<id>.*?)/?$', ReadingView.as_view(), name='reading_view'),
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^wordpopup/(?P<wordname>.*)$', WordPopupView.as_view(), name='word_popup_view'),
 )

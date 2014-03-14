@@ -18,6 +18,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.db.models import F
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
+from django.utils import simplejson
 
 
 # Imaginary function to handle an uploaded file.
@@ -1251,4 +1253,27 @@ class BooksAdminView(TemplateView):
                 bookob.delete()
 
         return HttpResponseRedirect("/admin/books/")
+
+class WordPopupView(TemplateView):
+
+    def get(self, request, wordname):
+        print "pppppppppppppppp"
+        word = None
+        data = None
+        words = Word.objects.filter(name=wordname)
+        if words:
+            word = words[0]
+        else:
+#download from web
+            some_data_to_dump = {
+               'mean': 'foo',
+               'phonetics': '[fu:]',
+            }
+
+            data = simplejson.dumps(some_data_to_dump)
+            pass
+
+        if word:
+            data = serializers.serialize('json', word)
+        return HttpResponse(data, mimetype='application/json')
 
