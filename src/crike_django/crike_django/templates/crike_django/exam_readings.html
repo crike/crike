@@ -51,13 +51,15 @@
     var start = e.target.selectionStart;
     var end = e.target.selectionEnd;
     var word = e.target.value.substring(start, end);
+    //TODO on edge of the page
     var x = selectX + 150;
-    var y = selectY + 30;
-    $('#popup').html(word).css({'left':x+'px','top':y+'px'}).show();
+    var y = selectY + 80;
+    $('#popup').html('<i class="fa fa-times-circle-o" style="float:right"></i><p><b>'+word+'</b></p>');
+    $('#popup').css({'left':x+'px','top':y+'px'}).show();
   };
   function selectPosition(e) {
-    selectX = e.pageX;
-    selectY = e.pageY;
+    selectX = e.clientX;
+    selectY = e.clientY;
   };
 </script>
 
