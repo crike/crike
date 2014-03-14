@@ -284,7 +284,7 @@ def show_image(request, name, num):
     else:
         return HttpResponse(None)
 
-def retrieve_word(request, book, lesson, word):
+def download_single_word(word):
     mp3path = MEDIA_ROOT+'/audios/'+word+".mp3"
     imgpath = MEDIA_ROOT+'/images/'+word
     if os.path.exists(mp3path):
@@ -294,6 +294,9 @@ def retrieve_word(request, book, lesson, word):
         shutil.rmtree(imgpath)
     process = Process(target=download_images_single, args=(word,))
     process.start()
+
+def retrieve_word(request, book, lesson, word):
+    download_single_word(word)
     num = 0
     while not is_path_full(imgpath) and num < 3:
         num += 1
@@ -1261,22 +1264,20 @@ class WordPopupView(TemplateView):
         word = None
         data = None
         words = Word.objects.filter(name=wordname)
-        if words:
-            word = words[0]
-        else:
-#download from web
-            pass
+        if not words:
+            download_single_word(wordname)
+            words = Word.objects.filter(name=wordname)
 
-        if word:
+        if words:
             some_data_to_dump = {
-               'mean': word.mean,
-               'phonetics': '['+word.phonetics+']',
+               'mean': words[0].mean,
+               'phonetics': '['+words[0].phonetics+']',
             }
 
         else:
             some_data_to_dump = {
-               'mean': 'foo',
-               'phonetics': '[fu:]',
+               'mean': 'NOT FOUND IN DATABASE',
+               'phonetics': '[sorry!]',
             }
         data = simplejson.dumps(some_data_to_dump)
         return HttpResponse(data, mimetype='application/json')
