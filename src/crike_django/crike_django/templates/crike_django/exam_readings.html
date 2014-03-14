@@ -59,7 +59,7 @@
                .css({'left':x+'px','top':y+'px'});
     $.get("/wordpopup/"+word, function(data){
       $('#popup').append('<p>'+data.phonetics+'</p>')
-                 .append('<textarea readonly>'+data.mean+'</textarea>').show();
+                 .append('<textarea readonly style="width:100%">'+data.mean+'</textarea>').show();
     }, "json");
   };
   function selectPosition(e) {
