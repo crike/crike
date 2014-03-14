@@ -1265,15 +1265,19 @@ class WordPopupView(TemplateView):
             word = words[0]
         else:
 #download from web
+            pass
+
+        if word:
+            some_data_to_dump = {
+               'mean': word.mean,
+               'phonetics': '['+word.phonetics+']',
+            }
+
+        else:
             some_data_to_dump = {
                'mean': 'foo',
                'phonetics': '[fu:]',
             }
-
-            data = simplejson.dumps(some_data_to_dump)
-            pass
-
-        if word:
-            data = serializers.serialize('json', word)
+        data = simplejson.dumps(some_data_to_dump)
         return HttpResponse(data, mimetype='application/json')
 
