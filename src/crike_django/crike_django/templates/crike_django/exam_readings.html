@@ -45,15 +45,19 @@
   function onPick(me) {
     $(me).find("input:radio").prop('checked',true);
   };
+  var selectX;
+  var selectY;
   function selectWord(e) {
     var start = e.target.selectionStart;
     var end = e.target.selectionEnd;
     var word = e.target.value.substring(start, end);
-    var x = e.pageX;
-    var y = e.pageY;
-    console.log(x);
-    console.log(y);
-    $('#popup').html(word).css({'margin-left':x+'px','margin-top':y+'px'}).show();
+    var x = selectX + 150;
+    var y = selectY + 30;
+    $('#popup').html(word).css({'left':x+'px','top':y+'px'}).show();
+  };
+  function selectPosition(e) {
+    selectX = e.pageX;
+    selectY = e.pageY;
   };
 </script>
 
@@ -75,7 +79,7 @@
   <div class="col-12 col-sm-12 col-lg-12">
     <div class="thumbnail">
       <p><b id="text_reading_name">{{reading.name}}</b></p>
-      <textarea readonly style="width:100%" class="autogrow_article" onselect="selectWord(event);">{{reading.article}}</textarea>
+      <textarea readonly style="width:100%" class="autogrow_article" onmouseup="selectPosition(event)" onselect="selectWord(event);">{{reading.article}}</textarea>
     </div>
   </div>
   {% for ques in reading.questions %}
