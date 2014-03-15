@@ -6,6 +6,8 @@ English online teaching and testing system.
 Todo
 -----
 * 统计信息：对教师所教的所有学生建立图表，包括直方图，排名表等信息
+* 直方图不再显示单词学习信息，改为得分统计，学习事件统计，横轴为日期
+* 只有学生点击了“学习”中的某课程，才将其加入home page
 * 美化：活泼
 * 发布 1.0 版本
 * 部署nginx，局域网DNS/DHCP，数据备份(distributed mongodb)
