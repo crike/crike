@@ -59,8 +59,12 @@
                .css({'left':x+'px','top':y+'px'}).show();
     $.get("/wordpopup/"+word, function(data){
       $('#loading').remove();
-      $('#popup').append('<p>'+data.phonetics+'</p>')
-                 .append('<textarea readonly style="width:100%">'+data.mean+'</textarea>');
+      $('#popup').append('<p>'+data.phonetics+
+                         ' <a onmouseover="delayPlay(\'/media/audios/'+word+'.mp3\');"'+
+                            'onmouseout ="clearTimeout(timer);"'+ 
+                            'onclick="playSound(\'/media/audios/'+word+'.mp3\');"'+ 
+                            'title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a></p>')
+                 .append('<textarea readonly style="width:100%;height:80px">'+data.mean+'</textarea>');
     }, "json");
   };
   function selectPosition(e) {
