@@ -1284,3 +1284,29 @@ class WordPopupView(TemplateView):
         data = simplejson.dumps(some_data_to_dump)
         return HttpResponse(data, mimetype='application/json')
 
+    def post(self, request, wordname):
+        words = Word.objects.filter(name=wordname)
+        if not words:
+            return HttpResponse(status=404)
+        else:
+            word = words[0]
+
+        book_obj = Book.objects.get_or_create(name=request.user.username, is_public=False)[0]
+        lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
+        lesson_obj = None
+        if len(lesson_embs) > 0:
+            lesson_emb = lesson_embs[0]
+            lesson_obj = get_lessonobj(lesson_emb)
+            lesson_obj.book = book_obj
+            book_obj.lessons.remove(lesson_emb)
+            lesson_obj.words.append(word.id)
+        else:
+            lesson_obj = Lesson(name='strange words', book=book_obj)
+            lesson_obj.words.append(word.id)
+
+        lesson_obj.save()
+        book_obj.lessons.append(lesson_obj)
+        book_obj.save()
+
+        return HttpResponse(status=204)
+
