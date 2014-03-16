@@ -1299,7 +1299,8 @@ class WordPopupView(TemplateView):
             lesson_obj = get_lessonobj(lesson_emb)
             lesson_obj.book = book_obj
             book_obj.lessons.remove(lesson_emb)
-            lesson_obj.words.append(word.id)
+            if not word.id in lesson_obj.words:
+                lesson_obj.words.append(word.id)
         else:
             lesson_obj = Lesson(name='strange words', book=book_obj)
             lesson_obj.words.append(word.id)
