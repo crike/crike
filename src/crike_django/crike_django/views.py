@@ -262,10 +262,6 @@ class TeacherView(TemplateView):
     def post(self, request, *args, **kwargs):
         return HttpResponse("Not implement yet")
 
-def hello_crike(request):
-    print request
-    return HttpResponse("Hello crike!")
-
 def play_audio(request, name):
     #word = Word.objects.filter(name=name)[0]
     #return HttpResponse(word.audio.read(), content_type="audio/mpeg")
@@ -333,7 +329,6 @@ class UserHeadSculptureView(TemplateView):
         return HttpResponseForbidden('allowed only via POST')
     
     def post(self, request, *args, **kwargs):
-        # print request.POST
         form = UploadHeadSculptureForm(request.POST, request.FILES)
         if form.is_valid():
             profile = get_profile(request.user)
@@ -651,9 +646,6 @@ class LessonPickView(TemplateView):
         page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
-        print "nnnnnnnnnnnnnnnn"
-        print num, page, ret
-        print "nnnnnnnnnnnnnnnn"
 
         self._record(request, book, lesson)
 
@@ -695,9 +687,6 @@ class LessonFillView(TemplateView):
         page = request.POST.get('page')
         num = request.POST.get('num')
         ret = request.POST.get('ret')
-        print "nnnnnnnnnnnnnnnn"
-        print num, page, ret
-        print "nnnnnnnnnnnnnnnn"
 
         self._record(request, book, lesson)
         if page == '0':
@@ -726,9 +715,6 @@ class LessonDictationView(TemplateView):
         num = request.POST.get('num')
         ret = request.POST.get('ret')
         words = request.POST.get('words')
-        print "nnnnnnnnnnnnnnnn"
-        print num, ret, words
-        print "nnnnnnnnnnnnnnnn"
         self._record(request, book, lesson)
         self._success(request, book, lesson)
         return HttpResponseRedirect('/home')
@@ -1260,7 +1246,6 @@ class BooksAdminView(TemplateView):
 class WordPopupView(TemplateView):
 
     def get(self, request, wordname):
-        print "pppppppppppppppp"
         data = None
         words = Word.objects.filter(name=wordname)
         if not words:
