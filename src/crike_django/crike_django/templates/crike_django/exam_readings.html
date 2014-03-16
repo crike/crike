@@ -55,7 +55,7 @@
     var x = selectX + 150;
     var y = selectY + 80;
     $('#popup').html('<a herf="#"><i class="fa fa-times-circle" style="float:right;cursor:pointer" onclick="cancelPopup()"></i></a>'+
-                     '<a herf="#"><i class="fa fa-plus" style="float:right;cursor:pointer" onclick="addToStrange(\''+word+'\')"></i></a>'+
+                     '<a herf="#"><i class="fa fa-plus" style="float:right;cursor:pointer;margin-right:5px" onclick="addToStrange(\''+word+'\')"></i></a>'+
                      '<p><b>'+word+'</b></p><p id="loading">Loading...</p>')
                .css({'left':x+'px','top':y+'px'}).show();
     $.get("/wordpopup/"+word, function(data){
