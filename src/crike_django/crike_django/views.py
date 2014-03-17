@@ -203,7 +203,7 @@ class HomeView(TemplateView):
         # TODO:
         # update_user_from_wer(request)
 
-        books = Book.objects.filter(is_public=True) | Book.objects.filter(name=request.user.username)
+        books = Book.objects.filter(name=request.user.username)
         todos = []
         for book in books:
             for lesson in book.lessons:
@@ -212,20 +212,27 @@ class HomeView(TemplateView):
                 lesson.stat = stat
                 todos.append({'book':book, 'lesson':lesson})
 
-                if stat.percent == 100 and lesson.name != 'strange words':
-                    exams = filter(lambda x: lesson in x.lessons, Exam.objects.all())
-                    for exam in exams:
-                        ready = True
-                        for lesson in exam.lessons:
-                            stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
-                                                                   lesson=lesson)
-                            if stat.percent != 100:
-                                ready = False
-                                break
-                        if ready:
-                            examstat = ExamStat.objects.get_or_create(
-                                    user=request.user, exam=exam)[0]
-                            examstat.save()
+        stats = LessonStat.objects.filter(user=request.user)
+        for stat in stats:
+            lesson = stat.lesson
+            if lesson.name != 'strange words':
+                lesson.stat = stat
+                todos.append({'book':lesson.book, 'lesson':lesson})
+
+            if stat.percent == 100:
+                exams = filter(lambda x: lesson in x.lessons, Exam.objects.all())
+                for exam in exams:
+                    ready = True
+                    for lesson in exam.lessons:
+                        stat, retval = lesson.lessonstat_set.get_or_create(user=request.user,
+                                                               lesson=lesson)
+                        if stat.percent != 100:
+                            ready = False
+                            break
+                    if ready:
+                        examstat = ExamStat.objects.get_or_create(
+                                user=request.user, exam=exam)[0]
+                        examstat.save()
 
         return render(request, self.template_name, {
             'todos': todos,
@@ -719,8 +726,8 @@ class LessonDictationView(TemplateView):
         self._success(request, book, lesson)
         return HttpResponseRedirect('/home')
 
-class BooksStudyView(TemplateView):
-    template_name='crike_django/books_study.html'
+class LessonsChooseView(TemplateView):
+    template_name='crike_django/lessons_choose.html'
 
     def get(self, request):
         update_strange_words_lesson(request)
@@ -755,7 +762,16 @@ class BooksStudyView(TemplateView):
 
 
     def post(self, request, *args, **kwargs):
-        return HttpResponseRedirect("/study/books/")
+        id = request.POST.get('id')
+        lessons = Lesson.objects.filter(id=id)
+        if not lessons:
+            return HttpResponse(status=404)
+        lesson = lessons[0]
+        lesson_result = LessonStat.objects.get_or_create(user=request.user,
+                                                         lesson=lesson)[0]
+        lesson_result.save()
+
+        return HttpResponse(status=204)
 
 def exam_creator(book, unit):
     words_list = []

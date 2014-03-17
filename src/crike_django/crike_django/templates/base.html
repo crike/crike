@@ -122,6 +122,37 @@ padding: 10px 10px 0 20px; }
 text-transform: capitalize; }
 .subject-header-container .subject-header .subject-header-description p {
 font-size: 16px; } }
+/* for popup */
+.alert-messages {
+position: fixed;
+top: 47px;
+left: 0;
+right: 0;
+z-index: 7000;
+}
+
+.message {
+position: relative;
+width: 500px;
+padding: 10px 12px;
+margin: 0 auto;
+text-shadow: 0 -1px 1px rgba(0,0,0,.5);
+background: #111;
+background: rgba(20,20,20,.9);
+border-radius: 6px;
+-webkit-box-shadow: 0 2px 4px rgba(0,0,0,.25);
+box-shadow: 0 2px 4px rgba(0,0,0,.25);
+}
+
+.message .message-text {
+display: block;
+margin-right: 20px;
+color: #ccc;
+font-size: 12px;
+line-height: 16px;
+text-align: center;
+}
+
 
     </style>
 
@@ -151,9 +182,9 @@ font-size: 16px; } }
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_languagearts_30x30.png' %}"></div>
               <div class="subject-title">{% trans '课本' %}</div>
             </a></li>
-            <li class="{% active request 'study' %} subject-item"><a href="{% url 'study' %}">
+            <li class="{% active request 'lessonschoose' %} subject-item"><a href="{% url 'lessonschoose' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_healthskills_30x30.png' %}"></div>
-              <div class="subject-title">{% trans '学习' %}</div>
+              <div class="subject-title">{% trans '选课' %}</div>
             </a></li>
             <li class="{% active request 'prize' %} subject-item"><a href="{% url 'prize' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_computerskills_30x30.png' %}"></div>

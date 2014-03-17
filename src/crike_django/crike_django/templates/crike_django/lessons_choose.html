@@ -11,11 +11,68 @@
     overflow:hidden;
     text-overflow:ellipsis;
 }
+
 </style>
 <!-- <link href="/static/index.css" rel="stylesheet" type="text/css"/> -->
 {% endblock %}
 
 {% block content %}
+<script>
+  //solve the csrf token issue
+  function getCookie(name)
+  {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = jQuery.trim(cookies[i]);
+              // Does this cookie string begin with the name we want?
+   
+              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+ 
+  function addToMine(lessonid) {
+    //solve the csrf token issue
+    $.ajaxSetup({ 
+         beforeSend: function(xhr, settings) {
+             if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                 // Only send the token to relative URLs i.e. locally.
+                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+             }
+         } 
+    });
+
+    $.post("/lessonschoose/", {id: lessonid })
+    .done(function(){
+      popup_message("已加入我的课程！");
+    });
+  };
+
+function popup_message(text)
+{
+    $('#message-drawer .message-text').text(text);
+    $('#message-drawer').show();
+    $('#message-drawer').fadeTo("fast", 1.0);
+    $('#message-drawer').fadeTo(3000, 0, function(){
+        $(this).hide();
+    }); 
+}
+
+</script>
+<div class="alert-messages" id="message-drawer" style="opacity: 0; top: 60px; display: none;">                                                    
+ <div class="message ">
+   <div class="message-inside">
+     <span class="message-text"></span>
+     <a class="dismiss" href="#" style="display: none;">×</a>
+   </div>
+ </div>
+</div>
 <div id='padding-top'></div>
 <div class='row'>
 <div class="container subject-header-container clearfix">
@@ -34,12 +91,6 @@
 </div>
 <br/>
 <br/>
-<!-- 
-  <div class="jumbotron">
-    <h1>Crike -- 课程选择</h1>
-    <a title="返回" href="/">返回首页</a>
-  </div>
- -->
 <!-- Cycle through entries -->
   {% for book in books %}
   <div class="panel panel-primary">
@@ -49,7 +100,7 @@
     <div class="panel-body">
     {% for lesson in book.lessons|dictsort:"name" %}
       <div class="col-6 col-sm-6 col-lg-3">  
-        <a class="thumbnail" style="width:100%" title="开始学习" href="/study/book/{{book.name}}/lesson/{{lesson.name}}/show">
+        <a class="thumbnail" style="width:100%;cursor:pointer" title="加入我的课程" onclick="addToMine('{{lesson.id}}')">
           <div class="caption"></div>
           <p>课程：{{lesson.name}}</p>
           <div>{% include 'crike_django/lesson_result.html' %}</div>
