@@ -107,13 +107,13 @@
     });
 
     $.post("/wordpopup/"+word, function(){
-      popup_message("Add to strange words successfully!");
+      popup_message("已加入生词本！");
     });
   };
 
 function popup_message(text)
 {
-    $('#message-drawer .message-text').text("已加入生词本！");
+    $('#message-drawer .message-text').text(text);
     $('#message-drawer').show();
     $('#message-drawer').fadeTo("fast", 1.0);
     $('#message-drawer').fadeTo(3000, 0, function(){
