@@ -61,31 +61,14 @@ text-align:center;
 {% endblock %}
 
 {% block body_footer%}
-<script src="{% static 'jquery.knob/1.2.2/jquery.knob.min.js' %}"></script>
 <script src="{% static 'flot/0.8.1/jquery.flot.min.js' %}"></script>
 <script src="{% static 'flot/0.8.1/jquery.flot.time.min.js' %}"></script>
 <script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script>
 <script src="{% static 'chart.js/0.2.0/chart.js' %}"></script>
 
-<!-- <script src="http://cdn.jsdelivr.net/jquery.knob/1.2.2/jquery.knob.min.js"></script>
-<script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.min.js"></script>
-<script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.time.min.js"></script>
-<script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script> -->
-
-<script>
-{% include 'js/csrf.js' %}
-$(function() {
-    $(".dial").knob({
-    	readOnly:true,
-        'draw': function () {
-        	$(this.i).val(this.cv + '%')
-        }
-    });
-    $(".knob").knob();
-});
-</script>
-
 <script type="text/javascript">
+{% include 'js/csrf.js' %}
+
 $(function() {
 
 	var accuracy = [],
@@ -191,6 +174,7 @@ $(function() {
 
 	$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
 });
+
 $('#clear_button').on('click', function(){
 	$.ajax({
 	    url: '{% url "user_history" %}',
