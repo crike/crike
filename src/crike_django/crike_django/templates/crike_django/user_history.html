@@ -65,6 +65,7 @@ text-align:center;
 <script src="{% static 'flot/0.8.1/jquery.flot.min.js' %}"></script>
 <script src="{% static 'flot/0.8.1/jquery.flot.time.min.js' %}"></script>
 <script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script>
+<script src="{% static 'chart.js/0.2.0/chart.js' %}"></script>
 
 <!-- <script src="http://cdn.jsdelivr.net/jquery.knob/1.2.2/jquery.knob.min.js"></script>
 <script src="http://cdn.bootcss.com/flot/0.8.1/jquery.flot.min.js"></script>
@@ -84,121 +85,120 @@ $(function() {
 });
 </script>
 
-	<script type="text/javascript">
+<script type="text/javascript">
+$(function() {
 
-	$(function() {
+	var accuracy = [],
+		liveness = [];
 
-		var accuracy = [],
-			liveness = [];
+	//for (var i = 0; i < 14; i += 0.5) {
+		//accuracy.push(['{{h.date|date:"U"}}', {{h.correct_num}}]);
+		//liveness.push(['{{h.date|date:"U"}}', {{h.mistake_num}}]);
+	var i = 0;
+	{% for h in user_history %}
+	i++;
+	accuracy.push([i, {{h.correct_num}}]);
+	liveness.push([i, {{h.mistake_num}}]);
+	{% endfor %}
+	//}
 
-		//for (var i = 0; i < 14; i += 0.5) {
-			//accuracy.push(['{{h.date|date:"U"}}', {{h.correct_num}}]);
-			//liveness.push(['{{h.date|date:"U"}}', {{h.mistake_num}}]);
-		var i = 0;
-		{% for h in user_history %}
-		i++;
-		accuracy.push([i, {{h.correct_num}}]);
-		liveness.push([i, {{h.mistake_num}}]);
-		{% endfor %}
-		//}
-
-		var plot = $.plot("#placeholder", [
-			{ data: accuracy, label: "正确次数(x)", color: "#5482FF"},
-			{ data: liveness, label: "错误次数(x)"},
-		], {
-			series: {
-				lines: {
-					show: false
-				},
-				points: {
-					show: false,
-				},
-				bars: {
-					show: true,
-				}
+	var plot = $.plot("#placeholder", [
+		{ data: accuracy, label: "正确次数(x)", color: "#5482FF"},
+		{ data: liveness, label: "错误次数(x)"},
+	], {
+		series: {
+			lines: {
+				show: false
+			},
+			points: {
+				show: false,
 			},
 			bars: {
-                barWidth: 0.5,
-				align: 'center',
-			},
-			grid: {
-				hoverable: true,
-				clickable: true
-			},
-			xaxis: {
-				axisLabel: '单词',
-				axisLabelUseCanvas: true,
-				axisLabelFontSizePixels: 12,
-				axisLabelPadding: 10,
-				axisLabelFontFamily: 'Verdana, Arial',
-				mode: "time",
-				timeformat: "%m/%d/%h",
-				ticks: [
-				        //'{{h.date|date:"U"}}'
-				        {% for h in user_history %}
-				        [{{forloop.counter}}, '{{h.word}}'],
-				        {% endfor %}
-				       ]
-			},
-			yaxis: {
-				axisLabel: '正确率',
-				axisLabelUseCanvas: true,
-				axisLabelFontSizePixels: 12,
-				axisLabelPadding: 10,
-				axisLabelFontFamily: 'Verdana, Arial',
+				show: true,
 			}
-		});
-
-		$("<div id='user_history_tooltip'></div>").css({
-			position: "absolute",
-			display: "none",
-			border: "1px solid #fdd",
-			padding: "2px",
-			"background-color": "#fee",
-			opacity: 0.80
-		}).appendTo("body");
-
-		$("#placeholder").bind("plothover", function (event, pos, item) {
-
-			if ($("#enablePosition:checked").length > 0) {
-				var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
-				$("#hoverdata").text(str);
-			}
-
-			//if ($("#enableTooltip:checked").length > 0) {
-				if (item) {
-					var x = item.datapoint[0].toFixed(2),
-						y = item.datapoint[1].toFixed(2);
-
-					var d = new Date(x * 1000);
-					$("#user_history_tooltip").html(item.series.label + " of " + d + " = " + y)
-						.css({top: item.pageY+5, left: item.pageX+5})
-						.fadeIn(200);
-				} else {
-					$("#user_history_tooltip").hide();
-				}
-			//}
-		});
-
-		$("#placeholder").bind("plotclick", function (event, pos, item) {
-			if (item) {
-				$("#clickdata").text(" - click point " + item.dataIndex + " in " + item.series.label);
-				plot.highlight(item.series, item.datapoint);
-			}
-		});
-
-		// Add the Flot version string to the footer
-
-		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
+		},
+		bars: {
+               barWidth: 0.5,
+			align: 'center',
+		},
+		grid: {
+			hoverable: true,
+			clickable: true
+		},
+		xaxis: {
+			axisLabel: '单词',
+			axisLabelUseCanvas: true,
+			axisLabelFontSizePixels: 12,
+			axisLabelPadding: 10,
+			axisLabelFontFamily: 'Verdana, Arial',
+			mode: "time",
+			timeformat: "%m/%d/%h",
+			ticks: [
+			        //'{{h.date|date:"U"}}'
+			        {% for h in user_history %}
+			        [{{forloop.counter}}, '{{h.word}}'],
+			        {% endfor %}
+			       ]
+		},
+		yaxis: {
+			axisLabel: '正确率',
+			axisLabelUseCanvas: true,
+			axisLabelFontSizePixels: 12,
+			axisLabelPadding: 10,
+			axisLabelFontFamily: 'Verdana, Arial',
+		}
 	});
-	$('#clear_button').on('click', function(){
-		$.ajax({
-		    url: '{% url "user_history" %}',
-		    type: 'DELETE',
-		    success: function(result) {
-		        location.reload();
-		    }
-		});
-	})
-	</script>
+
+	$("<div id='user_history_tooltip'></div>").css({
+		position: "absolute",
+		display: "none",
+		border: "1px solid #fdd",
+		padding: "2px",
+		"background-color": "#fee",
+		opacity: 0.80
+	}).appendTo("body");
+
+	$("#placeholder").bind("plothover", function (event, pos, item) {
+
+		if ($("#enablePosition:checked").length > 0) {
+			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
+			$("#hoverdata").text(str);
+		}
+
+		//if ($("#enableTooltip:checked").length > 0) {
+			if (item) {
+				var x = item.datapoint[0].toFixed(2),
+					y = item.datapoint[1].toFixed(2);
+
+				var d = new Date(x * 1000);
+				$("#user_history_tooltip").html(item.series.label + " of " + d + " = " + y)
+					.css({top: item.pageY+5, left: item.pageX+5})
+					.fadeIn(200);
+			} else {
+				$("#user_history_tooltip").hide();
+			}
+		//}
+	});
+
+	$("#placeholder").bind("plotclick", function (event, pos, item) {
+		if (item) {
+			$("#clickdata").text(" - click point " + item.dataIndex + " in " + item.series.label);
+			plot.highlight(item.series, item.datapoint);
+		}
+	});
+
+	// Add the Flot version string to the footer
+
+	$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
+});
+$('#clear_button').on('click', function(){
+	$.ajax({
+	    url: '{% url "user_history" %}',
+	    type: 'DELETE',
+	    success: function(result) {
+	        location.reload();
+	    }
+	});
+})
+</script>
 {% endblock %}
