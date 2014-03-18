@@ -1,178 +1,36 @@
-
 {% extends 'base.html' %}
 {% load staticfiles %}
 
 {% block header %}
 <style>
 
-.demo-container {
-	box-sizing: border-box;
-
-	height: 450px;
-	padding: 20px 15px 15px 15px;
-	border: 1px solid #ddd;
-	background: #fff;
-	background: linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-	background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
-	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-	-o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	-ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	-moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.demo-placeholder {
-	width: 100%;
-	height: 100%;
-	font-size: 14px;
-	line-height: 1.2em;
-}
-
-.legend table {
-	border-spacing: 5px;
-}
-
-.thumbnail {
-text-align:center;
-}
-
 </style>
 {% endblock %}
 
 {% block content %}
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="page-header">
-              <h1 id="tables">学习历史</h1>
-              <button id="clear_button" type="button" class="btn btn-primary">清空</button>
-            </div>
-
-	        <div id="content">
-		        <div class="demo-container">
-			        <div id="placeholder" class="demo-placeholder"></div>
-		        </div>
-	        </div>
-	      </div>
-	    </div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="page-header">
+      <h1 id="tables">学习历史</h1>
+      <button id="clear_button" type="button" class="btn btn-primary">清空</button>
+    </div>
+    <div id="content">
+     <div class="demo-container">
+      <div id="placeholder" class="demo-placeholder"></div>
+     </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 
-{% block body_footer%}
-<script src="{% static 'flot/0.8.1/jquery.flot.min.js' %}"></script>
-<script src="{% static 'flot/0.8.1/jquery.flot.time.min.js' %}"></script>
-<script src="{% static 'flot/jquery.flot.axislabels.js' %}"></script>
+{% block body_footer %}
 <script src="{% static 'chart.js/0.2.0/chart.js' %}"></script>
-
 <script type="text/javascript">
 {% include 'js/csrf.js' %}
 
 $(function() {
 
-	var accuracy = [],
-		liveness = [];
-
-	//for (var i = 0; i < 14; i += 0.5) {
-		//accuracy.push(['{{h.date|date:"U"}}', {{h.correct_num}}]);
-		//liveness.push(['{{h.date|date:"U"}}', {{h.mistake_num}}]);
-	var i = 0;
-	{% for h in user_history %}
-	i++;
-	accuracy.push([i, {{h.correct_num}}]);
-	liveness.push([i, {{h.mistake_num}}]);
-	{% endfor %}
-	//}
-
-	var plot = $.plot("#placeholder", [
-		{ data: accuracy, label: "正确次数(x)", color: "#5482FF"},
-		{ data: liveness, label: "错误次数(x)"},
-	], {
-		series: {
-			lines: {
-				show: false
-			},
-			points: {
-				show: false,
-			},
-			bars: {
-				show: true,
-			}
-		},
-		bars: {
-               barWidth: 0.5,
-			align: 'center',
-		},
-		grid: {
-			hoverable: true,
-			clickable: true
-		},
-		xaxis: {
-			axisLabel: '单词',
-			axisLabelUseCanvas: true,
-			axisLabelFontSizePixels: 12,
-			axisLabelPadding: 10,
-			axisLabelFontFamily: 'Verdana, Arial',
-			mode: "time",
-			timeformat: "%m/%d/%h",
-			ticks: [
-			        //'{{h.date|date:"U"}}'
-			        {% for h in user_history %}
-			        [{{forloop.counter}}, '{{h.word}}'],
-			        {% endfor %}
-			       ]
-		},
-		yaxis: {
-			axisLabel: '正确率',
-			axisLabelUseCanvas: true,
-			axisLabelFontSizePixels: 12,
-			axisLabelPadding: 10,
-			axisLabelFontFamily: 'Verdana, Arial',
-		}
-	});
-
-	$("<div id='user_history_tooltip'></div>").css({
-		position: "absolute",
-		display: "none",
-		border: "1px solid #fdd",
-		padding: "2px",
-		"background-color": "#fee",
-		opacity: 0.80
-	}).appendTo("body");
-
-	$("#placeholder").bind("plothover", function (event, pos, item) {
-
-		if ($("#enablePosition:checked").length > 0) {
-			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
-			$("#hoverdata").text(str);
-		}
-
-		//if ($("#enableTooltip:checked").length > 0) {
-			if (item) {
-				var x = item.datapoint[0].toFixed(2),
-					y = item.datapoint[1].toFixed(2);
-
-				var d = new Date(x * 1000);
-				$("#user_history_tooltip").html(item.series.label + " of " + d + " = " + y)
-					.css({top: item.pageY+5, left: item.pageX+5})
-					.fadeIn(200);
-			} else {
-				$("#user_history_tooltip").hide();
-			}
-		//}
-	});
-
-	$("#placeholder").bind("plotclick", function (event, pos, item) {
-		if (item) {
-			$("#clickdata").text(" - click point " + item.dataIndex + " in " + item.series.label);
-			plot.highlight(item.series, item.datapoint);
-		}
-	});
-
-	// Add the Flot version string to the footer
-
-	$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
 });
 
 $('#clear_button').on('click', function(){
