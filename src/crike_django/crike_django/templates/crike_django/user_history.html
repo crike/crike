@@ -20,7 +20,7 @@ margin-right: auto;
       <button id="clear_button" type="button" class="btn btn-primary">清空</button>
     </div>
     <div id="content">
-     <canvas id="myChart" width="800" height="400"></canvas>
+     <canvas id="myChart" width=900 height="400"></canvas>
     </div>
   </div>
 </div>
@@ -34,27 +34,27 @@ margin-right: auto;
 
 $(function() {
 	var data = {
-		labels : ["January","February","March","April","May","June","July"],
+		labels : [{%for h in user_history%}"{{ h.word }}",{%endfor%}],
 		datasets : [
 			{
 				fillColor : "rgba(220,220,220,0.5)",
 				strokeColor : "rgba(220,220,220,1)",
 				pointColor : "rgba(220,220,220,1)",
 				pointStrokeColor : "#fff",
-				data : [65,59,90,81,56,55,40]
+				data : [{%for h in user_history%}{{ h.correct_num }},{%endfor%}]
 			},
 			{
 				fillColor : "rgba(151,187,205,0.5)",
 				strokeColor : "rgba(151,187,205,1)",
 				pointColor : "rgba(151,187,205,1)",
 				pointStrokeColor : "#fff",
-				data : [28,48,40,19,96,27,100]
+				data : [{%for h in user_history%}{{ h.mistake_num }},{%endfor%}]
 			}
 		]
 	}
 	//Get the context of the canvas element we want to select
 	var ctx = document.getElementById("myChart").getContext("2d");
-	new Chart(ctx).Line(data);
+	new Chart(ctx).Bar(data);
 });
 
 $('#clear_button').on('click', function(){
