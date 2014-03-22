@@ -12,3 +12,7 @@
 * django-registration
 * django-crispy-forms
 * django-admin-bootstrapped
+
+###python
+* python-dev (apt-get install python-dev)
+* Pillow (pip install Pillow)
