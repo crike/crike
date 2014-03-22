@@ -1,13 +1,14 @@
 ###djanog-nonrel
+**http://django-mongodb-engine.readthedocs.org/en/latest/topics/setup.html**
 * django-nonrel
 * djangotoolbox
-* mongodb-engine
+* django-mongodb-engine
 
 ###mongodb
 * mongodb
 * pymongo
 
 ###misc
-* registration
-* crispy-forms
+* django-registration
+* django-crispy-forms
 * django-admin-bootstrapped
