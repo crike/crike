@@ -287,10 +287,15 @@ function expandExam(me) {
     $(me).prop('class','fa fa-caret-down');
   }
 };
-function deleteExam(me) {
+function deleteExam(e,me) {
   var form = $(me).parents('form');
-  $('<input>').attr({name:'delexam', value:'true', hidden:'true'}).appendTo(form);
-  $(form).submit();
+  var examname = form.find('.editable_examname').text()
+  if (confirm('你确定要删除考试："'+examname+'"?')) {
+    $('<input>').attr({name:'delexam', value:'true', hidden:'true'}).appendTo(form);
+    $(form).submit();
+  } else {
+    e.preventDefault();
+  }
 };
 </script>
 
@@ -584,7 +589,7 @@ function deleteExam(me) {
     <b id="modified" style="display:none">&nbsp&nbsp*</b>
     <button onclick="saveExam(event, this);" class="btn btn-success" style="float:right;display:none">
       <i class="fa fa-save"></i></button>
-    <button class="btn btn-danger" style="float:right;" onclick="deleteExam(this);">
+    <button class="btn btn-danger" style="float:right;" onclick="deleteExam(event,this);">
       <i class="fa fa-minus"></i></button>
   </h2>
   <div class="content" style="display:none">
