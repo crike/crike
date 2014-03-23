@@ -178,10 +178,6 @@ text-align: center;
         <div class="navbar-collapse collapse subjects">
           <ul class="nav navbar-nav">
             <li class="{% active request 'auth' %} hide"><a href="{% url 'auth' %}">{% trans '账户' %}</a></li>
-            <li class="{% active request 'books' %} subject-item"><a href="{% url 'books' %}">
-              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_languagearts_30x30.png' %}"></div>
-              <div class="subject-title">{% trans '课本' %}</div>
-            </a></li>
             <li class="{% active request 'lessonschoose' %} subject-item"><a href="{% url 'lessonschoose' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_healthskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans '选课' %}</div>
@@ -200,6 +196,10 @@ text-align: center;
               </ul>
             </li>
             {% if user.teacher %}
+            <li class="{% active request 'books' %} subject-item"><a href="{% url 'books' %}">
+              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_languagearts_30x30.png' %}"></div>
+              <div class="subject-title">{% trans '课本' %}</div>
+            </a></li>
             <li class="{% active request 'exam' %} subject-item"><a href="{% url 'exam' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_environmentalskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans "试题" %}</div>
