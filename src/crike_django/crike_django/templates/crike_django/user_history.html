@@ -30,13 +30,11 @@ margin-right: auto;
      <canvas id="historyChart" width="600" height="300"></canvas>
     </div>
     <div class="col-md-4">
-     <canvas id="historyChartText" width="449" height="300"></canvas>
     </div>
     <div class="col-md-8">
      <canvas id="tagsChart" width="600" height="300"></canvas>
     </div>
     <div class="col-md-4">
-     <canvas id="tagsChartText" width="449" height="300"></canvas>
     </div>
   </div>
 </div>
@@ -74,23 +72,21 @@ $(function() {
 });
 
 $(function() {
-    var data = [
-        {
-            value: 30,
-            color:"#F38630"
-        },
-        {
-            value : 50,
-            color : "#E0E4CC"
-        },
-        {
-            value : 100,
-            color : "#69D2E7"
-        }
-    ]
+	var data = {
+			labels : [{% for k, v in tags.items %}"{{ k }}",{% endfor %}],
+			datasets : [
+				{
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					data : [{% for k, v in tags.items %}{{ v }},{% endfor %}]
+				},
+			]
+		}
     //Get the context of the canvas element we want to select
     var ctx = document.getElementById("tagsChart").getContext("2d");
-    new Chart(ctx).Pie(data);
+    new Chart(ctx).Radar(data);
 });
 
 $('#clear_button').on('click', function(){
