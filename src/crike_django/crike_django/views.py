@@ -312,7 +312,16 @@ class UserHistoryView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         user_history = WordEventRecorder.objects.filter(user=request.user)
-        return render(request, self.template_name, {'user_history': user_history})
+        tags = {}
+        for history in user_history:
+            if history.tag not in tags:
+                tags[history.tag] = 0
+            tags[history.tag] += 1
+        print tags
+        return render(request, self.template_name, {
+                'user_history': user_history,
+                'tags': tags,
+        })
 
     def delete(self, request, *args, **kwargs):
         WordEventRecorder.objects.filter(user=request.user).delete()
