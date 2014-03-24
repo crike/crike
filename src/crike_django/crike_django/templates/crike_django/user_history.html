@@ -3,8 +3,15 @@
 
 {% block header %}
 <style>
-#myChart {
-background-color: white;
+#historyChart {
+/* background-color: white; */
+display: block;
+margin-left: auto;
+margin-right: auto;
+padding: 15px;
+}
+#tagsChart {
+/* background-color: white; */
 display: block;
 margin-left: auto;
 margin-right: auto;
@@ -19,8 +26,17 @@ margin-right: auto;
       <h1 id="tables">学习历史</h1>
       <button id="clear_button" type="button" class="btn btn-primary">清空</button>
     </div>
-    <div id="content">
-     <canvas id="myChart" width=900 height="400"></canvas>
+    <div class="col-md-8">
+     <canvas id="historyChart" width="600" height="300"></canvas>
+    </div>
+    <div class="col-md-4">
+     <canvas id="historyChartText" width="449" height="300"></canvas>
+    </div>
+    <div class="col-md-8">
+     <canvas id="tagsChart" width="600" height="300"></canvas>
+    </div>
+    <div class="col-md-4">
+     <canvas id="tagsChartText" width="449" height="300"></canvas>
     </div>
   </div>
 </div>
@@ -33,38 +49,58 @@ margin-right: auto;
 {% include 'js/csrf.js' %}
 
 $(function() {
-	var data = {
-		labels : [{%for h in user_history%}"{{ h.word }}",{%endfor%}],
-		datasets : [
-			{
-				fillColor : "rgba(220,220,220,0.5)",
-				strokeColor : "rgba(220,220,220,1)",
-				pointColor : "rgba(220,220,220,1)",
-				pointStrokeColor : "#fff",
-				data : [{%for h in user_history%}{{ h.correct_num }},{%endfor%}]
-			},
-			{
-				fillColor : "rgba(151,187,205,0.5)",
-				strokeColor : "rgba(151,187,205,1)",
-				pointColor : "rgba(151,187,205,1)",
-				pointStrokeColor : "#fff",
-				data : [{%for h in user_history%}{{ h.mistake_num }},{%endfor%}]
-			}
-		]
-	}
-	//Get the context of the canvas element we want to select
-	var ctx = document.getElementById("myChart").getContext("2d");
-	new Chart(ctx).Bar(data);
+    var data = {
+        labels : [{%for h in user_history%}"{{ h.word }}",{%endfor%}],
+        datasets : [
+        {
+            fillColor : "rgba(0,100,100,0.5)",
+            strokeColor : "rgba(220,220,220,1)",
+            pointColor : "rgba(220,220,220,1)",
+            pointStrokeColor : "#fff",
+            data : [{%for h in user_history%}{{ h.correct_num }},{%endfor%}]
+        },
+        {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,1)",
+            pointColor : "rgba(151,187,205,1)",
+            pointStrokeColor : "#fff",
+            data : [{%for h in user_history%}{{ h.mistake_num }},{%endfor%}]
+        }
+        ]
+    }
+    //Get the context of the canvas element we want to select
+    var ctx = document.getElementById("historyChart").getContext("2d");
+    new Chart(ctx).Bar(data);
+});
+
+$(function() {
+    var data = [
+        {
+            value: 30,
+            color:"#F38630"
+        },
+        {
+            value : 50,
+            color : "#E0E4CC"
+        },
+        {
+            value : 100,
+            color : "#69D2E7"
+        }
+    ]
+    //Get the context of the canvas element we want to select
+    var ctx = document.getElementById("tagsChart").getContext("2d");
+    new Chart(ctx).Pie(data);
 });
 
 $('#clear_button').on('click', function(){
-	$.ajax({
-	    url: '{% url "user_history" %}',
-	    type: 'DELETE',
-	    success: function(result) {
-	        location.reload();
-	    }
-	});
+    $.ajax({
+        url: '{% url "user_history" %}',
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
+        }
+    });
 })
 </script>
 {% endblock %}
