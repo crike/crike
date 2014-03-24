@@ -215,7 +215,7 @@ class HomeView(TemplateView):
         stats = LessonStat.objects.filter(user=request.user)
         for stat in stats:
             lesson = stat.lesson
-            if lesson.name != 'strange words':
+            if lesson.name != 'strange words' and stat.selected:
                 lesson.stat = stat
                 todos.append({'book':lesson.book, 'lesson':lesson})
 
@@ -769,6 +769,7 @@ class LessonsChooseView(TemplateView):
         lesson = lessons[0]
         lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                          lesson=lesson)[0]
+        lesson_result.selected = True
         lesson_result.save()
 
         return HttpResponse(status=204)
