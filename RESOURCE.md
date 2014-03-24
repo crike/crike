@@ -35,6 +35,10 @@ jquery
   http://www.appelsiini.net/projects/jeditable
   https://code.google.com/p/jquery-in-place-editor/
 
+javascript
+=====
+* chart.js: http://www.chartjs.org/
+
 div + css
 =====
 
