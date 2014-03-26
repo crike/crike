@@ -31,8 +31,25 @@
         onclick="playSound('/meida/audios/crike.mp3');" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
     </h1>
-    <p>{% trans "无法想象未来的你不会说英语会怎样？<br>那就是今天的你不会说普通话的样子" %}</p>
-    <p><a class="btn btn-primary btn-lg" role="button" href="">Learn more</a></p>
+    <p>
+      {% if user.is_authenticated %}
+          
+        {% if user.student %}
+         亲爱的学生 <strong>{{ user.username }}</strong>
+        {% elif user.teacher %}
+         亲爱的教师 <strong>{{ user.username }}</strong>
+        {% else %}
+         亲爱的管理员 <strong>{{ user.username }}</strong>
+        {% endif %}
+          欢迎回来！
+
+      {% else %}
+      <!-- 弹出框相关 -->
+        <button data-toggle="modal" data-target="#loginModal" class="btn btn-primary">登录</button>
+        <button data-toggle="modal" data-target="#registerModal" class="btn btn-success">注册</button>
+      {% endif %}
+    </p>
+    <p>{% trans "学习赢积分，有奖品哦！" %}</p>
     </div>
 
   </div>
