@@ -35,11 +35,11 @@
       {% if user.is_authenticated %}
           
         {% if user.student %}
-         亲爱的学生 <strong>{{ user.username }}</strong>
+        亲爱的学生 <a href="/home/" title="GoTo我的主页"><strong>{{ user.username }}</strong></a>
         {% elif user.teacher %}
-         亲爱的教师 <strong>{{ user.username }}</strong>
+        亲爱的教师 <a href="/home/" title="GoTo我的主页"><strong>{{ user.username }}</strong></a>
         {% else %}
-         亲爱的管理员 <strong>{{ user.username }}</strong>
+        亲爱的管理员 <a href="/home/" title="GoTo我的主页"><strong>{{ user.username }}</strong></a>
         {% endif %}
           欢迎回来！
 
