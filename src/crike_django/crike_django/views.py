@@ -1052,9 +1052,15 @@ class PrizeView(TemplateView):
                 pass
             else:
                 prize = Prize.objects.get(pk=prize_pk)
+                if prize.amount <=0:
+#TODO when a prize amount get to zero, take it off the shelf
+                    kwargs.update({'error_message': 'Prize not available!'})
+                    return self.get_all(request, prize_pk, *args, **kwargs)
                 ret = profile.point_add(-prize.value)
                 if ret is True:
                     profile.save()
+                    prize.amount -= 1
+                    prize.save()
                     PrizeQuery.objects.create(
                         user=request.user,
                         prize=prize,
