@@ -138,6 +138,28 @@ background-color: #F3F3F3;
   </div>
   {% endfor %}
 </div>
+
+<div class="row">
+  <div class="page-header">
+    <h2>我的奖品</h2>
+  </div>
+  {% for pq in prize_queries %}
+  <div class="col-sm-6 col-md-3">
+    <div title="兑换奖品" class="thumbnail">
+      <div class="caption">
+        <h4>奖品名：{{ pq.prize.name }}</h4>
+        <p>奖品分类：{{ pq.prize.category }}</p>
+        <p>奖品价格：{{ pq.value }}</p>
+        {% if pq.done %}
+        <p>获奖时间：{{ pq.date }}</p>
+        {% else %}
+        <p>申请中...</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}
 
 {% block body_footer %}

@@ -234,10 +234,12 @@ class HomeView(TemplateView):
                                 user=request.user, exam=exam)[0]
                         examstat.save()
 
+        prize_queries = PrizeQuery.objects.filter(user=request.user)
         return render(request, self.template_name, {
             'todos': todos,
             'examstats': ExamStat.objects.filter(user=request.user),
-            'header_form': UploadHeadSculptureForm
+            'header_form': UploadHeadSculptureForm,
+            'prize_queries': prize_queries,
         })
 
     def post(self, request, *args, **kwargs):
