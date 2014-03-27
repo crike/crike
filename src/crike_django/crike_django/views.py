@@ -755,7 +755,7 @@ class LessonsChooseView(TemplateView):
             print e
             return HttpResponseRedirect('/error/')#TODO error page
         """
-        books = Book.objects.filter(is_public=True) | Book.objects.filter(name=request.user.username)
+        books = Book.objects.filter(is_public=True)
         if len(books) == 0:
             return render(request, self.template_name,{})
 
