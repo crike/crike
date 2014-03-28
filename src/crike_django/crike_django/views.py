@@ -437,12 +437,12 @@ def profile_record_right(profile, correct_num):
     if profile:
         if correct_num > 0:
             profile.study_cright += 1
+            if profile.study_cright % 10 == 0:
+                profile.point_add(5)
         else:
             profile.study_cright = 0
 
-        if profile.study_cright >= 10:
-            profile.point_add(5)
-            profile.study_cright = 0
+
         profile.save()
 
 
@@ -451,11 +451,11 @@ def profile_record_exam_ret(profile, ret):
         return
     if ret == 'true':
         profile.exam_cright += 1
+        if profile.study_cright % 10 == 0:
+            profile.point_add(10)
     else:
         profile.exam_cright = 0
-    if profile.exam_cright == 10:
-        profile.exam_cright = 0
-        profile.point_add(10)
+
     profile.save()
 
 
