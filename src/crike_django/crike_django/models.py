@@ -123,7 +123,7 @@ class Profile(models.Model):
     last_login_ip = models.IPAddressField(blank=True, null=True)
     last_login_date = models.DateTimeField(blank=True, null=True)
     is_human = models.BooleanField()
-    usage_points = models.IntegerField(default=0)
+    usable_points = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
     biggest_points = models.IntegerField(default=0)
     last_visit = models.DateTimeField(auto_now=True, null=True)
@@ -156,10 +156,11 @@ class Profile(models.Model):
             return False
 
     def point_add(self, point):
-        if self.usage_points + point < 0:
+        if self.usable_points + point < 0:
             return False
-        self.usage_points += point
-        self.total_points += point
+        self.usable_points += point
+        if point > 0:
+            self.total_points += point
         if self.biggest_points < point:
             self.biggest_points = point
         return True
