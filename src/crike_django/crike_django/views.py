@@ -451,7 +451,7 @@ def profile_record_exam_ret(profile, ret):
         return
     if ret == 'true':
         profile.exam_cright += 1
-        if profile.study_cright % 10 == 0:
+        if profile.exam_cright % 10 == 0:
             profile.point_add(10)
     else:
         profile.exam_cright = 0
