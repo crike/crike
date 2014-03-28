@@ -105,7 +105,11 @@
       </form>
     </div>
 <!-- Cycle through entries -->
+    <div class="page-header">
+      <h2>公共课程</h2>
+    </div>
     {% for book in books %}
+    {% if book.is_public %}
     <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandBook(this, '{{book.name}}')"></i></a>
       <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
       {{ book.name }}
@@ -126,6 +130,34 @@
       </div>
       {% endfor %}
     </div>
+    {% endif %}
+    {% endfor %}
+    <div class="page-header">
+      <h2>私有课程</h2>
+    </div>
+    {% for book in books %}
+    {% if not book.is_public %}
+    <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandBook(this, '{{book.name}}')"></i></a>
+      <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
+      {{ book.name }}
+      <div id="checkall{{book.name}}" style="display:none">
+        <input class="checkall" type="checkbox" onclick="checkall(this,'{{book.name}}')">
+        <label style="font-size:50%" for="checkall{{book.name}}">全选</label>
+      </div>
+    </h2>
+    <div class="row" id="contentOf{{book.name}}" style="display:none">
+      {% for lesson in book.lessons|dictsort:"name" %}
+      <div class="col-6 col-sm-6 col-lg-2">  
+        <input type="checkbox" class="{{book.name}}lesson" style="display: none" name='dellessons' value='{{lesson.name}}' onclick="appendlesson(this);">
+        <a class="thumbnail" title="修改" style="width:100%;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
+          <div class="caption"></div>
+          <p><b>{{lesson.name}}</b></p>
+          <p style="color:sienna;">sum:{{lesson.words|length}}</p>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
     {% endfor %}
     <span id="dummy"></span>
 {% endblock %}
