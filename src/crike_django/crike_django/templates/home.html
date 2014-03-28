@@ -28,9 +28,9 @@ background-color: #F3F3F3;
 {% block container_header %}
 
 <header class="user-profile-header header-gray">
-  <div class="container">
+<div class="container">
 
-<div class="row">
+  <div class="row">
 
     <div id="user-info-view" class="col-md-2 pull-left">
       <div class="avatar-wrapper">
@@ -68,32 +68,42 @@ background-color: #F3F3F3;
 
     <div class="user-stats col-md-2">
       <div class="user-points-bar-container">
-      <div class="points-labels">
-        <span class="best">最高得分 <strong class="best-count"> {{ profile.biggest_points }} </strong></span>
-      </div>
-      <div class="points-labels">
-        <span class="best">所有积分 <strong class="best-count"> {{ profile.total_points }} </strong></span>
-      </div>
-      <div class="points-labels">
-        <span class="best">可用积分 <strong class="best-count"> {{ profile.usage_points }} </strong></span>
-      </div>
-      <!-- 今天的分数
-      <div class="points-bar">
-        <span class="points-bar-fill" style="width: 0.0%">今天的分数
-          <span class="count-container count-right">
-            <span class="points-today-count"> XXX </span>
+        <div class="points-labels">
+          <span class="best">最高得分 <strong class="best-count"> {{ profile.biggest_points }} </strong></span>
+        </div>
+        <div class="points-labels">
+          <span class="best">所有积分 <strong class="best-count"> {{ profile.total_points }} </strong></span>
+        </div>
+        <div class="points-labels">
+          <span class="best">可用积分 <strong class="best-count"> {{ profile.usage_points }} </strong></span>
+        </div>
+        <!-- 今天的分数
+        <div class="points-bar">
+          <span class="points-bar-fill" style="width: 0.0%">今天的分数
+            <span class="count-container count-right">
+              <span class="points-today-count"> XXX </span>
+            </span>
           </span>
-        </span>
-      </div> -->
+        </div> -->
+      </div>
     </div>
 
 <!--
 持续时间    <span class="stat-count"> XXX </span> 天
 <div class="last-coded">上次编码<span class="last-coded-time"> XXX 天前</span></div>
 -->
+    <div class="user-stats col-md-2">
+      <div class="user-points-bar-container">
+        <div class="points-labels">
+          <span class="cright">连续做对<strong class="study-cright"> {{ profile.study_cright }}道 </strong>自测题</span>
+        </div>
+        <div class="points-labels">
+          <span class="cright">连续做对<strong class="exam-cright"> {{ profile.exam_cright }}道 </strong>测试题</span>
+        </div>
+      </div>
     </div>
 
-</div>
+  </div>
 
 </div>
 </header>
@@ -145,7 +155,7 @@ background-color: #F3F3F3;
   </div>
   {% for pq in prize_queries %}
   <div class="col-sm-6 col-md-3">
-    <div title="兑换奖品" class="thumbnail">
+    <div title="我的奖品" class="thumbnail">
       <div class="caption">
         <h4>奖品名：{{ pq.prize.name }}</h4>
         <p>奖品分类：{{ pq.prize.category }}</p>
