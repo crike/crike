@@ -159,7 +159,7 @@ def update_strange_words_lesson(request):
     for item in strange_record_list:
         strange_list.append(item.word)
 
-    book_obj = Book.objects.get_or_create(name=request.user.username, is_public=False)[0]
+    book_obj = Book.objects.get_or_create(name=request.user.username+"'s book", is_public=False)[0]
     lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
     lesson_obj = None
     if len(lesson_embs) > 0:
@@ -203,7 +203,7 @@ class HomeView(TemplateView):
         # TODO:
         # update_user_from_wer(request)
 
-        books = Book.objects.filter(name=request.user.username)
+        books = Book.objects.filter(name=request.user.username+"'s book")
         todos = []
         for book in books:
             for lesson in book.lessons:
@@ -609,13 +609,13 @@ class LessonShowView(TemplateView):
     def get(self, request, book, lesson):
         lesson_obj = get_lessonemb(book, lesson)
         if lesson_obj.name != "strange words":
-            lesson_strange = get_lessonemb(request.user.username, "strange words")
+            lesson_strange = get_lessonemb(request.user.username+"'s book", "strange words")
             if len(lesson_strange.words) > 0:
                 lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                                  lesson=lesson_strange)[0]
                 if lesson_result.timestamp.date() != datetime.datetime.now().date():
                     print "need study strange words first!"
-                    return HttpResponseRedirect('/study/book/'+request.user.username+'/lesson/strange words/show')
+                    return HttpResponseRedirect('/study/book/'+request.user.username+"'s book"+'/lesson/strange words/show')
 
         words = get_words_from_lesson(book, lesson)
         if len(words) == 0:
@@ -1310,7 +1310,7 @@ class WordPopupView(TemplateView):
         else:
             word = words[0]
 
-        book_obj = Book.objects.get_or_create(name=request.user.username, is_public=False)[0]
+        book_obj = Book.objects.get_or_create(name=request.user.username+"'s book", is_public=False)[0]
         lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
         lesson_obj = None
         if len(lesson_embs) > 0:
