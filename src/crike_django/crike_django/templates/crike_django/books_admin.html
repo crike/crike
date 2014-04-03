@@ -110,11 +110,11 @@
     </div>
     {% for book in books %}
     {% if book.is_public %}
-    <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandBook(this, '{{book.name}}')"></i></a>
+    <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick='expandBook(this, "{{book.name}}")'></i></a>
       <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
       {{ book.name }}
       <div id="checkall{{book.name}}" style="display:none">
-        <input class="checkall" type="checkbox" onclick="checkall(this,'{{book.name}}')">
+        <input class="checkall" type="checkbox" onclick='checkall(this,"{{book.name}}")'>
         <label style="font-size:50%" for="checkall{{book.name}}">全选</label>
       </div>
     </h2>
@@ -137,11 +137,11 @@
     </div>
     {% for book in books %}
     {% if not book.is_public %}
-    <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandBook(this, '{{book.name}}')"></i></a>
+    <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick='expandBook(this, "{{book.name}}")'></i></a>
       <input class="checkbook" style="display:none" type="checkbox" name='delbook' value='{{book.name}}' onclick="appendbook(this);">
       {{ book.name }}
       <div id="checkall{{book.name}}" style="display:none">
-        <input class="checkall" type="checkbox" onclick="checkall(this,'{{book.name}}')">
+        <input class="checkall" type="checkbox" onclick='checkall(this,"{{book.name}}")'>
         <label style="font-size:50%" for="checkall{{book.name}}">全选</label>
       </div>
     </h2>

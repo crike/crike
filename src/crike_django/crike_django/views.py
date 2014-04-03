@@ -159,8 +159,8 @@ def update_strange_words_lesson(request):
     for item in strange_record_list:
         strange_list.append(item.word)
 
-    book_obj = Book.objects.get_or_create(name=request.user.username+"'s book", is_public=False)[0]
-    lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
+    book_obj = Book.objects.get_or_create(name=request.user.username+"_book", is_public=False)[0]
+    lesson_embs = filter(lambda x: x.name == 'strange_words', book_obj.lessons)
     lesson_obj = None
     if len(lesson_embs) > 0:
         lesson_emb = lesson_embs[0]
@@ -173,13 +173,13 @@ def update_strange_words_lesson(request):
         familiar_record_list = WordStat.objects.filter(correct_num__gte=2,
                                                          user=request.user)
         for item in familiar_record_list:
-            if item.lesson.name == 'strange words':
+            if item.lesson.name == 'strange_words':
                 familiar_list.append(item.word)
         for word in familiar_list:
             if len(filter(lambda x: x == word.id, lesson_obj.words)) > 0:
                 lesson_obj.words.remove(word.id)
     else:
-        lesson_obj = Lesson(name='strange words', book=book_obj)
+        lesson_obj = Lesson(name='strange_words', book=book_obj)
         for word in strange_list:
             lesson_obj.words.append(word.id)
 
@@ -203,7 +203,7 @@ class HomeView(TemplateView):
         # TODO:
         # update_user_from_wer(request)
 
-        books = Book.objects.filter(name=request.user.username+"'s book")
+        books = Book.objects.filter(name=request.user.username+"_book")
         todos = []
         for book in books:
             for lesson in book.lessons:
@@ -215,7 +215,7 @@ class HomeView(TemplateView):
         stats = LessonStat.objects.filter(user=request.user)
         for stat in stats:
             lesson = stat.lesson
-            if lesson.name != 'strange words' and stat.selected:
+            if lesson.name != 'strange_words' and stat.selected:
                 lesson.stat = stat
                 todos.append({'book':lesson.book, 'lesson':lesson})
 
@@ -609,14 +609,14 @@ class LessonShowView(TemplateView):
 
     def get(self, request, book, lesson):
         lesson_obj = get_lessonemb(book, lesson)
-        if lesson_obj.name != "strange words":
-            lesson_strange = get_lessonemb(request.user.username+"'s book", "strange words")
+        if lesson_obj.name != "strange_words":
+            lesson_strange = get_lessonemb(request.user.username+"_book", "strange_words")
             if len(lesson_strange.words) > 0:
                 lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                                  lesson=lesson_strange)[0]
                 if lesson_result.timestamp.date() != datetime.datetime.now().date():
-                    print "need study strange words first!"
-                    return HttpResponseRedirect('/study/book/'+request.user.username+"'s book"+'/lesson/strange words/show')
+                    print "need study strange_words first!"
+                    return HttpResponseRedirect('/study/book/'+request.user.username+"_book"+'/lesson/strange_words/show')
 
         words = get_words_from_lesson(book, lesson)
         if len(words) == 0:
@@ -1311,8 +1311,8 @@ class WordPopupView(TemplateView):
         else:
             word = words[0]
 
-        book_obj = Book.objects.get_or_create(name=request.user.username+"'s book", is_public=False)[0]
-        lesson_embs = filter(lambda x: x.name == 'strange words', book_obj.lessons)
+        book_obj = Book.objects.get_or_create(name=request.user.username+"_book", is_public=False)[0]
+        lesson_embs = filter(lambda x: x.name == 'strange_words', book_obj.lessons)
         lesson_obj = None
         if len(lesson_embs) > 0:
             lesson_emb = lesson_embs[0]
@@ -1322,7 +1322,7 @@ class WordPopupView(TemplateView):
             if not word.id in lesson_obj.words:
                 lesson_obj.words.append(word.id)
         else:
-            lesson_obj = Lesson(name='strange words', book=book_obj)
+            lesson_obj = Lesson(name='strange_words', book=book_obj)
             lesson_obj.words.append(word.id)
 
         lesson_obj.save()
