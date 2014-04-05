@@ -117,7 +117,6 @@ def download_from_iciba(word):
             audio_list = re.findall('asplay\(\'(http://res.+?\.mp3)\'\)', content, re.M | re.S)
             download_audio_from_iciba(audio_list[0], word)
     else:
-        print content
         print('[iciba] '+word.name+' download failed!')
 
 def get_data_from_req(req):
