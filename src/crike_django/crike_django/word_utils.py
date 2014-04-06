@@ -39,12 +39,12 @@ def get_content_from_url(url):
         url_lock.acquire()
         try:
             content = urlopen(url).read().decode('utf-8', 'ignore')
-            time.sleep(1)
+            time.sleep(2)
             url_lock.release()
             break
         except Exception as e:
             attempts += 1
-            time.sleep(1)
+            time.sleep(2)
             url_lock.release()
             print(e)
 
@@ -126,11 +126,11 @@ def get_data_from_req(req):
         data_lock.acquire()
         try:
             binary = urlopen(req)
-            time.sleep(0.5) # be nice to web host
+            time.sleep(2) # be nice to web host
             data_lock.release()
             break
         except Exception as e:
-            time.sleep(0.5) # be nice to web host
+            time.sleep(2) # be nice to web host
             data_lock.release()
             attempts += 1
             print("Attempts: "+str(attempts))
@@ -195,7 +195,7 @@ def download_thread_single_engine(word, engine):
         print("Process init failed")
         process = Process(target=engine, args=(word,))
     process.start()
-    time.sleep(1)
+    time.sleep(2)
 
     while process.is_alive():
         print str(process)+ ' ' + word.name + ' ' + str(count)
