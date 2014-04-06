@@ -291,7 +291,7 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     tempwords = []
     for word in words:
         wordrecord = Word.objects.filter(name=word)
-        if not wordrecord or wordrecord.mean == []:
+        if not wordrecord or wordrecord[0].mean == []:
             tempwords.append(word)
             wordrecord = Word.objects.create(name=word)
             lesson.words.append(wordrecord.id)
