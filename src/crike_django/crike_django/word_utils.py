@@ -209,9 +209,6 @@ def get_word_from_queue(words,engine):
     words_lock.acquire()
     wordname = None
     for word in words:
-        if len(Word.objects.filter(name=word)) > 0:
-           words.remove(word)
-           continue
 # youdao can't download phrase, iciba can!!!
         if engine == download_from_youdao and word.find(' ') != -1:
            continue
@@ -224,18 +221,34 @@ def get_word_from_queue(words,engine):
     return wordname
 
 class download_thread_with_engine(threading.Thread):
-    def __init__(self, words, engine):
+    def __init__(self, book, lesson, words, engine):
         threading.Thread.__init__(self)
         self.words = words
         self.engine = engine
+        self.book = book
+        self.lesson = lesson
 
     def run(self):
         wordname = get_word_from_queue(self.words,self.engine)
         while wordname:
-            word = Word.objects.create(name=wordname)
+            words = Word.objects.filter(name=wordname)
+            if not words:
+                print("Fatal error: download to unsaved word %s" % wordname)
+                return
             print('Start downloading "%s"' % wordname)
-            download_thread_single_engine(word, self.engine)
+            download_thread_single_engine(words[0], self.engine)
             wordname = get_word_from_queue(self.words,self.engine)
+
+        if self.lesson.tag == "new":
+            self.lesson.tag = "done1" 
+        elif self.lesson.tag == "done1":
+            self.lesson.tag = "done"
+        self.lesson.save()
+        lessonembs = filter(lambda x: x.name == self.lesson.name, self.book.lessons)
+        if len(lessonembs) > 0:
+            self.book.lessons.remove(lessonembs[0])
+        self.book.lessons.append(self.lesson)
+        self.book.save()
 
 
 def install_proxy():
@@ -260,7 +273,6 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     if not os.path.exists(PATH):
         os.makedirs(PATH)
 
-    lesson = Lesson(name=lessonname)
     words = words_file.read().replace('\r','').split('\n')
     if '' in words:
         words.remove('')
@@ -268,25 +280,16 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     wordsforimage = words[:]
     download_images(wordsforimage)
 
-    tempwords = words[:]
-
-    thread1 = download_thread_with_engine(tempwords, download_from_iciba)
-    thread1.start()
-    print('Thread 1 started!')
-    time.sleep(2)
-    thread2 = download_thread_with_engine(tempwords, download_from_youdao)
-    thread2.start()
-    print('Thread 2 started!')
-
-    thread1.join()
-    print('Thread 1 Done!')
-    thread2.join()
-    print('Thread 2 Done!')
-
+    lesson = Lesson(name=lessonname)
+    tempwords = []
     for word in words:
-        if len(Word.objects.filter(name=word)) > 0:
-            wordrecord = Word.objects.filter(name=word)[0]
+        wordrecord = Word.objects.filter(name=word)
+        if not wordrecord:
+            tempwords.append(word)
+            wordrecord = Word.objects.create(name=word)
             lesson.words.append(wordrecord.id)
+        else:
+            lesson.words.append(wordrecord[0].id)
 
     book = None
     if len(Book.objects.filter(name=bookname)) == 0:
@@ -298,4 +301,20 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     lesson.save()
     book.lessons.append(lesson)
     book.save()
+
+    download_words(book, lesson, tempwords)
+
+def download_words(book, lesson, words):
+    tempwords = words[:]
+
+    thread1 = download_thread_with_engine(book, lesson, tempwords, download_from_iciba)
+    thread1.deamon = True
+    thread1.start()
+    print('Thread 1 started!')
+    time.sleep(2)
+    thread2 = download_thread_with_engine(book, lesson, tempwords, download_from_youdao)
+    thread2.deamon = True
+    thread2.start()
+    print('Thread 2 started!')
+
 

@@ -125,7 +125,11 @@
         <a class="thumbnail" title="修改" style="width:100%;" href='/admin/book/{{book.name}}/lesson/{{lesson.name}}/'>
           <div class="caption"></div>
           <p><b>{{lesson.name}}</b></p>
+          {% if lesson.tag == "done" %}
           <p style="color:sienna;">sum:{{lesson.words|length}}</p>
+          {% else %}
+          <p style="color:sienna;">downloading...</p>
+          {% endif %}
         </a>
       </div>
       {% endfor %}
