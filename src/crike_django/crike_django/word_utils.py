@@ -220,6 +220,11 @@ def get_word_from_queue(words,engine):
     words_lock.release()
     return wordname
 
+def put_word_to_queue(word,words):
+    words_lock.acquire()
+    words.append(word)
+    words_lock.release()
+
 class download_thread_with_engine(threading.Thread):
     def __init__(self, book, lesson, words, engine):
         threading.Thread.__init__(self)
@@ -237,6 +242,8 @@ class download_thread_with_engine(threading.Thread):
                 return
             print('Start downloading "%s"' % wordname)
             download_thread_single_engine(words[0], self.engine)
+            if words[0].means == []:
+                put_word_to_queue(words[0].name, self.words)
             wordname = get_word_from_queue(self.words,self.engine)
 
         if self.lesson.tag == "new":
@@ -284,7 +291,7 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     tempwords = []
     for word in words:
         wordrecord = Word.objects.filter(name=word)
-        if not wordrecord:
+        if not wordrecord or wordrecord.mean == []:
             tempwords.append(word)
             wordrecord = Word.objects.create(name=word)
             lesson.words.append(wordrecord.id)
