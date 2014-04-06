@@ -242,7 +242,7 @@ class download_thread_with_engine(threading.Thread):
                 return
             print('Start downloading "%s"' % wordname)
             download_thread_single_engine(words[0], self.engine)
-            if words[0].means == []:
+            if words[0].mean == []:
                 put_word_to_queue(words[0].name, self.words)
             wordname = get_word_from_queue(self.words,self.engine)
 
