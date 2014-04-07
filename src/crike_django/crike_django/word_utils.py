@@ -266,7 +266,7 @@ def install_proxy():
 
 PATH = MEDIA_ROOT + '/audios/'
 use_proxy = True
-http_proxy = "http://localhost:8086"
+http_proxy = "http://localhost:8087"
 words_lock = threading.Lock()
 url_lock = threading.Lock()
 data_lock = threading.Lock()
