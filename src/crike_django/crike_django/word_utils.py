@@ -266,7 +266,7 @@ def install_proxy():
 
 PATH = MEDIA_ROOT + '/audios/'
 use_proxy = True
-http_proxy = "http://localhost:8087"
+http_proxy = "http://localhost:8086"
 words_lock = threading.Lock()
 url_lock = threading.Lock()
 data_lock = threading.Lock()
@@ -312,7 +312,7 @@ def handle_uploaded_file(bookname, lessonname, words_file):
 def download_words(book, lesson, words):
     tempwords = words[:]
 
-    thread1 = download_thread_with_engine(book, lesson, tempwords, download_from_iciba)
+    thread1 = download_thread_with_engine(book, lesson, tempwords, download_from_youdao)
     thread1.deamon = True
     thread1.start()
     print('Thread 1 started!')
