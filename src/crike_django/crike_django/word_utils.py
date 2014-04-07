@@ -281,6 +281,11 @@ def handle_uploaded_file(bookname, lessonname, words_file):
     words = words_file.read().replace('\r','').split('\n')
     if '' in words:
         words.remove('')
+    for word in words:
+        if '/' in word:
+            word = word.split('/')[0]
+        if '(' in word:
+            word = word.split('(')[0]
 
     wordsforimage = words[:]
     download_images(wordsforimage)
