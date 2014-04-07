@@ -1169,7 +1169,8 @@ class LessonAdminView(TemplateView):
             lessonobj = get_lessonobj(lessonemb)
             for word in words:
                 wordobj = Word.objects.filter(name=word)[0]
-                lessonobj.words.remove(wordobj.id)
+                if wordobj.id in lessonobj.words:
+                    lessonobj.words.remove(wordobj.id)
                 lessonobj.save()
                 if request.POST.get('delinfos', None):
                     wordobj.delete()

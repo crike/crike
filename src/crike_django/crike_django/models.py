@@ -56,7 +56,7 @@ class ClassRelation(models.Model):
 
 
 class Word(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     phonetics = models.CharField(max_length=50)
     mean = ListField(models.CharField(max_length=100))
     
