@@ -79,7 +79,7 @@
     </script>
     <div class="jumbotron">
       <h1>Crike -- 课程管理</h1>
-      <button class="btn btn-success btn-lg" onclick="showUploadform();">添加课程</button>
+      <button id="addlesson" class="btn btn-success btn-lg" onclick="showUploadform();">添加课程</button>
       <button class="btn btn-danger  btn-lg" onclick="showDeleteform();">删除课程</button>
       {% if Showform == "uploadform" %}
       <form id='uploadform' style="display: block" enctype="multipart/form-data" method="post" action="/admin/books/">
@@ -128,6 +128,9 @@
           {% if lesson.tag == "done" %}
           <p style="color:sienna;">sum:{{lesson.words|length}}</p>
           {% else %}
+          <script>
+            $('#addlesson').prop('disabled', true);
+          </script>
           <p style="color:sienna;">downloading...</p>
           {% endif %}
         </a>
