@@ -11,6 +11,7 @@ Todo
 * 发布 1.0 版本
 * 部署nginx，局域网DNS/DHCP，数据备份(distributed mongodb，计划任务)
 * 禁止通过修改browser地址栏直接进入某页面，禁止刷新清零错误次数
+  * consider using "kiosk mode"
 * 提供积分增加提示信息，积分增加或减少的历史记录
 
 需求
