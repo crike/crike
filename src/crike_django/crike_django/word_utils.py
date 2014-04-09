@@ -210,8 +210,9 @@ def get_word_from_queue(words,engine):
     wordname = None
     for word in words:
 # youdao can't download phrase, iciba can!!!
-        if engine == download_from_youdao and word.find(' ') != -1:
-           continue
+        if engine == download_from_youdao \
+            and ("." in word or word.find(' ') != -1):
+            continue
         else:
            words.remove(word)
            wordname = word
@@ -265,7 +266,7 @@ def install_proxy():
     return
 
 PATH = MEDIA_ROOT + '/audios/'
-use_proxy = True
+use_proxy = False
 http_proxy = "http://localhost:8086"
 words_lock = threading.Lock()
 url_lock = threading.Lock()
