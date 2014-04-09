@@ -320,7 +320,7 @@ def handle_uploaded_file(bookname, lessonname, words_file):
 def download_words(book, lesson, words):
     tempwords = words[:]
 
-    thread1 = download_thread_with_engine(book, lesson, tempwords, download_from_youdao)
+    thread1 = download_thread_with_engine(book, lesson, tempwords, download_from_iciba)
     thread1.deamon = True
     thread1.start()
     print('Thread 1 started!')
