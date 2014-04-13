@@ -38,10 +38,10 @@
       $('#DelWordForm').find('input[name="delwords"]').prop('checked', false);
     }
   };
-  function radioOn(name) {
-    phonetics = $('#'+name+'div').find('li[id="id_phonetics"]').text().replace('[','').replace(']','');
+  function radioOn(id,name) {
+    phonetics = $('#'+id+'div').find('li[id="id_phonetics"]').text().replace('[','').replace(']','');
     var means = [];
-    $('#'+name+'div').find('li[id="id_mean"]').each(function() { means.push($(this).text()) });
+    $('#'+id+'div').find('li[id="id_mean"]').each(function() { means.push($(this).text()) });
     mean = means.join("\n");
     $('#UpdWordForm').find('input[id="id_name"]').prop('value', name);
     $('#UpdWordForm').find('input[id="id_phonetics"]').prop('value', phonetics);
@@ -115,7 +115,7 @@ function onRetrieve(name) {
   <form id="UpdWordForm" enctype="multipart/form-data" method="post" action="/admin/book/{{book}}/lesson/{{lesson}}/" style="display:none">
   {% endif %}
     {% for word in words %}
-    <input type='radio' name="updword" onclick='radioOn("{{word.name}}")'>{{word.name}}
+    <input type='radio' name="updword" onclick='radioOn("{{word.id}}", "{{word.name}}")'>{{word.name}}
     {% endfor %}
     {% csrf_token %}
     {{AddWordForm|crispy}}
@@ -126,7 +126,7 @@ function onRetrieve(name) {
 </div>
 <!-- Cycle through entries -->
 {% for word in words %}
-<div id='{{word.name}}div'>  
+<div id='{{word.id}}div'>  
   <h2> {{ word.name }} 
     <button class="btn btn-success retrieve" style="float:right" onclick="onRetrieve('{{word.name}}')">
       重新获取
@@ -148,28 +148,28 @@ function onRetrieve(name) {
       </div>
     </div>
     <div class="col-lg-4">
-      <div id="carousel-example-captions-{{word.name}}" class="carousel slide" data-ride="carousel">
+      <div id="carousel-example-captions-{{word.id}}" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-          <li data-target="#carousel-example-captions-{{word.name}}" data-slide-to="0" class="active"></li>
-          <li data-target="#carousel-example-captions-{{word.name}}" data-slide-to="1" class=""></li>
-          <li data-target="#carousel-example-captions-{{word.name}}" data-slide-to="2" class=""></li>
+          <li data-target="#carousel-example-captions-{{word.id}}" data-slide-to="0" class="active"></li>
+          <li data-target="#carousel-example-captions-{{word.id}}" data-slide-to="1" class=""></li>
+          <li data-target="#carousel-example-captions-{{word.id}}" data-slide-to="2" class=""></li>
         </ol>
         <div class="carousel-inner" style="height:200px">
           <div class="item active">
             <!-- data-src="holder.js/900x500/auto/#777:#777" -->
-            <img class='img{{word.name}}' alt="900x500" src="/media/images/{{word.name}}/0.jpg">
+            <img class='img{{word.id}}' alt="900x500" src="/media/images/{{word.name}}/0.jpg">
           </div>
           <div class="item">
-            <img class='img{{word.name}}' alt="900x500" src="/media/images/{{word.name}}/1.jpg">
+            <img class='img{{word.id}}' alt="900x500" src="/media/images/{{word.name}}/1.jpg">
           </div>
           <div class="item">
-            <img class='img{{word.name}}' alt="900x500" src="/media/images/{{word.name}}/2.jpg">
+            <img class='img{{word.id}}' alt="900x500" src="/media/images/{{word.name}}/2.jpg">
           </div>
         </div>
-        <a class="left carousel-control" href="#carousel-example-captions-{{word.name}}" data-slide="prev">
+        <a class="left carousel-control" href="#carousel-example-captions-{{word.id}}" data-slide="prev">
           <span class="glyphicon glyphicon-chevron-left"></span>
         </a>
-        <a class="right carousel-control" href="#carousel-example-captions-{{word.name}}" data-slide="next">
+        <a class="right carousel-control" href="#carousel-example-captions-{{word.id}}" data-slide="next">
           <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
       </div>
