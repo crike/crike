@@ -1,7 +1,7 @@
 # Django settings for crike_django project.
 import os
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 CURRENT_DIR = os.path.dirname( __file__ ).replace( '\\'  ,  '/' )
 PROJECT_DIR = os.path.dirname(CURRENT_DIR).replace( '\\'  ,  '/' )
@@ -21,7 +21,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
