@@ -816,8 +816,7 @@ class ExamView(TemplateView):
             words_list += Word.objects.filter(id__in=lessonobj.words)
 
         if len(words_list) == 0:
-            return render(request, self.template_name,
-                    { 'name':name})
+            return HttpResponseRedirect('/reading/'+id)
 
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
