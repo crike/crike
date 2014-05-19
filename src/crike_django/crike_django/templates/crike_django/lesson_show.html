@@ -32,18 +32,18 @@
     {% for word in words %}
     <div class="bb-item">
       <div class="bb-custom-side">
-        <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
+        <h1><strong style='font-size:150%; margin-left:10px'>{{word.name}} </strong>
           [{{ word.phonetics }}]
           <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
               onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
               onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
-              title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+              title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a><br>
+          <div style='font-size:70%; margin-top:20px'>
+            {% for mean in word.mean %}
+            <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
+            {% endfor %}
+          </div>
         </h1>
-        <ul>
-          {% for mean in word.mean %}
-          <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
-          {% endfor %}
-        </ul>
       </div>
       <div class="bb-custom-side">
         <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
