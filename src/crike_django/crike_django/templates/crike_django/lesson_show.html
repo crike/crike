@@ -42,7 +42,8 @@
             {% for mean in word.mean %}
             <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
             {% endfor %}
-          </div>
+          </div></br>
+          <label style="float:bottom;font-size:50%;color:gray;">{{ forloop.counter }} / {{ words|length }}</label>
         </h1>
       </div>
       <div class="bb-custom-side">
