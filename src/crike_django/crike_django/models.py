@@ -80,6 +80,18 @@ class Reading(models.Model):
     def __unicode__(self):
         return self.name
 
+class LessonApply(models.Model):
+    '''
+    When a person applies a prize, system generates a lesson
+    apply, and wait for teacher to approve the apply, then 
+    this lesson will show up in the person's home page
+    '''
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date = models.DateField(auto_now_add=True)
+    lesson = models.ForeignKey('Lesson')
+    tag = models.CharField(max_length=50, default='normal')
+    done = models.BooleanField(default=False)
+
 class Lesson(models.Model):
     name = models.CharField(max_length=50)
     book = models.ForeignKey('Book')

@@ -50,7 +50,7 @@
 
     $.post("/lessonschoose/", {id: lessonid })
     .done(function(){
-      popup_message("已加入我的课程！");
+      popup_message("已提交课程申请");
     });
   };
 
@@ -106,7 +106,7 @@ function popup_message(text)
         <h4>课程名：{{ la.lesson.name }}</h4>
         <p>所属课本：{{ la.lesson.book }}</p>
         <p>请求时间：{{ la.date }}</p>
-        <a href="/lesson_apply/{{ la.id }}" class="btn btn-primary" role="button">接受</a>
+        <a href="/lesson_apply/accept/{{ la.id }}" class="btn btn-primary" role="button">接受</a>
         <a href="/lesson_apply/delete/{{ la.id }}" class="btn btn-danger" role="button">删除</a>
       </div>
     </div>

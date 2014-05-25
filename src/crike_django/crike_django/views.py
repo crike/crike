@@ -770,7 +770,9 @@ class LessonsChooseView(TemplateView):
                 # XXX this result should never save
                 lesson.result = lesson_result
 
-        return render(request, self.template_name, {'books': books})
+            las = LessonApply.objects.all()
+
+        return render(request, self.template_name, {'books': books, 'lesson_applies':las})
 
 
     def post(self, request, *args, **kwargs):
@@ -779,12 +781,41 @@ class LessonsChooseView(TemplateView):
         if not lessons:
             return HttpResponse(status=404)
         lesson = lessons[0]
-        lesson_result = LessonStat.objects.get_or_create(user=request.user,
-                                                         lesson=lesson)[0]
+        la = LessonApply.objects.get_or_create(user=request.user,
+                                               lesson=lesson,
+                                               )[0]
+        la.save()
+
+        return HttpResponse(status=204)
+
+
+class LessonApplyAcceptView(TemplateView):
+
+    def get(self, request, id):
+        las = LessonApply.objects.filter(id=id)
+        if not las:
+            return HttpResponse(status=404)
+        la = las[0]
+        lesson_result = LessonStat.objects.get_or_create(user=la.user,
+                                                         lesson=la.lesson)[0]
         lesson_result.selected = True
         lesson_result.save()
 
+        la.delete()
+
+        return HttpResponseRedirect('/lessonschoose/')
+
+class LessonApplyDeleteView(TemplateView):
+
+    def get(self, request, id):
+        las = LessonApply.objects.filter(id=id)
+        if not las:
+            return HttpResponse(status=404)
+        la = las[0]
+        la.delete()
+
         return HttpResponse(status=204)
+
 
 def exam_creator(book, unit):
     words_list = []
