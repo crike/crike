@@ -814,7 +814,7 @@ class LessonApplyDeleteView(TemplateView):
         la = las[0]
         la.delete()
 
-        return HttpResponse(status=204)
+        return HttpResponseRedirect('/lessonschoose/')
 
 
 def exam_creator(book, unit):
