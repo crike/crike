@@ -92,6 +92,32 @@ function popup_message(text)
 <br/>
 <br/>
 <!-- Cycle through entries -->
+{% if user.teacher %}
+
+<div class="row">
+  <div class="page-header">
+    <h2>教师可见：课程申请列表</h2>
+  </div>
+  {% for la in lesson_applies %}
+  <div class="col-sm-6 col-md-3">
+    <div title="课程申请" class="thumbnail">
+      <div class="caption">
+        <h4>申请者：{{ la.user.username }}</h4>
+        <h4>课程名：{{ la.lesson.name }}</h4>
+        <p>所属课本：{{ la.lesson.book }}</p>
+        <p>请求时间：{{ la.date }}</p>
+        <a href="/lesson_apply/{{ la.id }}" class="btn btn-primary" role="button">接受</a>
+        <a href="/lesson_apply/delete/{{ la.id }}" class="btn btn-danger" role="button">删除</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+  <div class="page-header">
+    <h2>课程选择</h2>
+  </div>
   {% for book in books %}
   <div class="panel panel-primary">
     <div class="panel-heading">
