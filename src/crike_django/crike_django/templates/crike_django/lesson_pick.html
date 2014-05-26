@@ -54,11 +54,17 @@
       var showtimer = null;
       var cb = "$('#popup').hide();$('#overlay').hide()"
       e.preventDefault();
-      $('#popup')
-      .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 不对哦，再想一想 <i style='color:orange' class='fa fa-frown-o'/></label>")
-      .show()
-      $('#overlay').show()
-      shotimer = setTimeout(cb, 2000)
+      if (numoftry < 3) {
+        $('#popup')
+        .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 不对哦，再想一想 <i style='color:orange' class='fa fa-frown-o'/></label>")
+        .show();
+      } else {
+        $('#popup')
+        .html("<label style='font-size:80%'>正确答案: "+$('#answer_'+ques).html()+ " </label>")
+        .show();
+      }
+      $('#overlay').show();
+      shotimer = setTimeout(cb, 2000);
       $('input[name="answer"]').prop('checked', false);
     }
   };
@@ -100,9 +106,15 @@
     <div class="col-6 col-sm-6 col-lg-3">  
       <div class="pin" style="width:100%;height:300px" onclick='onPick(this)'>
         <input type="radio" name="answer" value="{{option.name}}">
-        {% for m in option.mean %}
-        <li style="font-size:130%">{{m}}</li>
-        {% endfor %}
+        {% if word.name == option.name %}
+        <div id="answer_{{word.name}}">
+        {% else %}
+        <div>
+        {% endif %}
+          {% for m in option.mean %}
+          <li style="font-size:130%">{{m}}</li>
+          {% endfor %}
+        </div>
       </div>
     </div>
     {% endfor %}
