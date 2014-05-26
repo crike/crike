@@ -50,9 +50,15 @@
       var showtimer = null;
       var cb = "$('#popup').hide();$('#overlay').hide()"
       e.preventDefault();
-      $('#popup')
-      .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 不对哦，再想一想 <i style='color:orange' class='fa fa-frown-o'/></label>")
-      .show()
+      if (numoftry < 3) {
+        $('#popup')
+        .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 不对哦，再想一想 <i style='color:orange' class='fa fa-frown-o'/></label>")
+        .show();
+      } else {
+        $('#popup')
+        .html("<label style='font-size:200%'>正确答案:<br>"+ques+ " </label>")
+        .show();
+      }
       $('#overlay').show()
       shotimer = setTimeout(cb, 2000)
       $('input[name="answer"]').prop('value', '');
