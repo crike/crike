@@ -146,7 +146,7 @@ class IndexView(TemplateView):
         return HttpResponse("Not implement yet")
 
 def lesson_stat_update(stat):
-    stat.percent = stat.pick + stat.show + stat.dictation + stat.fill
+    stat.percent = stat.pick + stat.show + stat.review + stat.fill
     stat.save()
 
 def update_strange_words_lesson(request):
@@ -710,17 +710,17 @@ class LessonFillView(TemplateView):
         self._record(request, book, lesson)
         if page == '0':
             self._success(request, book, lesson)
-            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/dictation')
+            return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/review')
         return HttpResponseRedirect('/study/book/'+book+'/lesson/'+lesson+'/fill?page='+page)
 
-class LessonDictationView(TemplateView):
-    template_name='crike_django/lesson_dictation.html'
+class LessonReviewView(TemplateView):
+    template_name='crike_django/lesson_review.html'
 
     def _success(self, request, book, lesson):
-        lesson_success(request, book, lesson, 'dictation')
+        lesson_success(request, book, lesson, 'review')
 
     def _record(self, request, book, lesson):
-        words_event_recorder(request, book, lesson, 'dictation')
+        words_event_recorder(request, book, lesson, 'review')
 
     def get(self, request, book, lesson):
         words = get_words_from_lesson(book, lesson)
@@ -734,7 +734,7 @@ class LessonDictationView(TemplateView):
         num = request.POST.get('num')
         ret = request.POST.get('ret')
         words = request.POST.get('words')
-        self._record(request, book, lesson)
+        # self._record(request, book, lesson)
         self._success(request, book, lesson)
         return HttpResponseRedirect('/home')
 

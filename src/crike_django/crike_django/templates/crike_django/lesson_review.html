@@ -21,7 +21,7 @@ document.onkeypress = stopRKey;
   </h1>
 </div>
 
-<form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/dictation' method='post'>
+<form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/review' method='post'>
   {% csrf_token %}
   <div class='row'>
     {% for word in words %}
