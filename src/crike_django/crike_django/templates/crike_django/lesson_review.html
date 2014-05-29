@@ -15,7 +15,6 @@ document.onkeypress = stopRKey;
 <div id='popup' class='pin'></div>
 
 <div class='jumbotron subject-header-container2'>
-  <div id="counter" style='float:right;'></div>
   <h1>
     学习小结<br>
     课本: {{book}} 课程: {{lesson}} 
@@ -54,29 +53,6 @@ document.onkeypress = stopRKey;
     numoftry[i] = 0;
     ret[i]=false;
   }
-
-  $(function(){
-    var form = $('#DictationForm');
-    $('#counter').countdown({
-       image: "{% static 'countdown/img/digits.png' %}",
-       {% if words|length < 10 %}
-       startTime: '0{{words|length}}:00',
-       {% else %}
-       startTime: '{{words|length}}:00',
-       {% endif %}
-       timerEnd: function(){ 
-        $('#popup')
-        .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'></i></label>")
-        .show()
-        $('#overlay').show()
-        $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo('#DictationForm');
-        $('<input>').attr({name:'ret', value:ret, hidden:'true'}).appendTo('#DictationForm');
-        $('<input>').attr({name:'words', value:ques, hidden:'true'}).appendTo('#DictationForm');
-        setTimeout( function () { $(form).submit(); }, 1000);
-       },
-       format: 'mm:ss'
-    });
-  });
 
   function onSubmit(t,e) {
     var index = parseInt(t.id.substring(3));
