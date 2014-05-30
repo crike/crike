@@ -26,13 +26,12 @@ document.onkeypress = stopRKey;
   <div class='row'>
     {% for word in words %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <input type="text" name="ans{{forloop.counter0}}" autocomplete="off">
+      {{word.name}}
       <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
           onmouseout ="clearTimeout(timer);" 
           onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-          title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a><br>
+          title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a>
       <input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:5px">
-      <strong id='feedback{{forloop.counter0}}'>Fill the blank</strong>
     </div>
     {% endfor %}
   </div>
