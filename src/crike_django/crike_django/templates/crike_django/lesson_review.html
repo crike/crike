@@ -23,18 +23,34 @@ document.onkeypress = stopRKey;
 
 <form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/review' method='post'>
   {% csrf_token %}
-  <div class='row'>
+    <table border="1" style="width:300px">
+      <tr>
+        <th>单词</th> 
+        <th>音标</th>
+        <th>释义</th>
+        <th></th>
+      </tr>
     {% for word in words %}
-    <div class="col-6 col-sm-6 col-lg-3">  
-      {{word.name}}
-      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-          onmouseout ="clearTimeout(timer);" 
-          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-          title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a>
-      <input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:5px">
-    </div>
+      <tr>
+        <td>{{word.name}}</td>
+        <td>[{{word.phonetics}}]
+          <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+            onmouseout ="clearTimeout(timer);" 
+            onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+            title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a>
+        </td>
+        <td>
+          {% comment %}
+          {% for mean in word.mean %}
+            {{mean}};
+          {% endfor %}
+          {% endcomment %}
+        </td>
+        <td><input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:5px">
+        </td>
+      </tr>
     {% endfor %}
-  </div>
+    </table>
 </form>
 
 <script>
