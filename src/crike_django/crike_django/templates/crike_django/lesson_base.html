@@ -2,9 +2,11 @@
 
 {% block content %}
 
+{% load staticfiles %}
+
 <link href="/static/index.css" rel="stylesheet" type="text/css"/>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="{% static 'font-awesome/4.0.3/css/font-awesome.min.css' %}" rel="stylesheet">
+<script src="{% static 'jquery/2.0.3/jquery.min.js' %}"></script>
 <script language="javascript" type="text/javascript">
   var timer = null;
   function playSound(mp3) {
