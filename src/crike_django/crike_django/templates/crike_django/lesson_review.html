@@ -44,8 +44,16 @@ document.onkeypress = stopRKey;
             {{mean}};
           {% endfor %}
         </td>
-        <td>
-          {{word.we}} 
+        <td style="width:50px">
+          {% if word.we == 3 %} 
+          <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+          {% endif %}
+          {% if word.we == 2 %} 
+          <i class="fa fa-star"></i><i class="fa fa-star"></i>
+          {% endif %}
+          {% if word.we == 1 %} 
+          <i class="fa fa-star"></i>
+          {% endif %}
         </td>
       </tr>
     {% endfor %}
