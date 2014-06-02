@@ -28,7 +28,7 @@ document.onkeypress = stopRKey;
         <th>单词</th> 
         <th>音标</th>
         <th>释义</th>
-        <th></th>
+        <th>熟悉度</th>
       </tr>
     {% for word in words %}
       <tr>
@@ -44,7 +44,8 @@ document.onkeypress = stopRKey;
             {{mean}};
           {% endfor %}
         </td>
-        <td><input id='opt{{forloop.counter0}}' type="submit" onClick='onSubmit(this,event);' value="确认" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:5px">
+        <td>
+          {{word.we}} 
         </td>
       </tr>
     {% endfor %}

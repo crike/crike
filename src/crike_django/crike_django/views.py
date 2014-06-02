@@ -724,6 +724,19 @@ class LessonReviewView(TemplateView):
 
     def get(self, request, book, lesson):
         words = get_words_from_lesson(book, lesson)
+        for word in words:
+            we = WordEventRecorder.objects.filter(user=request.user, word=word)
+            if we:
+                we = we[0]
+                ratio = we.correct_num/float(we.correct_num+we.mistake_num)
+                if ratio >= 0.9:
+                    word.we = 3
+                elif ratio >= 0.6:
+                    word.we = 2
+                elif ratio > 0:
+                    word.we = 1
+                else:
+                    word.we = 0
 
         return render(request, self.template_name,
                 {'words':words, 'book':book, 'lesson':lesson})
