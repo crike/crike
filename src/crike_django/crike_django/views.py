@@ -725,8 +725,6 @@ class LessonReviewView(TemplateView):
     def get(self, request, book, lesson):
         words = get_words_from_lesson(book, lesson)
 
-        words = sample(words, len(words))
-
         return render(request, self.template_name,
                 {'words':words, 'book':book, 'lesson':lesson})
 
