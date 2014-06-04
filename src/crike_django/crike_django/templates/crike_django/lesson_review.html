@@ -21,6 +21,8 @@ document.onkeypress = stopRKey;
   </h1>
 </div>
 
+<audio preload='auto' autoplay src='/media/audios/01alpha-diluodexingzi.mp3' type='audio/mpeg'></audio>
+
 <form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/review' method='post'>
   {% csrf_token %}
     <table border="1" style="width:100%">
