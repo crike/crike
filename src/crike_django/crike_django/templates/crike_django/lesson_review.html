@@ -60,12 +60,14 @@ init([
     学习小结<br>
     课本: {{book}} 课程: {{lesson}} 
   </h1>
+  <form id='ReviewForm' action='/study/book/{{book}}/lesson/{{lesson}}/review' method='post'>
+    {% csrf_token %}
+    <input type="submit" class="btn btn-primary btn-lg" value="OK">
+  </form>
 </div>
 
 <!--audio preload='auto' autoplay src='/media/audios/01alpha-diluodexingzi.mp3' type='audio/mpeg'></audio-->
 
-<form id='DictationForm' action='/study/book/{{book}}/lesson/{{lesson}}/review' method='post'>
-  {% csrf_token %}
     <table border="1" style="width:100%">
       <tr>
         <th>单词</th> 
@@ -101,8 +103,6 @@ init([
       </tr>
     {% endfor %}
     </table>
-    <input type="submit" value="OK">
-</form>
 
 <script>
   $('.step-links').hide();
