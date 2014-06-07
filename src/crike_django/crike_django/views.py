@@ -1186,6 +1186,7 @@ class LessonAdminView(TemplateView):
                 word.name = request.POST['name']
                 word.mean = request.POST['mean'].replace('\r','').split('\n')
                 word.phonetics = request.POST['phonetics']
+                word.example = request.POST['example']
                 if request.FILES.get('audio', None):
                     save_file(request.FILES['audio'], MEDIA_ROOT+"/audios/"+word.name+".mp3")
                 imagepath = MEDIA_ROOT+"/images/"+word.name
@@ -1239,6 +1240,7 @@ class LessonAdminView(TemplateView):
             word = words[0]
             word.mean = request.POST['mean'].replace('\r','').split('\n')
             word.phonetics = request.POST['phonetics']
+            word.example = request.POST['example']
             word.save()
             if request.FILES.get('audio', None):
                 audiofile = MEDIA_ROOT+'/audios/'+word.name+'.mp3'

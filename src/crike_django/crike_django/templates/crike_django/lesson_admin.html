@@ -2,8 +2,9 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 <link href="/static/index.css" rel="stylesheet" type="text/css"/>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="{% static 'jquery/2.0.3/jquery.min.js' %}"></script>
 <script language="javascript" type="text/javascript">
   $(document).ready ( function(){
     $('#UpdWordForm').find('input[id="id_name"]').prop('readonly', true);
@@ -40,11 +41,13 @@
   };
   function radioOn(id,name) {
     phonetics = $('#'+id+'div').find('li[id="id_phonetics"]').text().replace('[','').replace(']','');
+    example = $('#'+id+'div').find('li[id="id_example"]').text();
     var means = [];
     $('#'+id+'div').find('li[id="id_mean"]').each(function() { means.push($(this).text()) });
     mean = means.join("\n");
     $('#UpdWordForm').find('input[id="id_name"]').prop('value', name);
     $('#UpdWordForm').find('input[id="id_phonetics"]').prop('value', phonetics);
+    $('#UpdWordForm').find('textarea[id="id_example"]').val(example);
     //waste a lot of time on .text(), that will not change the textarea once modified the content, use .val() !!!!
     $('#UpdWordForm').find('textarea[id="id_mean"]').val(mean);
   };
@@ -145,6 +148,8 @@ function onRetrieve(name) {
         {% for mean in word.mean %}
         <li id='id_mean'>{{mean}}</li>
         {% endfor %}
+        <strong>Example:</strong>
+        <li id='id_example'>{{ word.example }}</li>
       </div>
     </div>
     <div class="col-lg-4">

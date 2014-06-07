@@ -59,21 +59,22 @@ class Word(models.Model):
     name = models.CharField(max_length=50, unique=True)
     phonetics = models.CharField(max_length=50)
     mean = ListField(models.CharField(max_length=100))
+    example = models.CharField(max_length=500,blank=True)
     
     def __unicode__(self):
         return self.name
 
 class Choicesingle(models.Model):
-    name = models.CharField(max_length=50, blank=True)
-    question = models.TextField(max_length=50)
-    answers = ListField(models.CharField(max_length=100))
+    name = models.CharField(max_length=100, blank=True)
+    question = models.TextField(max_length=500)
+    answers = ListField(models.CharField(max_length=500))
     rightindex = models.IntegerField()
     
     def __unicode__(self):
         return self.name
 
 class Reading(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     article = models.TextField()
     questions = ListField(EmbeddedModelField('Choicesingle'))
     
