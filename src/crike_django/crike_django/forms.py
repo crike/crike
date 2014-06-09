@@ -17,6 +17,7 @@ class AddWordForm(forms.Form):
     phonetics = forms.CharField(max_length=50, required=False)
     mean = forms.CharField(widget=forms.Textarea, required=False)
     example = forms.CharField(widget=forms.Textarea, required=False)
+    example_t = forms.CharField(widget=forms.Textarea, required=False)
     audio  = forms.FileField(required=False)
     image0  = forms.FileField(required=False)
     image1  = forms.FileField(required=False)

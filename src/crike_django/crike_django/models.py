@@ -60,6 +60,7 @@ class Word(models.Model):
     phonetics = models.CharField(max_length=50)
     mean = ListField(models.CharField(max_length=100))
     example = models.CharField(max_length=500,blank=True)
+    example_t = models.CharField(max_length=500,blank=True)
     
     def __unicode__(self):
         return self.name

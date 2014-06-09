@@ -42,12 +42,14 @@
   function radioOn(id,name) {
     phonetics = $('#'+id+'div').find('li[id="id_phonetics"]').text().replace('[','').replace(']','');
     example = $('#'+id+'div').find('li[id="id_example"]').text();
+    example_t = $('#'+id+'div').find('li[id="id_example_t"]').text();
     var means = [];
     $('#'+id+'div').find('li[id="id_mean"]').each(function() { means.push($(this).text()) });
     mean = means.join("\n");
     $('#UpdWordForm').find('input[id="id_name"]').prop('value', name);
     $('#UpdWordForm').find('input[id="id_phonetics"]').prop('value', phonetics);
     $('#UpdWordForm').find('textarea[id="id_example"]').val(example);
+    $('#UpdWordForm').find('textarea[id="id_example_t"]').val(example_t);
     //waste a lot of time on .text(), that will not change the textarea once modified the content, use .val() !!!!
     $('#UpdWordForm').find('textarea[id="id_mean"]').val(mean);
   };
@@ -150,6 +152,7 @@ function onRetrieve(name) {
         {% endfor %}
         <strong>Example:</strong>
         <li id='id_example'>{{ word.example }}</li>
+        <li id='id_example_t'>{{ word.example_t }}</li>
       </div>
     </div>
     <div class="col-lg-4">
