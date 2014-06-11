@@ -152,10 +152,11 @@ def lesson_stat_update(stat):
 def update_strange_words_lesson(request):
     if request.user.username == '':
         return
-    strange_record_list = WordStat.objects.filter(mistake_num__gte=3,
+    strange_record_list = WordStat.objects.filter(mistake_num__gte=2,
                                                     user=request.user)
+    strange_record_list = filter(lambda x: x.mistake_num-x.correct_num>=2, strange_record_list)
+
     strange_list = []
-    familiar_list = []
     for item in strange_record_list:
         strange_list.append(item.word)
 
@@ -167,17 +168,10 @@ def update_strange_words_lesson(request):
         lesson_obj = get_lessonobj(lesson_emb)
         lesson_obj.book = book_obj
         book_obj.lessons.remove(lesson_emb)
+        lesson_obj.words = []
         for word in strange_list:
-            if len(filter(lambda x: x == word.id, lesson_obj.words)) == 0:
-                lesson_obj.words.append(word.id)
-        familiar_record_list = WordStat.objects.filter(correct_num__gte=2,
-                                                         user=request.user)
-        for item in familiar_record_list:
-            if item.lesson.name == 'strange_words':
-                familiar_list.append(item.word)
-        for word in familiar_list:
-            if len(filter(lambda x: x == word.id, lesson_obj.words)) > 0:
-                lesson_obj.words.remove(word.id)
+            lesson_obj.words.append(word.id)
+
     else:
         lesson_obj = Lesson(name='strange_words', book=book_obj)
         for word in strange_list:
@@ -508,9 +502,7 @@ def word_event_recorder(request, book, lesson, tag):
     word = get_words_from_paginator(paginator, page)[0]
 
     word_stat, retval = WordStat.objects.get_or_create(user=request.user,
-                                                    word=word,
-                                                    lesson=get_lessonemb(book, lesson),
-                                                    tag=tag)
+                                                    word=word)
     if ret == 'true':
         correct_num = 1
         mistake_num = int(num) - 1
@@ -527,10 +519,8 @@ def word_event_recorder(request, book, lesson, tag):
 
     wer = WordEventRecorder.objects.create(user=request.user,
                                            word=word,
-                                           lesson=get_lessonemb(book,lesson),
                                            correct_num=correct_num,
-                                           mistake_num=mistake_num,
-                                           tag=tag)
+                                           mistake_num=mistake_num)
     wer.save()
     
     profile = get_profile(request.user)
@@ -551,9 +541,7 @@ def words_event_recorder(request, book, lesson, tag):
     for i,option in enumerate(options):
         word = Word.objects.filter(name=option)[0]
         word_stat, retval = WordStat.objects.get_or_create(user=request.user,
-                                                        word=word,
-                                                        lesson=get_lessonemb(book, lesson),
-                                                        tag=tag)
+                                                        word=word)
         if ret[i] == 'true':
             correct_num = 1
             mistake_num = int(num[i]) - 1
@@ -567,10 +555,8 @@ def words_event_recorder(request, book, lesson, tag):
 
         wer = WordEventRecorder.objects.create(user=request.user,
                                                word=word,
-                                               lesson=get_lessonemb(book,lesson),
                                                correct_num=correct_num,
-                                               mistake_num=mistake_num,
-                                               tag=tag)
+                                               mistake_num=mistake_num)
         wer.save()
 
         profile = get_profile(request.user)
@@ -616,7 +602,7 @@ class LessonShowView(TemplateView):
                                                                  lesson=lesson_strange)[0]
                 if lesson_result.timestamp.date() != datetime.datetime.now().date():
                     print "need study strange_words first!"
-                    return render(request, "home.html", {'notice': '请先复习生词'})
+                    return HttpResponseRedirect('/home/')
 
         words = get_words_from_lesson(book, lesson)
         if len(words) == 0:

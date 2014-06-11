@@ -112,10 +112,18 @@ background-color: #F3F3F3;
 
 {% block container %}
 
+<div class="alert-messages" id="message-drawer" style="opacity: 0; top: 200px; display: none;">                                                   
+ <div class="message ">
+   <div class="message-inside">
+     <span class="message-text"></span>
+     <a class="dismiss" href="#" style="display: none;">×</a>
+   </div>
+ </div>
+</div>
+
 <div class="row">
   <div class="page-header">
     <h2>我的课程</h2>
-    <h3>{{notice}}</h3>
   </div>
   {% for todo in todos %}
   <div class="col-sm-6 col-md-3">
@@ -197,6 +205,20 @@ function showForm(me, id) {
     $('#'+id).show();
   }
 };
+
+function popup_message(text)
+{
+    $('#message-drawer .message-text').text(text);
+    $('#message-drawer').show();
+    $('#message-drawer').fadeTo("fast", 1.0);
+    $('#message-drawer').fadeTo(8000, 0, function(){
+        $(this).hide();
+    }); 
+}
+
+$(document).ready(function(){
+    popup_message("要先复习生词（strange words）哦！");
+});
 </script>
 
 {% endblock %}
