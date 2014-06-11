@@ -616,7 +616,7 @@ class LessonShowView(TemplateView):
                                                                  lesson=lesson_strange)[0]
                 if lesson_result.timestamp.date() != datetime.datetime.now().date():
                     print "need study strange_words first!"
-                    return HttpResponseRedirect('/study/book/'+request.user.username+"_book"+'/lesson/strange_words/show')
+                    return render(request, "home.html", {'notice': '请先复习生词'})
 
         words = get_words_from_lesson(book, lesson)
         if len(words) == 0:
