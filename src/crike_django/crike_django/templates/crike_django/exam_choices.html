@@ -1,0 +1,183 @@
+{% extends 'crike_django/lesson_base.html' %}
+{% load staticfiles %}
+
+{% block subcontent %}
+<script>
+  $('.step-links').hide();
+
+  $(function(){
+    var form = $('#ExamForm');
+    $('#counter').countdown({
+       image: "{% static 'countdown/img/digits.png' %}",
+       startTime: '10:00',
+       timerEnd: function(){ 
+        $('#popup')
+        .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
+        .show()
+        $('#overlay').show()
+        setTimeout( function () { $(form).submit(); }, 1000);
+       },
+       format: 'mm:ss'
+    });
+
+    $('.autogrow_article').autogrow();
+
+  });
+
+  function onSubmit(e) {
+
+    var form = $('#ExamForm');
+    var pickcheck = $(form).find( "input:radio:checked" ).length;
+
+    if ( pickcheck < 5) //TODO assume that comprehension has 5 questions
+    {
+      e.preventDefault();
+      var showtimer = null;
+      var cb = "$('#popup').hide();$('#overlay').hide()"
+      $('#popup')
+      .html("<label style='font-size:250%'><i style='color:red' class='fa fa-minus-square'></i> 还没做完呢，又粗心了吧 <i style='color:orange' class='fa fa-frown-o'/></label>")
+      .show()
+      $('#overlay').show()
+      shotimer = setTimeout(cb, 2000)
+      return false;
+    }
+  };
+  function onPick(me) {
+    $(me).find("input:radio").prop('checked',true);
+  };
+  var selectX;
+  var selectY;
+  function selectWord(e) {
+    var start = e.target.selectionStart;
+    var end = e.target.selectionEnd;
+    var word = e.target.value.substring(start, end);
+    //TODO on edge of the page
+    var x = selectX + 150;
+    var y = selectY + 80;
+    $('#popup').html('<a herf="#"><i class="fa fa-times-circle" style="float:right;cursor:pointer" onclick="cancelPopup()"></i></a>'+
+                     '<a herf="#"><i class="fa fa-plus" style="float:right;cursor:pointer;margin-right:5px" onclick="addToStrange(\''+word+'\')"></i></a>'+
+                     '<p><b>'+word+'</b></p><p id="loading">Loading...</p>')
+               .css({'left':x+'px','top':y+'px'}).show();
+    $.get("/wordpopup/"+word, function(data){
+      $('#loading').remove();
+      $('#popup').append('<p>'+data.phonetics+
+                         ' <a onmouseover="delayPlay(\'/media/audios/'+word+'.mp3\');"'+
+                            'onmouseout ="clearTimeout(timer);"'+ 
+                            'onclick="playSound(\'/media/audios/'+word+'.mp3\');"'+ 
+                            'title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a></p>')
+                 .append('<textarea readonly style="width:100%;height:80px;border:none">'+data.mean+'</textarea>');
+    }, "json");
+  };
+  function selectPosition(e) {
+    selectX = e.clientX;
+    selectY = e.clientY;
+  };
+  function cancelPopup() {
+    $('#popup').hide();
+  };
+
+  //solve the csrf token issue
+  function getCookie(name)
+  {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = jQuery.trim(cookies[i]);
+              // Does this cookie string begin with the name we want?
+   
+              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+ 
+  function addToStrange(word) {
+    //solve the csrf token issue
+    $.ajaxSetup({ 
+         beforeSend: function(xhr, settings) {
+             if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                 // Only send the token to relative URLs i.e. locally.
+                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+             }
+         } 
+    });
+
+    $.post("/wordpopup/"+word, function(){
+      popup_message("已加入生词本！");
+    });
+  };
+
+function popup_message(text)
+{
+    $('#message-drawer .message-text').text(text);
+    $('#message-drawer').show();
+    $('#message-drawer').fadeTo("fast", 1.0);
+    $('#message-drawer').fadeTo(3000, 0, function(){
+        $(this).hide();
+    }); 
+}
+
+</script>
+
+<div id='overlay'></div>
+<div id='popup'></div>
+<div class="alert-messages" id="message-drawer" style="opacity: 0; top: 60px; display: none;">                                                    
+ <div class="message ">
+   <div class="message-inside">
+     <span class="message-text"></span>
+     <a class="dismiss" href="#" style="display: none;">×</a>
+   </div>
+ </div>
+</div>
+
+
+<form id='ExamForm' action='/choices/{{id}}/' method='post'>
+  <div class='jumbotron subject-header-container2'>
+    <label>{{name}}</label>
+    <div id="counter" style='float:right;'></div>
+    <p>Read this article within 10 minutes, and answer the questions bellow</p>
+    {% csrf_token %}
+    <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
+    <strong id='feedback'>Choose the best answer</strong>
+  </div>
+
+  {% for ques in questions %}
+  <p>Question{{forloop.counter}}:</p>
+  <div id='question1'>
+    <div class="col-12 col-sm-12 col-lg-12">
+      <div class="thumbnail">
+        <p class="autogrow_question">{{ques.question|linebreaksbr}}</p>
+      </div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
+      <input type="radio" name="answer{{forloop.counter}}" value=1>
+      <div class="thumbnail">A<p id="choice_1" class="autogrow_choice">{{ques.answers.0|linebreaksbr}}</p></div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
+      <input type="radio" name="answer{{forloop.counter}}" value=2>
+      <div class="thumbnail">B<p id="choice_2" class="autogrow_choice">{{ques.answers.1|linebreaksbr}}</p></div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
+      <input type="radio" name="answer{{forloop.counter}}" value=3>
+      <div class="thumbnail">C<p id="choice_3" class="autogrow_choice">{{ques.answers.2|linebreaksbr}}</p></div>
+    </div>
+    <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
+      <input type="radio" name="answer{{forloop.counter}}" value=4>
+      <div class="thumbnail">D<p id="choice_4" class="autogrow_choice">{{ques.answers.3|linebreaksbr}}</p></div>
+    </div>
+  </div>
+  {% endfor %}
+
+</form>
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'jeditable/jquery.autogrow.js' %}"></script>
+{% endblock %}
+
+{% endblock %}
+
