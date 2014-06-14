@@ -297,6 +297,33 @@ function deleteExam(e,me) {
     e.preventDefault();
   }
 };
+var numofchoices = 0;
+function addNewChoice() {
+    numofchoices++;
+    $('<div id="question'+numofchoices+'"> \
+      <div class="col-12 col-sm-12 col-lg-12"> \
+        <div class="thumbnail"> \
+          <p class="autogrow_question">question</p> \
+        </div> \
+      </div> \
+      <div class="col-6 col-sm-6 col-lg-3"> \
+        <input type="radio" name="answer'+numofchoices+'" value=1> \
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice"></p></div> \
+      </div> \
+      <div class="col-6 col-sm-6 col-lg-3"> \
+        <input type="radio" name="answer'+numofchoices+'" value=2> \
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice"></p></div> \
+      </div> \
+      <div class="col-6 col-sm-6 col-lg-3"> \
+        <input type="radio" name="answer'+numofchoices+'" value=3> \
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice"></p></div> \
+      </div> \
+      <div class="col-6 col-sm-6 col-lg-3"> \
+        <input type="radio" name="answer'+numofchoices+'" value=4> \
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div> \
+      </div> \
+    </div>').appendTo('#choices');
+};
 </script>
 
 <div class="jumbotron">
@@ -321,6 +348,14 @@ function deleteExam(e,me) {
       </div>
     </div>
   </div>
+
+  <div class="page-header">
+    <h4>选择题</h4>
+  </div>
+  <div id="choices" class='row'>
+  </div>
+  <a onclick="addNewChoice();"><i class="fa fa-plus"></i></a>
+
   <div class="page-header">
     <h4>阅读理解1</h4>
   </div>
