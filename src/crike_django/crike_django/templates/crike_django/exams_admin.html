@@ -323,6 +323,40 @@ function addNewChoice() {
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div> \
       </div> \
     </div>').appendTo('#choices');
+
+  $(".autogrow_question").editable(function(value, settings) {
+        value = value.replace(/\n/g, '<br>');
+        $(this).html(value);
+        $(this).parents('form').find('#modified').show();
+        $(this).parents('form').find('button').show();
+      }, { 
+      type      : "autogrow",
+      submit    : 'OK',
+      cancel    : 'cancel',
+      tooltip   : "Click to edit...",
+      onblur    : "ignore",
+      autogrow : {
+         lineHeight : 32,
+         minHeight  : 32
+      },
+  });
+  $(".autogrow_choice").editable(function(value, settings) {
+        value = value.replace(/\n/g, '<br>');
+        $(this).html(value);
+        $(this).parents('form').find('#modified').show();
+        $(this).parents('form').find('button').show();
+      }, { 
+      type      : "autogrow",
+      submit    : 'OK',
+      cancel    : 'cancel',
+      tooltip   : "Click to edit...",
+      onblur    : "ignore",
+      autogrow : {
+         linewidth  : 64,
+         lineHeight : 32,
+         minHeight  : 32
+      },
+  });
 };
 </script>
 
