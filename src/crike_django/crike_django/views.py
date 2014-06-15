@@ -989,6 +989,20 @@ class ExamAdminView(TemplateView):
             exam.lessons.append(lesson)
             exam.totalpoints += len(lesson.words)
 
+        exam.choices[:] = []
+        choices_raw = request.POST.getlist('choice')
+        for choice_raw in choices_raw:
+            choice = json.loads(choice_raw)
+            question = choice['question']
+            choiceobj = Choicesingle(question=question)
+            choiceobj.answers = choice['choices']
+            rightindex = choice.get('rightindex', None)
+            if rightindex:
+                choiceobj.rightindex = rightindex;
+            else:
+                choiceobj.rightindex = 0;
+            exam.choices.append(choiceobj) 
+
         exam.readings[:] = []
         readings_raw = request.POST.getlist('reading')
         for reading_raw in readings_raw:
@@ -1009,6 +1023,7 @@ class ExamAdminView(TemplateView):
 
             exam.readings.append(readingobj)
 
+        exam.totalpoints += len(exam.choices)*5
         exam.totalpoints += len(exam.readings)*25
         exam.save()
         return HttpResponseRedirect("/admin/exams")

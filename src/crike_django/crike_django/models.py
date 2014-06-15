@@ -116,6 +116,7 @@ class Book(models.Model):
 class Exam(models.Model):
     name = models.CharField(max_length=50)
     lessons = ListField(EmbeddedModelField('Lesson'))
+    choices = ListField(EmbeddedModelField('Choicesingle'))
     readings = ListField(EmbeddedModelField('Reading'))
     totalpoints = models.IntegerField(blank=True, default=0)
     tag = models.CharField(max_length=50, blank=True, null=True)

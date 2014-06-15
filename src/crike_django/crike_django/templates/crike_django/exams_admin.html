@@ -188,6 +188,20 @@ function saveExam(e, me) {
   if ($.inArray(name, names) == -1) {
     $('<input>').attr({name:'name', value:name, hidden:'true'}).appendTo(form);
 
+    $(form).find('.choice').map(function() {
+        var data = JSON.stringify({
+              'question':$(this).find('.autogrow_question').html(),
+              'choices':[
+                 $(this).find('#choice_1').html(),
+                 $(this).find('#choice_2').html(),
+                 $(this).find('#choice_3').html(),
+                 $(this).find('#choice_4').html(),
+              ],
+              'rightindex':$(this).find("input:radio:checked" ).prop('value'),
+              });
+        $('<input>').attr({name:'choice', value: data, hidden:'true'}).appendTo(form);
+    });
+
     $(form).find('.reading').map(function() {
         var data = JSON.stringify({
           'name':$(this).find('.editable_readingname').html(),
@@ -300,7 +314,7 @@ function deleteExam(e,me) {
 var numofchoices = 0;
 function addNewChoice() {
     numofchoices++;
-    $('<div id="question'+numofchoices+'"> \
+    $('<div id="choice_question'+numofchoices+'" class="row choice"> \
       <div class="col-12 col-sm-12 col-lg-12"> \
         <div class="thumbnail"> \
           <p class="autogrow_question">question</p> \
@@ -386,9 +400,9 @@ function addNewChoice() {
   <div class="page-header">
     <h4>选择题</h4>
   </div>
-  <div id="choices" class='row'>
+  <div id='choices'>
   </div>
-  <a onclick="addNewChoice();"><i class="fa fa-plus"></i></a>
+  <a onclick="addNewChoice();" style="font-size:200%"><i class="fa fa-plus"></i></a>
 
   <div class="page-header">
     <h4>阅读理解1</h4>
