@@ -311,10 +311,11 @@ function deleteExam(e,me) {
     e.preventDefault();
   }
 };
-var numofchoices = 0;
-function addNewChoice() {
-    numofchoices++;
-    $('<div id="choice_question'+numofchoices+'" class="row choice"> \
+function addNewChoice(me) {
+    var choices = $(me).parents('form').find('#choices');
+    var numofchoices = $(choices).find('.choice').length+1;
+    $('<label>'+numofchoices+'.</label> \
+      <div id="choice_question'+numofchoices+'" class="row choice"> \
       <div class="col-12 col-sm-12 col-lg-12"> \
         <div class="thumbnail"> \
           <p class="autogrow_question">question</p> \
@@ -336,7 +337,7 @@ function addNewChoice() {
         <input type="radio" name="answer'+numofchoices+'" value=4> \
         <div class="thumbnail">D<p id="choice_4" class="autogrow_choice"></p></div> \
       </div> \
-    </div>').appendTo('#choices');
+    </div>').appendTo(choices);
 
   $(".autogrow_question").editable(function(value, settings) {
         value = value.replace(/\n/g, '<br>');
@@ -402,7 +403,7 @@ function addNewChoice() {
   </div>
   <div id='choices'>
   </div>
-  <a onclick="addNewChoice();" style="font-size:200%"><i class="fa fa-plus"></i></a>
+  <a onclick="addNewChoice(this);" style="font-size:200%"><i class="fa fa-plus"></i></a>
 
   <div class="page-header">
     <h4>阅读理解1</h4>
@@ -676,10 +677,10 @@ function addNewChoice() {
       <i class="fa fa-minus"></i></button>
   </h2>
   <div class="content" style="display:none">
+    <!-- vocabularies -->
     <div class="page-header">
       <h4>词汇测验</h4>
     </div>
-  <!-- vocabularies -->
     <div class='row'>
       {% for lesson in exam.lessons|dictsort:"name" %}
       <div class="col-6 col-sm-6 col-lg-2" ondblclick="onDoubleclickthumbnail(this)">
@@ -697,6 +698,41 @@ function addNewChoice() {
         </div>
       </div>
     </div>
+
+    <!--choices-->
+    <div class="page-header">
+      <h4>选择题</h4>
+    </div>
+    <div id='choices'>
+    {% for question in exam.choices %}
+    <label>{{forloop.counter}}.</label>
+    <div id='choice_question{{forloop.counter}}' class="row choice">
+      <div class="col-12 col-sm-12 col-lg-12">
+        <div class="thumbnail">
+          <p class="autogrow_question">{{question.question|linebreaksbr}}</p>
+        </div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer{{forloop.counter}}" value=1 {% if question.rightindex == 1 %}checked=true{% endif %}>
+        <div class="thumbnail">A<p id="choice_1" class="autogrow_choice">{{question.answers.0|linebreaksbr}}</p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer{{forloop.counter}}" value=2 {% if question.rightindex == 2 %}checked=true{% endif %}>
+        <div class="thumbnail">B<p id="choice_2" class="autogrow_choice">{{question.answers.1|linebreaksbr}}</p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer{{forloop.counter}}" value=3 {% if question.rightindex == 3 %}checked=true{% endif %}>
+        <div class="thumbnail">C<p id="choice_3" class="autogrow_choice">{{question.answers.2|linebreaksbr}}</p></div>
+      </div>
+      <div class="col-6 col-sm-6 col-lg-3">
+        <input type="radio" name="answer{{forloop.counter}}" value=4 {% if question.rightindex == 4 %}checked=true{% endif %}>
+        <div class="thumbnail">D<p id="choice_4" class="autogrow_choice">{{question.answers.3|linebreaksbr}}</p></div>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+    <a onclick="addNewChoice(this);" style="font-size:200%"><i class="fa fa-plus"></i></a>
+
   <!-- reading comprehensions -->
     {% for reading in exam.readings %}
     <div class="page-header">
