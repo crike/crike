@@ -49,7 +49,7 @@ urlpatterns = patterns('',
 # resource management for teachers
     url(r'^admin/books/', BooksAdminView.as_view(), name='books'),
     url(r'^admin/words/', WordsAdminView.as_view(), name='words'),
-    url(r'^admin/exams/', login_required(ExamAdminView.as_view()), name='exam'),#TODO current only for readings
+    url(r'^admin/exams/', login_required(ExamAdminView.as_view()), name='exam'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^delete/', WordDeleteView.as_view(), name='delete_word'),
@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^lessonschoose/?$', login_required(LessonsChooseView.as_view()), name='lessons_choose_view'),
     url(r'^exam/(?P<id>.*?)/?$', ExamView.as_view(), name='exam_view'),
     url(r'^reading/(?P<id>.*?)/?$', ReadingView.as_view(), name='reading_view'),
+    url(r'^choice/(?P<id>.*?)/?$', ChoiceView.as_view(), name='choice_view'),
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^wordpopup/(?P<wordname>.*)$', WordPopupView.as_view(), name='word_popup_view'),

@@ -7,9 +7,11 @@
 
   $(function(){
     var form = $('#ExamForm');
+    var choices_num = $(form).find( ".choice_question" ).length;
+
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
-       startTime: '10:00',
+       startTime: choices_num+':00',
        timerEnd: function(){ 
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
@@ -28,8 +30,9 @@
 
     var form = $('#ExamForm');
     var pickcheck = $(form).find( "input:radio:checked" ).length;
+    var choices_num = $(form).find( ".choice_question" ).length;
 
-    if ( pickcheck < 5) //TODO assume that comprehension has 5 questions
+    if ( pickcheck < choices_num) 
     {
       e.preventDefault();
       var showtimer = null;
@@ -135,11 +138,11 @@ function popup_message(text)
 </div>
 
 
-<form id='ExamForm' action='/choices/{{id}}/' method='post'>
+<form id='ExamForm' action='/choice/{{id}}/' method='post'>
   <div class='jumbotron subject-header-container2'>
     <label>{{name}}</label>
     <div id="counter" style='float:right;'></div>
-    <p>Read this article within 10 minutes, and answer the questions bellow</p>
+    <p>Choose the best answer for the following questions</p>
     {% csrf_token %}
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
     <strong id='feedback'>Choose the best answer</strong>
@@ -147,7 +150,7 @@ function popup_message(text)
 
   {% for ques in questions %}
   <p>Question{{forloop.counter}}:</p>
-  <div id='question1'>
+  <div class='choice_question'>
     <div class="col-12 col-sm-12 col-lg-12">
       <div class="thumbnail">
         <p class="autogrow_question">{{ques.question|linebreaksbr}}</p>

@@ -844,7 +844,7 @@ class ExamView(TemplateView):
             words_list += Word.objects.filter(id__in=lessonobj.words)
 
         if len(words_list) == 0:
-            return HttpResponseRedirect('/reading/'+id)
+            return HttpResponseRedirect('/choice/'+id)
 
         paginator = Paginator(words_list, 1)
         page = request.GET.get('page')
@@ -896,8 +896,42 @@ class ExamView(TemplateView):
                 examstat.save()
                 profile.save()
 
-            return HttpResponseRedirect('/reading/'+id)
+            return HttpResponseRedirect('/choice/'+id)
         return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
+
+class ChoiceView(TemplateView):
+    template_name='crike_django/exam_choices.html'
+
+    def get(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        name = exam.name
+        choices_list = exam.choices
+
+        if len(choices_list) == 0:
+            return HttpResponseRedirect('/reading/'+id)
+
+        return render(request, self.template_name,
+                {'questions':choices_list,'id':id,'name':name})
+
+    def post(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        length = len(exam.choices)
+        choices = exam.choices
+
+        score = 0
+        for i in range(length):
+            ans = request.POST.get('answer'+str(i+1), None)
+            if ans != None and choices[i].rightindex == eval(ans):
+                score += 5
+                profile = get_profile(request.user)
+                if profile:
+                    profile_record_exam_ret(profile, 'true')
+
+        examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+        examstat.score += score
+        examstat.save()
+
+        return HttpResponseRedirect('/reading/'+id)
 
 
 class ReadingView(TemplateView):
