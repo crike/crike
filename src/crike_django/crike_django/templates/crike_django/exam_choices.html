@@ -7,11 +7,15 @@
 
   $(function(){
     var form = $('#ExamForm');
-    var choices_num = $(form).find( ".choice_question" ).length;
 
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
-       startTime: choices_num+':00',
+       {% if questions|length < 10 %}
+       startTime: '0{{questions|length}}:00',
+       {% else %}
+       startTime: '{{questions|length}}:00',
+       {% endif %}
+
        timerEnd: function(){ 
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
