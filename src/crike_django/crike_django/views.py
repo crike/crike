@@ -839,29 +839,25 @@ class ExamView(TemplateView):
     def get(self, request, id):
         exam = Exam.objects.filter(id=id)[0]
         name = exam.name
-        words_list = []
+        words = []
         for lessonobj in exam.lessons:
-            words_list += Word.objects.filter(id__in=lessonobj.words)
+            words += Word.objects.filter(id__in=lessonobj.words)
 
-        if len(words_list) == 0:
+        if len(words) == 0:
             return HttpResponseRedirect('/choice/'+id)
 
-        paginator = Paginator(words_list, 1)
-        page = request.GET.get('page')
-        words = get_words_from_paginator(paginator, page)
+        for word in words:
+            words_list = filter(lambda x: x.name !=word.name, words)
+            count = len(words_list)
+            if count > 3:
+                options = sample(words_list, 3)
+            else:
+                options = sample(words_list, count)
+            options.insert(randrange(len(options)+1), word)
+            word.options = options
 
-        words_list = filter(lambda x: x.name !=words[0].name, words_list)
-        count = len(words_list)
-        if count > 3:
-            options = sample(words_list, 3)
-        else:
-            options = sample(words_list, count)
-        options.insert(randrange(len(options)+1), words[0])
-
-        score = request.GET.get('score')
         return render(request, self.template_name,
-                {'words':words, 'options':options, 
-                    'id':id, 'name':name, 'score':score})
+                {'words':words, 'id':id, 'name':name})
 
     def post(self, request, id):
         page = request.POST.get('page')

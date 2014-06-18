@@ -11,7 +11,11 @@
     var form = $('#ExamForm');
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
-       startTime: '01:00',
+       {% if words|length < 10 %}
+       startTime: '0{{words|length}}:00',
+       {% else %}
+       startTime: '{{words|length}}:00',
+       {% endif %}
        timerEnd: function(){ 
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
@@ -31,8 +35,9 @@
     var ques = $(form).find( "input[name='question']" ).prop('value');
     var pickcheck = $(form).find( "input:radio[name='pickanswer']:checked" ).length;
     var fillans = $(form).find( "input[name='fillanswer']" ).prop('value');
+    var words_num = {{words|length}};
 
-    if ( pickcheck == 0 || fillans == '')
+    if (pickcheck != words_num)
     {
       e.preventDefault();
       var showtimer = null;
@@ -89,47 +94,37 @@
 <div id='overlay'></div>
 <div id='popup'></div>
 
-{% for word in words %}
 <form id='ExamForm' action='/exam/{{id}}/' method='post'>
   <div class='jumbotron subject-header-container2'>
     <label>{{name}}</label>
     <div id="counter" style='float:right;'></div>
     {% csrf_token %}
-    {% if words.has_next %}
-    <input name="page" value="{{words.next_page_number}}" hidden="true">
-    {% else %}
-    <input name="page" value="0" hidden="true">
-    {% endif %}
-    <input name="question" value="{{word.name}}" hidden="true">
     <h1>
-      <input type="text" style="border: none; border-bottom: 1px solid black;" size="15" autocomplete="off" name='fillanswer'>
-      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-          onmouseout ="clearTimeout(timer);" 
-          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
-          title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a><br>
-      <span class="current" style="float:right">
-          {{ words.number }} / {{ words.paginator.num_pages }}
-      </span>
     </h1>
     <input name="score" value='{{score}}' hidden="true">
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
     <strong id='feedback'>根据发音，填写完整单词并选择释义</strong>
   </div>
 
-  <div class='row'>
-    {% for option in options %}
-    <div class="col-6 col-sm-6 col-lg-3">  
+{% for word in words %}
+  <div class='row e2c'>
+    <h2>{{forloop.counter}}. {{word.name}}
+    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+        onmouseout ="clearTimeout(timer);" 
+        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
+    </h2>
+    {% for option in word.options %}
       <div class="pin" style="width:100%" onclick='onPick(this)'>
         <input type="radio" name="pickanswer" value="{{option.name}}">
         {% for m in option.mean %}
-        <li style="font-size:150%">{{m}}</li>
+          {{m}};
         {% endfor %}
       </div>
-    </div>
     {% endfor %}
   </div>
-</form>
 {% endfor %}
+</form>
 
 {% block body_footer %}
 <script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
