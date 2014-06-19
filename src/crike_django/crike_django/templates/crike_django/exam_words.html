@@ -9,6 +9,9 @@
 
   $(function(){
     var form = $('#ExamForm');
+    var ques = $(form).find( "input[name^='ques']" ).prop('value');
+    //TODO: unchecked ans should possess a position
+    var ans = $(form).find( "input:radio[name^='pickanswer']:checked" ).prop('value');
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
        {% if words|length < 10 %}
@@ -21,8 +24,8 @@
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
         .show()
         $('#overlay').show()
-        $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
-        $('<input>').attr({name:'ret', value:'false', hidden:'true'}).appendTo(form);
+        $('<input>').attr({name:'ques', value:ques, hidden:'true'}).appendTo(form);
+        $('<input>').attr({name:'ans', value:ans, hidden:'true'}).appendTo(form);
         setTimeout( function () { $(form).submit(); }, 1000);
        },
        format: 'mm:ss'
@@ -32,9 +35,9 @@
   function onSubmit(e) {
 
     var form = $('#ExamForm');
-    var ques = $(form).find( "input[name='question']" ).prop('value');
-    var pickcheck = $(form).find( "input:radio[name='pickanswer']:checked" ).length;
-    var fillans = $(form).find( "input[name='fillanswer']" ).prop('value');
+    var pickcheck = $(form).find( "input:radio[name^='pickanswer']:checked" ).length;
+    var ques = $(form).find( "input[name^='ques']" ).prop('value');
+    var ans = $(form).find( "input:radio[name^='pickanswer']:checked" ).prop('value');
     var words_num = {{words|length}};
 
     if (pickcheck != words_num)
@@ -49,43 +52,10 @@
       shotimer = setTimeout(cb, 2000)
       return false;
     }
-
-    var pickans = $(form).find( "input:radio[name='pickanswer']:checked" ).prop('value');
-
-    numoftry++;
-    if (ques == pickans && ques == fillans)
-    {
-      e.preventDefault();
-      $('#popup')
-      .html("<label style='font-size:300%'><i style='color:green' class='fa fa-check'></i> 你真棒 <i style='color:orange' class='fa fa-smile-o'/></label>")
-      .show()
-      $('#overlay').show()
-      $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
-      $('<input>').attr({name:'ret', value:'true', hidden:'true'}).appendTo(form);
-      setTimeout( function () { $(form).submit(); }, 2000);
-    } else {
-      var showtimer = null;
-      var cb = "$('#popup').hide();$('#overlay').hide()"
-      e.preventDefault();
-      if (numoftry < 3) {
-        $('#popup')
-        .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 不对哦, 还有"+(3-numoftry)+"次机会 <i style='color:orange' class='fa fa-frown-o'/></label>")
-        .show()
-        $('#overlay').show()
-        shotimer = setTimeout(cb, 2000)
-        $('input[name="pickanswer"]').prop('checked', false);
-        $('input[name="fillanswer"]').prop('value', '');
-      } else {
-        $('#popup')
-        .html("<label style='font-size:300%'><i style='color:red' class='fa fa-times'></i> 看来要努力了啊 <i style='color:orange' class='fa fa-frown-o'/></label>")
-        .show()
-        $('#overlay').show()
-        $('<input>').attr({name:'num', value:numoftry, hidden:'true'}).appendTo(form);
-        $('<input>').attr({name:'ret', value:'false', hidden:'true'}).appendTo(form);
-        setTimeout( function () { $(form).submit(); }, 2000);
-      }
-    }
+    $('<input>').attr({name:'ques', value:ques, hidden:'true'}).appendTo(form);
+    $('<input>').attr({name:'ans', value:ans, hidden:'true'}).appendTo(form);
   };
+
   function onPick(pin) {
     $(pin).find("input:radio").prop('checked',true);
   }
@@ -114,9 +84,10 @@
         onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
     </h2>
+    <input name="ques{{forloop.counter}}" value="{{word.name}}" hidden="true">
     {% for option in word.options %}
       <div class="pin" style="width:100%" onclick='onPick(this)'>
-        <input type="radio" name="pickanswer" value="{{option.name}}">
+        <input type="radio" name="pickanswer{{forloop.parentloop.counter}}" value="{{option.name}}">
         {% for m in option.mean %}
           {{m}};
         {% endfor %}

@@ -860,40 +860,45 @@ class ExamView(TemplateView):
                 {'words':words, 'id':id, 'name':name})
 
     def post(self, request, id):
-        page = request.POST.get('page')
-        num = request.POST.get('num')
-        ret = request.POST.get('ret')
-        score = request.POST.get('score')
-        if score != 'None':
-            score = eval(score)
-        else:
-            score = 0
-        if ret == 'true':
-            score += 1
+        exam = Exam.objects.filter(id=id)[0]
+        ans = request.POST.getlist('ans')
+        ques = request.POST.getlist('ques')
+        score = 0
+
+        for i,an in enumerate(ans):
+            if an == ques[i]:
+                score += 1
         
+        """
         profile = get_profile(request.user)
         if profile:
             profile_record_exam_ret(profile, ret)
+        """
+        print("sssssssssssssssssssssssss")
+        print(score)
+        print(ans)
+        print(ques)
+        print("sssssssssssssssssssssssss")
 
-        if page == '0':
-            exam = Exam.objects.filter(id=id)[0]
-            examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
-            examstat.score = score
+        examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+        examstat.score = score
+        examstat.save()
+        if len(exam.choices) == 0 and len(exam.readings) == 0:
+            profile = get_profile(request.user)
+            if examstat.tag == "done":
+                if profile and examstat.score/exam.totalpoints == 1:
+                    profile.point_add(5)
+            else:
+                examstat.tag = "done"
+                if profile:
+                    profile.point_add(examstat.score)
             examstat.save()
-            if len(exam.readings) == 0:
-                profile = get_profile(request.user)
-                if examstat.tag == "done":
-                    if profile and examstat.score/exam.totalpoints == 1:
-                        profile.point_add(5)
-                else:
-                    examstat.tag = "done"
-                    if profile:
-                        profile.point_add(examstat.score)
-                examstat.save()
-                profile.save()
+            profile.save()
+            return HttpResponseRedirect('/home/')
+        elif len(exam.choices) == 0:
+            return HttpResponseRedirect('/reading/'+id)
 
-            return HttpResponseRedirect('/choice/'+id)
-        return HttpResponseRedirect('/exam/'+id+'/?page='+page+'&score='+str(score))
+        return HttpResponseRedirect('/choice/'+id)
 
 class ChoiceView(TemplateView):
     template_name='crike_django/exam_choices.html'
@@ -926,6 +931,19 @@ class ChoiceView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.save()
+
+        if len(exam.readings) == 0:
+            profile = get_profile(request.user)
+            if examstat.tag == "done":
+                if profile and examstat.score/exam.totalpoints == 1:
+                    profile.point_add(5)
+            else:
+                examstat.tag = "done"
+                if profile:
+                    profile.point_add(examstat.score)
+            examstat.save()
+            profile.save()
+            return HttpResponseRedirect('/home/')
 
         return HttpResponseRedirect('/reading/'+id)
 
