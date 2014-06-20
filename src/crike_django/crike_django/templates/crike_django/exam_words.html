@@ -9,9 +9,13 @@
 
   $(function(){
     var form = $('#ExamForm');
-    var ques = $(form).find( "input[name^='ques']" ).prop('value');
+    var ques = [];
+    $(form).find( "input[name^='ques']" )
+           .each(function() { ques.push($(this).prop('value')) });
     //TODO: unchecked ans should possess a position
-    var ans = $(form).find( "input:radio[name^='pickanswer']:checked" ).prop('value');
+    var ans =  [];
+    $(form).find( "input:radio[name^='pickanswer']:checked" )
+           .each(function() { ans.push($(this).prop('value')) });
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
        {% if words|length < 10 %}
@@ -23,9 +27,11 @@
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
         .show()
-        $('#overlay').show()
-        $('<input>').attr({name:'ques', value:ques, hidden:'true'}).appendTo(form);
-        $('<input>').attr({name:'ans', value:ans, hidden:'true'}).appendTo(form);
+        $('#overlay').show();
+        for (i=0;i<ques.length;i++)
+          $('<input>').attr({name:'ques', value:ques[i], hidden:'true'}).appendTo(form);
+        for (i=0;i<ans.length;i++)
+          $('<input>').attr({name:'ans', value:ans[i], hidden:'true'}).appendTo(form);
         setTimeout( function () { $(form).submit(); }, 1000);
        },
        format: 'mm:ss'
@@ -36,8 +42,12 @@
 
     var form = $('#ExamForm');
     var pickcheck = $(form).find( "input:radio[name^='pickanswer']:checked" ).length;
-    var ques = $(form).find( "input[name^='ques']" ).prop('value');
-    var ans = $(form).find( "input:radio[name^='pickanswer']:checked" ).prop('value');
+    var ques = [];
+    $(form).find( "input[name^='ques']" )
+           .each(function() { ques.push($(this).prop('value')) });
+    var ans =  [];
+    $(form).find( "input:radio[name^='pickanswer']:checked" )
+           .each(function() { ans.push($(this).prop('value')) });
     var words_num = {{words|length}};
 
     if (pickcheck != words_num)
@@ -52,8 +62,10 @@
       shotimer = setTimeout(cb, 2000)
       return false;
     }
-    $('<input>').attr({name:'ques', value:ques, hidden:'true'}).appendTo(form);
-    $('<input>').attr({name:'ans', value:ans, hidden:'true'}).appendTo(form);
+    for (i=0;i<ques.length;i++)
+      $('<input>').attr({name:'ques', value:ques[i], hidden:'true'}).appendTo(form);
+    for (i=0;i<ans.length;i++)
+      $('<input>').attr({name:'ans', value:ans[i], hidden:'true'}).appendTo(form);
   };
 
   function onPick(pin) {
