@@ -9,13 +9,6 @@
 
   $(function(){
     var form = $('#ExamForm');
-    var ques = [];
-    $(form).find( "input[name^='ques']" )
-           .each(function() { ques.push($(this).prop('value')) });
-    //TODO: unchecked ans should possess a position
-    var ans =  [];
-    $(form).find( "input:radio[name^='pickanswer']:checked" )
-           .each(function() { ans.push($(this).prop('value')) });
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
        {% if words|length < 10 %}
@@ -27,10 +20,16 @@
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
         .show()
+        var ques = [];
+        $(form).find( "input[name^='ques']" )
+               .each(function() { ques.push($(this).prop('value')) });
+        var ans =  [];
+        $(form).find( "input:radio[name^='pickanswer']:checked" )
+               .each(function() { var index = parseInt($(this).prop('name').substring(10)); ans[index-1]=$(this).prop('value') });
         $('#overlay').show();
         for (i=0;i<ques.length;i++)
           $('<input>').attr({name:'ques', value:ques[i], hidden:'true'}).appendTo(form);
-        for (i=0;i<ans.length;i++)
+        for (i=0;i<ques.length;i++)
           $('<input>').attr({name:'ans', value:ans[i], hidden:'true'}).appendTo(form);
         setTimeout( function () { $(form).submit(); }, 1000);
        },
