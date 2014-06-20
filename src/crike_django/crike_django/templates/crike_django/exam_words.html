@@ -9,21 +9,24 @@
 
   $(function(){
     var form = $('#ExamForm');
+    var ques = [];
+    $(form).find( "input[name^='ques']" )
+           .each(function() { ques.push($(this).prop('value')) });
+    var ans =  [];
+    var timelimit = ques.length * 10;
+    var time_s = timelimit % 60;
+    var time_m = Math.floor(timelimit / 60);
     $('#counter').countdown({
        image: "{% static 'countdown/img/digits.png' %}",
-       {% if words|length < 10 %}
-       startTime: '0{{words|length}}:00',
+       {% if time_m < 10 %}
+       startTime: '0'+time_m+':'+time_s,
        {% else %}
-       startTime: '{{words|length}}:00',
+       startTime: time_m+':'+time_s,
        {% endif %}
        timerEnd: function(){ 
         $('#popup')
         .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
         .show()
-        var ques = [];
-        $(form).find( "input[name^='ques']" )
-               .each(function() { ques.push($(this).prop('value')) });
-        var ans =  [];
         $(form).find( "input:radio[name^='pickanswer']:checked" )
                .each(function() { var index = parseInt($(this).prop('name').substring(10)); ans[index-1]=$(this).prop('value') });
         $('#overlay').show();
