@@ -898,6 +898,74 @@ class ExamView(TemplateView):
         elif len(exam.choices) == 0:
             return HttpResponseRedirect('/reading/'+id)
 
+        return HttpResponseRedirect('/trans/'+id)
+
+class TransView(TemplateView):
+    template_name='crike_django/exam_trans.html'
+
+    def get(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        name = exam.name
+        words = []
+        for lessonobj in exam.lessons:
+            words += Word.objects.filter(id__in=lessonobj.words)
+
+        if len(words) == 0:
+            return HttpResponseRedirect('/choice/'+id)
+
+        for word in words:
+            if not word.example or not word.example_t:
+                continue
+            example = word.example
+            if example[len(example)-1] == '.':
+                example = example[0:len(example)-1]
+            words_list = example.split()
+            count = len(words_list)
+            options = sample(words_list, count)
+            word.options = options
+
+        return render(request, self.template_name,
+                {'words':words, 'id':id, 'name':name})
+
+    def post(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        ans = request.POST.getlist('ans')
+        ques = request.POST.getlist('ques')
+        score = 0
+
+        for i,an in enumerate(ans):
+            if an == ques[i]:
+                score += 1
+        
+        """
+        profile = get_profile(request.user)
+        if profile:
+            profile_record_exam_ret(profile, ret)
+        """
+        print("sssssssssssssssssssssssss")
+        print(score)
+        print(ans)
+        print(ques)
+        print("sssssssssssssssssssssssss")
+
+        examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+        examstat.score = score
+        examstat.save()
+        if len(exam.choices) == 0 and len(exam.readings) == 0:
+            profile = get_profile(request.user)
+            if examstat.tag == "done":
+                if profile and examstat.score/exam.totalpoints == 1:
+                    profile.point_add(5)
+            else:
+                examstat.tag = "done"
+                if profile:
+                    profile.point_add(examstat.score)
+            examstat.save()
+            profile.save()
+            return HttpResponseRedirect('/home/')
+        elif len(exam.choices) == 0:
+            return HttpResponseRedirect('/reading/'+id)
+
         return HttpResponseRedirect('/choice/'+id)
 
 class ChoiceView(TemplateView):

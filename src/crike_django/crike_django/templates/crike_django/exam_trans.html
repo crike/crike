@@ -1,0 +1,111 @@
+{% extends 'crike_django/lesson_base.html' %}
+{% load staticfiles %}
+
+{% block subcontent %}
+<script>
+  $('.step-links').hide();
+
+  var numoftry = 0;
+
+  $(function(){
+    var form = $('#ExamForm');
+    var ques = [];
+    $(form).find( "input[name^='ques']" )
+           .each(function() { ques.push($(this).prop('value')) });
+    var ans =  [];
+    var timelimit = ques.length * 40;
+    var time_s = timelimit % 60;
+    var time_m = Math.floor(timelimit / 60);
+    $('#counter').countdown({
+       image: "{% static 'countdown/img/digits.png' %}",
+       {% if time_m < 10 %}
+       startTime: '0'+time_m+':'+time_s,
+       {% else %}
+       startTime: time_m+':'+time_s,
+       {% endif %}
+       timerEnd: function(){ 
+        $('#popup')
+        .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'/></label>")
+        .show()
+        $(form).find( "div[id^='choosed']" )
+        .each(function() { ans.push($(this).find('.pin').text());});
+        $('#overlay').show();
+        for (i=0;i<ques.length;i++)
+          $('<input>').attr({name:'ques', value:ques[i], hidden:'true'}).appendTo(form);
+        for (i=0;i<ques.length;i++)
+          $('<input>').attr({name:'ans', value:ans[i], hidden:'true'}).appendTo(form);
+        setTimeout( function () { $(form).submit(); }, 1000);
+       },
+       format: 'mm:ss'
+    });
+  });
+
+  function onSubmit(e) {
+
+    var form = $('#ExamForm');
+    var ques = [];
+    $(form).find( "input[name^='ques']" )
+           .each(function() { ques.push($(this).prop('value')) });
+    var ans =  [];
+    $(form).find( "input:radio[name^='pickanswer']:checked" )
+           .each(function() { ans.push($(this).prop('value')) });
+    var words_num = {{words|length}};
+
+    for (i=0;i<ques.length;i++)
+      $('<input>').attr({name:'ques', value:ques[i], hidden:'true'}).appendTo(form);
+    for (i=0;i<ans.length;i++)
+      $('<input>').attr({name:'ans', value:ans[i], hidden:'true'}).appendTo(form);
+  };
+
+  function onPick(pin,num,option) {
+    $('<div class="pin" onClick="onCancel(this,'+option+')">'+$(pin).text()+'</div>')
+    .appendTo('#choosed'+num);
+    $(pin).hide();
+  };
+
+  function onCancel(pin,option) {
+    $(pin).parents('.c2e').find('#option'+option).show();
+    $(pin).remove();
+  };
+</script>
+
+<div id='overlay'></div>
+<div id='popup'></div>
+
+<form id='ExamForm' action='/trans/{{id}}/' method='post'>
+  <div class='jumbotron subject-header-container2'>
+    <label>{{name}}</label>
+    <div id="counter" style='float:right;'></div>
+    {% csrf_token %}
+    <h1>
+    </h1>
+    <input name="score" value='{{score}}' hidden="true">
+    <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
+    <strong id='feedback'>点击单词给出对应中文句子的正确翻译</strong>
+  </div>
+
+{% for word in words %}
+  {% if word.options %}
+  <div class='row c2e' id="trans{{forloop.counter}}">
+    <h2>{{forloop.counter}}. {{word.example_t}}</h2>
+    <input name="ques{{forloop.counter}}" value="{{word.example}}" hidden="true">
+    <div id="choosed{{forloop.counter}}">
+    Answer: 
+    </div></br>
+    Options:
+    {% for option in word.options %}
+    <div class="pin" id="option{{forloop.counter}}" onclick='onPick(this, {{forloop.parentloop.counter}}, {{forloop.counter}})'>
+          {{option}} 
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endfor %}
+</form>
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% endblock %}
+
