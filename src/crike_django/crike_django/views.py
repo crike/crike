@@ -917,8 +917,10 @@ class TransView(TemplateView):
             if not word.example or not word.example_t:
                 continue
             example = word.example
+            """
             if example[len(example)-1] == '.':
                 example = example[0:len(example)-1]
+            """
             words_list = example.split()
             count = len(words_list)
             options = sample(words_list, count)
@@ -929,12 +931,11 @@ class TransView(TemplateView):
 
     def post(self, request, id):
         exam = Exam.objects.filter(id=id)[0]
-        ans = request.POST.getlist('ans')
-        ques = request.POST.getlist('ques')
+        retlist = request.POST.get('ret').split(',')
         score = 0
 
-        for i,an in enumerate(ans):
-            if an == ques[i]:
+        for ret in retlist:
+            if ret == 'true':
                 score += 1
         
         """
@@ -944,8 +945,7 @@ class TransView(TemplateView):
         """
         print("sssssssssssssssssssssssss")
         print(score)
-        print(ans)
-        print(ques)
+        print(retlist)
         print("sssssssssssssssssssssssss")
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
