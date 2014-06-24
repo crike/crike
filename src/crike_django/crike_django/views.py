@@ -936,7 +936,7 @@ class TransView(TemplateView):
 
         for ret in retlist:
             if ret == 'true':
-                score += 1
+                score += 5
         
         """
         profile = get_profile(request.user)
