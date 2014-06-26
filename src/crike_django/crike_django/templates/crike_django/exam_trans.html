@@ -75,11 +75,9 @@
   <div class='jumbotron subject-header-container2'>
     <label>{{name}}</label>
     <div id="counter" style='float:right;'></div>
+    <p><strong>Click the cards to form the right translation of each sentence, 40 seconds for each</strong></p>
     {% csrf_token %}
-    <h1>
-    </h1>
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
-    <strong id='feedback'>点击单词给出对应中文句子的正确翻译</strong>
   </div>
 
 {% for word in words %}

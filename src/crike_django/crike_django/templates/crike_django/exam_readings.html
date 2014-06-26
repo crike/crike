@@ -140,10 +140,9 @@ function popup_message(text)
   <div class='jumbotron subject-header-container2'>
     <label>{{name}}</label>
     <div id="counter" style='float:right;'></div>
-    <p>Read this article within 10 minutes, and answer the questions bellow</p>
+    <p><strong>Read this article and answer the questions bellow within 10 minutes</strong></p>
     {% csrf_token %}
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
-    <strong id='feedback'>Choose the best answer</strong>
   </div>
 
   <p>Article: </p>
