@@ -314,7 +314,6 @@ class UserHistoryView(TemplateView):
             if history.tag not in tags:
                 tags[history.tag] = 0
             tags[history.tag] += 1
-        print tags
         return render(request, self.template_name, {
                 'user_history': user_history,
                 'tags': tags,
@@ -530,8 +529,6 @@ def word_event_recorder(request, book, lesson, tag):
             profile.point_add(5/word_stat.correct_num)
             profile.save()
 
-    print word, request.user, lesson
-
 
 def words_event_recorder(request, book, lesson, tag):
     num = request.POST.get('num').split(',')
@@ -565,8 +562,6 @@ def words_event_recorder(request, book, lesson, tag):
             if correct_num > 0:
                 profile.point_add(5/word_stat.correct_num)
                 profile.save()
-
-        print word, request.user, lesson
 
 
 def create_class_if_need(request, book, lesson):
@@ -874,11 +869,6 @@ class ExamView(TemplateView):
         if profile:
             profile_record_exam_ret(profile, ret)
         """
-        print("sssssssssssssssssssssssss")
-        print(score)
-        print(ans)
-        print(ques)
-        print("sssssssssssssssssssssssss")
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score = score
@@ -943,10 +933,6 @@ class TransView(TemplateView):
         if profile:
             profile_record_exam_ret(profile, ret)
         """
-        print("sssssssssssssssssssssssss")
-        print(score)
-        print(retlist)
-        print("sssssssssssssssssssssssss")
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score = score
