@@ -1460,6 +1460,7 @@ class WordPopupView(TemplateView):
         else:
             word = words[0]
 
+        """
         book_obj = Book.objects.get_or_create(name=request.user.username+"_book", is_public=False)[0]
         lesson_embs = filter(lambda x: x.name == 'strange_words', book_obj.lessons)
         lesson_obj = None
@@ -1473,10 +1474,14 @@ class WordPopupView(TemplateView):
         else:
             lesson_obj = Lesson(name='strange_words', book=book_obj)
             lesson_obj.words.append(word.id)
-
         lesson_obj.save()
         book_obj.lessons.append(lesson_obj)
         book_obj.save()
+        """
+        # words add to strange_words need to have a mistake_num greater or equal to 2
+        word_stat,ret = WordStat.objects.get_or_create(user=request.user,
+                                                   word=word, mistake_num=3)
+        word_stat.save()
 
         return HttpResponse(status=204)
 
