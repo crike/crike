@@ -19,6 +19,10 @@
 
 function init_jeditable() {
 
+  $('input:radio').attr('onclick', 
+      '$(this).parents("form").find("#modified").show();'+
+      '$(this).parents("form").find("button").show();');
+
   $(".editable_selectbook").editable(function(value, settings){
     $(this).html(value);
     lessons = lessonsOfbooks[value];
@@ -312,6 +316,8 @@ function deleteExam(e,me) {
   }
 };
 function addNewChoice(me) {
+    $(me).parents('form').find('#modified').show();
+    $(me).parents('form').find('button').show();
     var choices = $(me).parents('form').find('#choices');
     var numofchoices = $(choices).find('.choice').length+1;
     $('<label>'+numofchoices+'.</label> \
@@ -344,6 +350,8 @@ function addNewChoice(me) {
 };
 
 function addNewReading(me) {
+    $(me).parents('form').find('#modified').show();
+    $(me).parents('form').find('button').show();
     var readings = $(me).parents('form').find('#readings');
     var numofreadings = $(readings).find('.reading').length+1;
     $('<label>'+numofreadings+'.</label> \
@@ -527,10 +535,10 @@ $(function(){init_jeditable();});
   <h2><a style="cursor:pointer;"><i class="fa fa-caret-right" style="font-size:80%" onclick="expandExam(this)"></i></a>
     <b class="editable_examname" id="text_1">{{exam.name}}</b>
     <b id="modified" style="display:none">&nbsp&nbsp*</b>
-    <button onclick="saveExam(event, this);" class="btn btn-success" style="float:right;display:none">
-      <i class="fa fa-save"></i></button>
     <button class="btn btn-danger" style="float:right;" onclick="deleteExam(event,this);">
       <i class="fa fa-minus"></i></button>
+    <button onclick="saveExam(event, this);" class="btn btn-success" style="float:right;display:none">
+      <i class="fa fa-save"></i></button>
   </h2>
   <div class="content" style="display:none">
     <!-- vocabularies -->
@@ -590,10 +598,12 @@ $(function(){init_jeditable();});
     <a onclick="addNewChoice(this);" style="font-size:200%"><i class="fa fa-plus"></i></a>
 
   <!-- reading comprehensions -->
-    {% for reading in exam.readings %}
     <div class="page-header">
-      <h4>阅读理解{{forloop.counter}}</h4>
+      <h4>阅读理解</h4>
     </div>
+    <div id='readings'>
+    {% for reading in exam.readings %}
+    <label>{{forloop.counter}}.</label>
     <div class='row reading'>
       <p>Article: </p>
       <div class="col-12 col-sm-12 col-lg-12">
@@ -630,6 +640,9 @@ $(function(){init_jeditable();});
       {% endfor %}
     </div>
     {% endfor %}
+    </div>
+    <a onclick="addNewReading(this);" style="font-size:200%"><i class="fa fa-plus"></i></a>
+
   </div>
 </form>
 {% endfor %}
