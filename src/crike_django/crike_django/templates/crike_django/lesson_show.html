@@ -38,7 +38,7 @@
               onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
               onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
               title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a><br>
-          <div style='font-size:70%; margin-top:20px'>
+          <div style='font-size:50%; margin-top:20px'>
             {% for mean in word.mean %}
             <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
             {% endfor %}
