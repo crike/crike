@@ -298,7 +298,9 @@ def retrieve_word(request, book, lesson, word):
     download_single_word(word)
     imgpath = MEDIA_ROOT+'/images/'+word
     num = 0
-    while not is_path_full(imgpath) and num < 3:
+    while not is_path_full(imgpath):
+        if num > 3:
+            break;
         num += 1
         time.sleep(10)
 
