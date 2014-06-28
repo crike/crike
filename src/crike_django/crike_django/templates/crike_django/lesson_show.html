@@ -46,7 +46,7 @@
           <strong style="font-size:70%;color:black;">Example:</strong>
           <li style="font-size:70%;color:blue;">{{ word.example }}</li>
           <li style="font-size:70%;color:blue;">{{ word.example_t }}</li>
-          <label style="float:bottom;font-size:50%;color:gray;">{{ forloop.counter }} / {{ words|length }}</label>
+          <label style="float:right;font-size:70%;color:gray;">第{{ forloop.counter }}个 / 共{{ words|length }}个</label>
         </h1>
       </div>
       <div class="bb-custom-side">
