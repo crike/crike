@@ -302,7 +302,7 @@ def retrieve_word(request, book, lesson, word):
         if num > 3:
             break;
         num += 1
-        time.sleep(10)
+        time.sleep(5)
 
     return HttpResponseRedirect("/admin/book/"+book+"/lesson/"+lesson)
 
