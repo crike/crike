@@ -15,7 +15,6 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>课程名</th>
             <th>正确次数</th>
             <th>错误次数</th>
             <th>标签</th>
@@ -26,7 +25,6 @@
         {% for word_stat in word_stats %}
           <tr>
             <td>{{ word_stat.word.name }}</td>
-            <td>{{ word_stat.lesson.name }}</td>
             <td>{{ word_stat.correct_num }}</td>
             <td>{{ word_stat.mistake_num }}</td>
             <td>{{ word_stat.tag }}</td>
