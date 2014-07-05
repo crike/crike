@@ -711,7 +711,10 @@ class LessonReviewView(TemplateView):
             we = WordEventRecorder.objects.filter(user=request.user, word=word)
             if we:
                 we = we[0]
-                ratio = we.correct_num/float(we.correct_num+we.mistake_num)
+                if we.correct_num+we.mistake_num is 0:
+                    ratio = 0
+                else:
+                    ratio = we.correct_num/float(we.correct_num+we.mistake_num)
                 if ratio >= 0.9:
                     word.we = 3
                 elif ratio >= 0.6:
