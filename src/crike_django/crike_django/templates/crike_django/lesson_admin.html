@@ -140,6 +140,7 @@ function onRetrieve(name) {
   <div class='row'>
     <div class="col-lg-8">
       <div class="pin" style="width:100%">
+        <ul>
         <li style='display:inline' id='id_phonetics'><strong>[{{ word.phonetics }}]</strong></li>
         <li style='display:inline'>
         <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
@@ -150,9 +151,10 @@ function onRetrieve(name) {
         {% for mean in word.mean %}
         <li id='id_mean'>{{mean}}</li>
         {% endfor %}
-        <strong>Example:</strong>
+        <strong style="font-size:70%">Example:</strong>
         <li id='id_example'>{{ word.example }}</li>
         <li id='id_example_t'>{{ word.example_t }}</li>
+        </ul>
       </div>
     </div>
     <div class="col-lg-4">
