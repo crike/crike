@@ -366,8 +366,7 @@ class WordStatView(TemplateView):
                 stat.accuracy = 0
             else:
                 stat.accuracy = "%.1f%%" % (stat.correct_num * 100 / tries)
-                if stat.accuracy is "100.0%":
-                    word_stats.exclude(id=stat.id)
+        word_stats = filter(lambda x: x.accuracy != "100.0%", word_stats)
         return render(request, self.template_name, {'word_stats': word_stats})
 
     def delete(self, request, *args, **kwargs):
