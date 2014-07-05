@@ -139,7 +139,7 @@ function popup_message(text)
 <form id='ExamForm' action='/reading/{{id}}/' method='post'>
   <div class='jumbotron subject-header-container2'>
     <label>{{name}}</label>
-    <div id="counter" style='float:right;'></div>
+    <div id="counter" style='position:fixed;top:50px;right:10px;z-index:1'></div>
     <p><strong>Read this article and answer the questions bellow within 10 minutes</strong></p>
     {% csrf_token %}
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">

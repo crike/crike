@@ -81,7 +81,7 @@
 <form id='ExamForm' action='/exam/{{id}}/' method='post'>
   <div class='jumbotron subject-header-container2'>
     <label>{{name}}</label>
-    <div id="counter" style='float:right;'></div>
+    <div id="counter" style='position:fixed;top:50px;right:10px;z-index:1'></div>
     <p><strong>Choose the right meanings of following words, 10 seconds for each</strong></p>
     {% csrf_token %}
     <input name="score" value='{{score}}' hidden="true">
