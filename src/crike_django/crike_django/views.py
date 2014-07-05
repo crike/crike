@@ -878,20 +878,6 @@ class ExamView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score = score
         examstat.save()
-        if len(exam.choices) == 0 and len(exam.readings) == 0:
-            profile = get_profile(request.user)
-            if examstat.tag == "done":
-                if profile and examstat.score/exam.totalpoints == 1:
-                    profile.point_add(5)
-            else:
-                examstat.tag = "done"
-                if profile:
-                    profile.point_add(examstat.score)
-            examstat.save()
-            profile.save()
-            return HttpResponseRedirect('/home/')
-        elif len(exam.choices) == 0:
-            return HttpResponseRedirect('/reading/'+id)
 
         return HttpResponseRedirect('/trans/'+id)
 
