@@ -57,7 +57,7 @@
             <li data-target="#carousel-example-captions" data-slide-to="1" class=""></li>
             <li data-target="#carousel-example-captions" data-slide-to="2" class=""></li>
           </ol>
-          <div class="carousel-inner" style="height:300px;width:400px">
+          <div class="carousel-inner" style="height:300px;width:500px">
             <div class="item active">
               <!-- data-src="holder.js/900x500/auto/#777:#777" -->
               <img alt="900x500" src="/media/images/{{word.name}}/0.jpg">
@@ -76,7 +76,7 @@
             <span class="glyphicon glyphicon-chevron-right"></span>
           </a>
         </div>
-        <label style="float:right;font-size:150%;color:gray;">{{ forloop.counter }}/{{ words|length }}</label>
+        <label style="position:absolute;top:100px;right:10px;font-size:150%;color:gray;">{{ forloop.counter }}/{{ words|length }}</label>
       </div>
     </div>
     {% endfor %}
@@ -99,7 +99,7 @@
     </div>
   </div>
 
-  <nav>
+  <nav style="position:absolute;bottom:100px;">
     <label>支持左右键翻页</label><br>
     <a id="bb-nav-first" href="#" class="bb-custom-icon bb-custom-icon-first">First page</a>
     <a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left">Previous</a>
