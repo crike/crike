@@ -36,9 +36,9 @@
         <h1>
           <strong style='font-size:100%; margin-left:10px'>{{word.name}} </strong>
           [{{ word.phonetics }}]
-          <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
-              onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
-              onclick="playSound('/media/audios/{{ word.name }}.mp3');readyGo()" 
+          <a onmouseover='delayPlay("/media/audios/{{ word.name }}.mp3/");delayGo()'
+              onmouseout ="clearTimeout(timer);clearTimeout(gotimer);"
+              onclick='playSound("/media/audios/{{ word.name }}.mp3");readyGo()'
               title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a><br>
           <ul style='font-size:50%; margin-top:20px'>
             {% for mean in word.mean %}

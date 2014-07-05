@@ -83,9 +83,9 @@
     <div style='font-size:100%'>
     <strong>{{word.name}} </strong><br>
     [{{ word.phonetics }}]
-    <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
-        onmouseout ="clearTimeout(timer);" 
-        onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+    <a onmouseover='delayPlay("/media/audios/{{ word.name }}.mp3/");'
+        onmouseout ="clearTimeout(timer);"
+        onclick='playSound("/media/audios/{{ word.name }}.mp3");'
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
     <span class="current" style="float:right">
         {{ words.number }} / {{ words.paginator.num_pages }}
