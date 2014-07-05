@@ -88,8 +88,9 @@
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
   </div>
 
-{% for word in words %}
   <div class='row e2c'>
+  {% for word in words %}
+    <div class="col-6 col-sm-6 col-lg-4">  
     <h2>{{forloop.counter}}. {{word.name}}
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
         onmouseout ="clearTimeout(timer);" 
@@ -105,8 +106,10 @@
         {% endfor %}
       </div>
     {% endfor %}
+    </div>
+  {% endfor %}
   </div>
-{% endfor %}
+  <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
 </form>
 
 {% block body_footer %}
