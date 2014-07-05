@@ -51,6 +51,9 @@
     $.post("/lessonschoose/", {id: lessonid })
     .done(function(){
       popup_message("已提交课程申请");
+      {% if user.teacher %}
+        window.location.href = '{% url "lessons_choose_view" %}';
+      {% endif %}
     });
   };
 
