@@ -719,7 +719,7 @@ class LessonReviewView(TemplateView):
                     word.we = 3
                 elif ratio >= 0.6:
                     word.we = 2
-                elif ratio > 0:
+                elif ratio >= 0.2:
                     word.we = 1
                 else:
                     word.we = 0
