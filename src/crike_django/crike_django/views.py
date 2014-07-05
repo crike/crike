@@ -714,7 +714,7 @@ class LessonReviewView(TemplateView):
                 if we.correct_num+we.mistake_num is 0:
                     ratio = 0
                 else:
-                    ratio = we.correct_num/float(we.correct_num+we.mistake_num)
+                    ratio = float(we.correct_num)/float(we.correct_num+we.mistake_num)
                 if ratio >= 0.9:
                     word.we = 3
                 elif ratio >= 0.6:
