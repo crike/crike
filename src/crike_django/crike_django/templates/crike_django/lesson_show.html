@@ -43,11 +43,13 @@
             <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
             {% endfor %}
           </ul></br>
+          {% if word.example %}
           <strong style="font-size:50%;color:black;">Example:</strong>
           <ul style="margin-top:10px">
           <li style="font-size:70%;color:blue;">{{ word.example }}</li>
-          <li style="font-size:70%;color:blue;margin-top:10px"">{{ word.example_t }}</li>
+          <li style="font-size:70%;color:blue;margin-top:10px">{{ word.example_t }}</li>
           </ul>
+          {% endif %}
         </h1>
       </div>
       <div class="bb-custom-side">
