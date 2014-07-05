@@ -12,7 +12,7 @@
   });
   var timer = null;
   function playSound(mp3) {
-     $('#dummy').html("<audio preload='auto' autoplay src='"+mp3+"' type='audio/mpeg'></audio>");
+     $('#dummy').html('<audio preload="auto" autoplay src="'+mp3+'" type="audio/mpeg"></audio>');
      //$('#dummy').html("<embed autostart='true' height=0 width=0 src='"+mp3+"'></embed>");
   };
   function callback(mp3) {
@@ -20,7 +20,7 @@
   };
   function delayPlay(mp3) {
       clearTimeout(timer);
-      var cb = "callback('"+mp3+"')";
+      var cb = 'callback("'+mp3+'")';
       timer = setTimeout(cb, 500);
   };
   function showForm(form) {
