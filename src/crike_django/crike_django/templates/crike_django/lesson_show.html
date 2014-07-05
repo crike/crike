@@ -32,7 +32,9 @@
     {% for word in words %}
     <div class="bb-item">
       <div class="bb-custom-side">
-        <h1><strong style='font-size:100%; margin-left:10px'>{{word.name}} </strong>
+        <div class="pin">
+        <h1>
+          <strong style='font-size:100%; margin-left:10px'>{{word.name}} </strong>
           [{{ word.phonetics }}]
           <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');delayGo()"
               onmouseout ="clearTimeout(timer);clearTimeout(gotimer);" 
@@ -51,6 +53,7 @@
           </ul>
           {% endif %}
         </h1>
+        </div>
       </div>
       <div class="bb-custom-side">
         <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">

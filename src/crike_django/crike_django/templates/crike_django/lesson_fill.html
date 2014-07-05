@@ -82,7 +82,8 @@
     {% endif %}
     <input name="question" value="{{word.name}}" hidden="true">
     <h1>
-      <input type="text" style="border: none; border-bottom: 1px solid black;" size="15" autocomplete="off" name='answer'>
+      <input type="text" style="border: none; border-bottom: 1px solid black;" size="12" autocomplete="off" name='answer'>
+      <div style="font-size:80%">
       <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
           onmouseout ="clearTimeout(timer);" 
           onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
@@ -91,6 +92,7 @@
       <span class="current" style="float:right">
           {{ words.number }} / {{ words.paginator.num_pages }}
       </span>
+      </div>
       <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
     </h1>
   </form>
