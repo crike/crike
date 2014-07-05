@@ -79,7 +79,7 @@
 {% for word in words %}
 <div class='jumbotron subject-header-container2'>
   <div id="counter" style='float:right;'></div>
-  <h1><strong style='font-size:150%'>{{word.name}} </strong><br>
+  <h1><strong style='font-size:100%'>{{word.name}} </strong><br>
     [{{ word.phonetics }}]
     <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
         onmouseout ="clearTimeout(timer);" 
@@ -104,16 +104,18 @@
   <div class='row'>
     {% for option in options %}
     <div class="col-6 col-sm-6 col-lg-3">  
-      <div class="pin" style="width:100%;height:300px" onclick='onPick(this)'>
+      <div class="pin" style="width:100%;height:150px" onclick='onPick(this)'>
         <input type="radio" name="answer" value="{{option.name}}">
         {% if word.name == option.name %}
         <div id="answer_{{word.name}}">
         {% else %}
         <div>
         {% endif %}
+        <ul>
           {% for m in option.mean %}
           <li style="font-size:150%"><strong>{{m}}</strong></li>
           {% endfor %}
+        </ul>
         </div>
       </div>
     </div>
