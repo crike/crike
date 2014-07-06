@@ -92,7 +92,7 @@
   {% for word in words %}
     <div class="col-6 col-sm-6 col-lg-3">  
     <h2>{{forloop.counter}}. {{word.name}}
-    <a onmouseover='delayPlay("/media/audios/{{ word.name }}.mp3/");'
+    <a onmouseover='delayPlay("/media/audios/{{ word.name }}.mp3");'
         onmouseout ="clearTimeout(timer);"
         onclick='playSound("/media/audios/{{ word.name }}.mp3");'
         title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
