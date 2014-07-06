@@ -1,0 +1,109 @@
+{% extends 'crike_django/lesson_base.html' %}
+{% load staticfiles %}
+
+{% block subcontent %}
+<script type="text/javascript"> 
+var collection=[];// final collection of sounds to play
+var loadedIndex=0;// horrible way of forcing a load of audio sounds
+
+// remap audios to a buffered collection
+function init(audios) {
+  for(var i=0;i<audios.length;i++) {
+    var audio = new Audio(audios[i]);
+    collection.push(audio);
+    buffer(audio);
+  }
+}
+
+// did I mention it's a horrible way to buffer?
+function buffer(audio) {
+  if(audio.readyState==4)return loaded();
+  setTimeout(function(){buffer(audio)},100);
+}
+
+// check if we're leady to dj this
+function loaded() {
+  loadedIndex++;
+  if(collection.length==loadedIndex)playLooped();
+}
+
+// play and loop after finished
+function playLooped() {
+  var audio=Math.floor(Math.random() * (collection.length));
+  audio=collection[audio];
+  audio.play();
+  setTimeout(playLooped,audio.duration*1000);
+}
+
+// the songs to be played!
+init([
+  '/media/audios/01alpha-diluodexingzi.mp3',
+  '/media/audios/02alpha-baoshazhiwu.mp3',
+  '/media/audios/03alpha-chengshipiaoliu.mp3',
+  '/media/audios/04alpha-mengqishidedifang.mp3',
+  '/media/audios/05alpha-weixun.mp3'
+]);
+</script>
+
+<div id='overlay'></div>
+<div id='popup' class='pin'></div>
+
+<div class='jumbotron subject-header-container2'>
+  <h1>
+    <div style="font-size:80%">{{examstat.exam.name}}</div> 
+    考试成绩
+  </h1>
+  <form id='ReviewForm' action='/home/' method='get'>
+    {% csrf_token %}
+    <input type="submit" class="btn btn-primary btn-lg" value="HOME">
+  </form>
+</div>
+
+<!--audio preload='auto' autoplay src='/media/audios/01alpha-diluodexingzi.mp3' type='audio/mpeg'></audio-->
+
+    <table border="1" style="width:100%">
+      <tr>
+        <th>#</th> 
+        <th>总分</th>
+        <th>得分</th>
+        <th>备注</th>
+      </tr>
+      <tr>
+        <th>词义题</th> 
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th>翻译题</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th>选择题</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th>阅读题</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th>合计</th>
+        <th>{{examstat.exam.totalpoints}}</th>
+        <th>{{examstat.score}}</th>
+        <th>{% widthratio examstat.score examstat.exam.totalpoints 100 %}%</th>
+      </tr>
+    </table>
+
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% endblock %}
+

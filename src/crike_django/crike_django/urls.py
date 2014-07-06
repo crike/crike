@@ -70,6 +70,7 @@ urlpatterns = patterns('',
     url(r'^reading/(?P<id>.*?)/?$', ReadingView.as_view(), name='reading_view'),
     url(r'^choice/(?P<id>.*?)/?$', ChoiceView.as_view(), name='choice_view'),
     url(r'^trans/(?P<id>.*?)/?$', TransView.as_view(), name='trans_view'),
+    url(r'^exam_result/(?P<id>.*?)/?$', ExamResultView.as_view(), name='exam_result_view'),
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^wordpopup/(?P<wordname>.*)$', WordPopupView.as_view(), name='word_popup_view'),

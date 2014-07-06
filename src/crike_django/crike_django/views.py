@@ -940,7 +940,7 @@ class TransView(TemplateView):
                     profile.point_add(examstat.score)
             examstat.save()
             profile.save()
-            return HttpResponseRedirect('/home/')
+            return HttpResponseRedirect('/exam_result/'+id)
         elif len(exam.choices) == 0:
             return HttpResponseRedirect('/reading/'+id)
 
@@ -989,7 +989,7 @@ class ChoiceView(TemplateView):
                     profile.point_add(examstat.score)
             examstat.save()
             profile.save()
-            return HttpResponseRedirect('/home/')
+            return HttpResponseRedirect('/exam_result/'+id)
 
         return HttpResponseRedirect('/reading/'+id)
 
@@ -1003,7 +1003,7 @@ class ReadingView(TemplateView):
         readings_list = exam.readings
 
         if len(readings_list) == 0:
-            return HttpResponseRedirect('/home/')
+            return HttpResponseRedirect('/exam_result/'+id)
 
         paginator = Paginator(readings_list, 1)
         page = request.GET.get('page')
@@ -1048,9 +1048,27 @@ class ReadingView(TemplateView):
                     profile.point_add(examstat.score)
             examstat.save()
             profile.save()
-            return HttpResponseRedirect('/home/')
+            return HttpResponseRedirect('/exam_result/'+id)
 
         return HttpResponseRedirect('/reading/'+id+'/?page='+page)
+
+
+class ExamResultView(TemplateView):
+    template_name='crike_django/exam_result.html'
+
+    def get(self, request, id):
+        exams = Exam.objects.filter(id=id)
+        if exams is []:
+            return HttpResponseRedirect('/home/')
+
+        exam = exams[0]
+        examstats = ExamStat.objects.filter(
+                user=request.user, exam=exam)
+        if examstats is []:
+            return HttpResponseRedirect('/home/')
+
+        return render(request, self.template_name,
+                {'examstat':examstats[0]})
 
 
 class ExamAdminView(TemplateView):
