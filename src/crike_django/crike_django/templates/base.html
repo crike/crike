@@ -186,6 +186,11 @@ text-align: center;
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_computerskills_30x30.png' %}"></div>
               <div class="subject-title">{% trans "奖品" %}</div>
             </a></li>
+            <li class="{% active request 'word_stat' %} subject-item"><a href="{% url 'word_stat' %}">
+              <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_math_30x30.png' %}"></div>
+              <div class="subject-title">{% trans "统计" %}</div>
+            </a></li>
+            {% comment %}
             <li class="dropdown subject-item">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_math_30x30.png' %}"></div>
@@ -195,6 +200,7 @@ text-align: center;
                 <li><a href="{% url 'word_stat' %}">常错词</a></li>
               </ul>
             </li>
+            {% endcomment %}
             {% if user.teacher %}
             <li class="{% active request 'books' %} subject-item"><a href="{% url 'books' %}">
               <div class="subject-icon"><img src="{% static 'images/navbar/efk_icon_languagearts_30x30.png' %}"></div>
