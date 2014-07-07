@@ -879,8 +879,11 @@ class ExamView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score = score
         examstat.save()
-
-        return HttpResponseRedirect('/trans/'+id)
+        
+        if exam.withtrans:
+            return HttpResponseRedirect('/trans/'+id)
+        else:
+            return HttpResponseRedirect('/choice/'+id)
 
 class TransView(TemplateView):
     template_name='crike_django/exam_trans.html'
@@ -1100,6 +1103,11 @@ class ExamAdminView(TemplateView):
             lesson = Lesson.objects.filter(id=lessonid)[0]
             exam.lessons.append(lesson)
             exam.totalpoints += len(lesson.words)
+
+        if request.POST.get('withtrans', None):
+            exam.withtrans = True;
+        else:
+            exam.withtrans = False;
 
         exam.choices[:] = []
         choices_raw = request.POST.getlist('choice')

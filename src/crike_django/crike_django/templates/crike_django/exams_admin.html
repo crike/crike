@@ -501,6 +501,7 @@ $(function(){init_jeditable();});
   </h2>
   <div class="page-header">
     <h4>词汇测验</h4>
+    <input type="checkbox" name="withtrans" checked>加入句子翻译题
   </div>
   <div class='row'>
     <div id="addnew" class="col-6 col-sm-6 col-lg-2">
@@ -544,6 +545,11 @@ $(function(){init_jeditable();});
     <!-- vocabularies -->
     <div class="page-header">
       <h4>词汇测验</h4>
+      {% if exam.withtrans %}
+      <input type="checkbox" name="withtrans" checked>加入句子翻译题
+      {% else %}
+      <input type="checkbox" name="withtrans">加入句子翻译题
+      {% endif %}
     </div>
     <div class='row'>
       {% for lesson in exam.lessons|dictsort:"name" %}

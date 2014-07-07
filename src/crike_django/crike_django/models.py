@@ -119,6 +119,7 @@ class Exam(models.Model):
     choices = ListField(EmbeddedModelField('Choicesingle'))
     readings = ListField(EmbeddedModelField('Reading'))
     totalpoints = models.IntegerField(blank=True, default=0)
+    withtrans = models.BooleanField(default=True)
     tag = models.CharField(max_length=50, blank=True, null=True)
 
 
