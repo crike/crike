@@ -100,6 +100,9 @@ init([
       </tr>
     </table>
 
+  <form style="margin-top:10px" id='ReexamForm' action='/exam/{{examstat.exam.id}}' method='get'>
+    <input type="submit" class="btn btn-primary btn-lg" value="重考">
+  </form>
 
 {% block body_footer %}
 <script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>

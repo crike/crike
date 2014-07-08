@@ -146,7 +146,11 @@ background-color: #F3F3F3;
   </div>
   {% for examstat in examstats %}
   <div class="col-sm-6 col-md-3">
+    {% if examstat.score %}
+    <a title="查看成绩" href="/exam_result/{{examstat.exam.id}}" class="thumbnail">
+    {% else %}
     <a title="开始考试" href="/exam/{{examstat.exam.id}}" class="thumbnail">
+    {% endif %}
       <div class="caption">
         <h3><p>{{ examstat.exam.name }}</p></h3>
         {% if examstat.score %}
