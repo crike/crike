@@ -272,7 +272,12 @@ class StudentStat(models.Model):
 class ExamStat(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     exam = models.ForeignKey(Exam)
-    score = models.IntegerField(blank=True, null=True)
+    # don't give it a default, None means this exam hasn't been taken
+    score = models.IntegerField(blank=True, null=True) 
+    score_words = models.IntegerField(blank=True, default=0)
+    score_trans = models.IntegerField(blank=True, default=0)
+    score_choices = models.IntegerField(blank=True, default=0)
+    score_readings = models.IntegerField(blank=True, default=0)
     timestamp = models.DateTimeField(auto_now=True)
     tag = models.CharField(max_length=140, blank=True, null=True)
 

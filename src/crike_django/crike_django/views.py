@@ -878,6 +878,7 @@ class ExamView(TemplateView):
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score = score
+        examstat.score_words = score
         examstat.save()
         
         if exam.withtrans:
@@ -930,7 +931,8 @@ class TransView(TemplateView):
         """
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
-        examstat.score = score
+        examstat.score += score
+        examstat.score_trans = score
         examstat.save()
         if len(exam.choices) == 0 and len(exam.readings) == 0:
             profile = get_profile(request.user)
@@ -979,6 +981,7 @@ class ChoiceView(TemplateView):
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
+        examstat.score_choices = score
         examstat.save()
 
         if len(exam.readings) == 0:
@@ -1038,6 +1041,7 @@ class ReadingView(TemplateView):
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
+        examstat.score_readings = score
         examstat.save()
 
         if page == '0':
@@ -1070,8 +1074,18 @@ class ExamResultView(TemplateView):
         if examstats is []:
             return HttpResponseRedirect('/home/')
 
+        examstat = examstats[0]
+        examstat.total_choices = len(exam.choices)*5
+        examstat.total_readings = len(exam.readings)*25
+        examstat.total_words = 0
+        examstat.total_trans = 0
+        for lesson in exam.lessons:
+            examstat.total_words += len(lesson.words)
+            if exam.withtrans:
+                examstat.total_trans += len(lesson.words)*5
+
         return render(request, self.template_name,
-                {'examstat':examstats[0]})
+                {'examstat':examstat})
 
 
 class ExamAdminView(TemplateView):
