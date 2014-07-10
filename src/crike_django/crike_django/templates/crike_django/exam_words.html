@@ -2,6 +2,13 @@
 {% load staticfiles %}
 
 {% block subcontent %}
+<style type="text/css">
+.pin p {
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+</style>
 <script>
   $('.step-links').hide();
 
@@ -100,10 +107,12 @@
     <input name="ques{{forloop.counter}}" value="{{word.name}}" hidden="true">
     {% for option in word.options %}
       <div class="pin" style="width:100%" onclick='onPick(this)'>
+        <p>
         <input type="radio" name="pickanswer{{forloop.parentloop.counter}}" value="{{option.name}}">
         {% for m in option.mean %}
           {{m}};
         {% endfor %}
+        </p>
       </div>
     {% endfor %}
     </div>
