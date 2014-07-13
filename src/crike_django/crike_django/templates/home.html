@@ -127,17 +127,17 @@ background-color: #F3F3F3;
     <h2>我的课程</h2>
   </div>
   {% for todo in todos %}
-  <div class="col-sm-6 col-md-3">
+  <div class="col-sm-6 col-md-2">
     <a title="开始学习" href="/study/book/{{todo.book.name}}/lesson/{{todo.lesson.name}}/show" class="thumbnail">
       <div class="caption" style="font-size:50%">
-        <h4><p>{{todo.book.name}}</p></h4>
-        <h3><p>{{ todo.lesson.name }}</p></h3>
+        <h5><p>{{todo.book.name}}</p></h5>
+        <h4><p>{{ todo.lesson.name }}</p></h4>
         {% comment %}
         <input type="text" value="{{ todo.lesson.stat.percent }}" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
         {% endcomment %}
         <p>score:{{ todo.lesson.stat.percent }}%</p>
         <p>sum:{{ todo.lesson.words | length }}</p>
-        <p>上次学习：{{todo.lesson.stat.timestamp | date }}</p>
+        <p>上次学习:{{todo.lesson.stat.timestamp | date }}</p>
       </div>
     </a>
   </div>
@@ -149,21 +149,27 @@ background-color: #F3F3F3;
     <h2>我的考试</h2>
   </div>
   {% for examstat in examstats %}
-  <div class="col-sm-6 col-md-3">
+  <div class="col-sm-6 col-md-2">
     {% if examstat.score %}
     <a title="查看成绩" href="/exam_result/{{examstat.exam.id}}" class="thumbnail">
     {% else %}
     <a title="开始考试" href="/exam/{{examstat.exam.id}}" class="thumbnail">
     {% endif %}
-      <div class="caption">
-        <h3><p>{{ examstat.exam.name }}</p></h3>
+      <div class="caption" style="font-size:50%">
+        <h4><p>{{ examstat.exam.name }}</p></h4>
+        {% comment %}
         {% if examstat.score %}
         <input type="text" value="{% widthratio examstat.score examstat.exam.totalpoints 100 %}" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
         {% else %}
         <input type="text" value="{% widthratio 0 examstat.exam.totalpoints 100 %}" class="dial" data-height="100" data-width="100" data-fgColor="#07DD3B" data-skin="tron" data-thickness=".13" data-angleOffset="180" data-inputColor="#969696">
         {% endif %}
-        <p>score:{{ examstat.score }} / {{examstat.exam.totalpoints}}</p>
-        <p>上次考试：{{examstat.timestamp | date }}</p>
+        {% endcomment %}
+        {% if examstat.score %}
+        <p>score:{{ examstat.score }}/{{examstat.exam.totalpoints}} ({% widthratio examstat.score examstat.exam.totalpoints 100 %}%)</p>
+        {% else %}
+        <p>score:{{ examstat.score }}/{{examstat.exam.totalpoints}} (0%)</p>
+        {% endif %}
+        <p>上次考试:{{examstat.timestamp | date }}</p>
       </div>
     </a>
   </div>
@@ -175,14 +181,14 @@ background-color: #F3F3F3;
     <h2>我的奖品</h2>
   </div>
   {% for pq in prize_queries %}
-  <div class="col-sm-6 col-md-3">
+  <div class="col-sm-6 col-md-2">
     <div title="我的奖品" class="thumbnail">
-      <div class="caption">
-        <h4>奖品名：{{ pq.prize.name }}</h4>
+      <div class="caption" style="font-size:50%">
+        <h5>奖品名：{{ pq.prize.name }}</h5>
         <p>奖品分类：{{ pq.prize.category }}</p>
         <p>奖品价格：{{ pq.value }}</p>
         {% if pq.done %}
-        <p>获奖时间：{{ pq.date }}</p>
+        <p>{{ pq.date }}</p>
         {% else %}
         <p>申请中...</p>
         {% endif %}
