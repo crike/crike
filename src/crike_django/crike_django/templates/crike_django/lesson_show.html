@@ -26,14 +26,20 @@ background-color: #FFFFCC;
   <div id="counter" style='float:right;margin-right:100px;'></div>
   
   <div id="bb-bookblock" class="bb-bookblock">
-    <!--<div class="bb-item">
+    <div class="bb-item">
       <div class="bb-custom-firstpage">
-        <p>This is for lesson cover</p>
+        <h2>{{book}}</h2>
+        <h1>{{lesson}}</h1>
       </div>
       <div class="bb-custom-side">
-        <p>Here we show the lesson status for student</p>
+        <p>
+        1. 鼠标左键<i class="fa fa-volume-up"></i>听读音</br>       
+        2. 根据读音与右边的图片记忆单词</br>
+        3. 结合相关单词的例子加深对单词拼写的记忆</br>
+        4. 支持左右键翻页，必须听完读音才能走哦
+        </p>
       </div>
-    </div>-->
+    </div>
     {% for word in words %}
     <div class="bb-item">
       <div class="bb-custom-side">
@@ -140,21 +146,22 @@ $(function(){
 
 var gotimer = null;
 var ready = false;
-var donenum = 0;
+var donenum = -1;
 var alldone =false;
 
 function isGoodtogo() {
-  if (!ready && !alldone) {
+  if (donenum != -1 && !ready && !alldone) {
+      console.log(donenum);
       var showtimer = null;
       var cb = "$('#popup').hide();$('#overlay').hide()"
       $('#popup')
       .html("<label style='font-size:250%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
-      .show()
-      $('#overlay').show()
-      shotimer = setTimeout(cb, 2000)
+      .show();
+      $('#overlay').show();
+      shotimer = setTimeout(cb, 2000);
       return false;
-  } else
-      donenum++;
+    } else {
+      incDonenum();
       if (donenum >= {{words|length}}) {
         alldone = true;
         var csrfvalue = $('#doneForm').find("input[name='csrfmiddlewaretoken']").val();
@@ -162,6 +169,7 @@ function isGoodtogo() {
               {csrfmiddlewaretoken: csrfvalue});
       }
       return true;
+    }
 };
 function canGotolast() {
   if (alldone)
@@ -171,9 +179,9 @@ function canGotolast() {
     var cb = "$('#popup').hide();$('#overlay').hide()"
     $('#popup')
     .html("<label style='font-size:250%'><i style='color:red' class='fa fa-exclamation-circle'></i> 还没学完，不要偷懒 </label>")
-    .show()
-    $('#overlay').show()
-    shotimer = setTimeout(cb, 2000)
+    .show();
+    $('#overlay').show();
+    shotimer = setTimeout(cb, 2000);
     return false;
 };
 function gototest() {
@@ -189,6 +197,19 @@ function delayGo() {
     clearTimeout(gotimer);
     var cb = "readyGo()";
     gotimer = setTimeout(cb, 500);
+};
+
+function decDonenum() {
+  donenum--;
+  if (donenum < -1)
+    donenum = -1;
+  console.log(donenum);
+};
+function incDonenum() {
+  donenum++;
+  if (donenum > {{words|length}})
+    donenum = {{words|length}};
+  console.log(donenum);
 };
 
 var Page = (function() {
@@ -222,20 +243,22 @@ var Page = (function() {
       } );
 
       config.$navPrev.on( 'click touchstart', function() {
-        donenum--;
+        decDonenum();
         config.$bookBlock.bookblock( 'prev' );
         return false;
       } );
 
       config.$navFirst.on( 'click touchstart', function() {
-        donenum = 0;
+        donenum = -1;
         config.$bookBlock.bookblock( 'first' );
         return false;
       } );
 
       config.$navLast.on( 'click touchstart', function() {
-        if (canGotolast())
+        if (canGotolast()) {
           config.$bookBlock.bookblock( 'last' );
+          donenum = {{words|length}};
+        }
         return false;
       } );
       
@@ -249,7 +272,7 @@ var Page = (function() {
           return false;
         },
         'swiperight' : function( event ) {
-          donenum--;
+          decDonenum();
           config.$bookBlock.bookblock( 'prev' );
           return false;
         }
@@ -267,7 +290,7 @@ var Page = (function() {
 
         switch (keyCode) {
           case arrow.left:
-            donenum--;
+            decDonenum();
             config.$bookBlock.bookblock( 'prev' );
             break;
           case arrow.right:
