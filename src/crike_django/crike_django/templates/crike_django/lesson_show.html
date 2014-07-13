@@ -29,16 +29,26 @@ background-color: #FFFFCC;
   <div id="bb-bookblock" class="bb-bookblock">
     <div class="bb-item">
       <div class="bb-custom-firstpage">
+        <div class="pin" style="width:100%">
         <h2>{{book}}</h2>
         <h1>{{lesson}}</h1>
-      </div>
-      <div class="bb-custom-side">
+        </div>
         <p>
-        1. 鼠标左键<i class="fa fa-volume-up"></i>听读音</br>       
-        2. 根据读音与右边的图片记忆单词</br>
-        3. 结合相关单词的例子加深对单词拼写的记忆</br>
-        4. 支持左右键翻页，必须听完读音才能走哦
+        本课包含以下{{words|length}}个单词:</br>
+        {% for word in words %}
+          {{word.name}}; 
+        {% endfor %}
         </p>
+      </div>
+      <div class="bb-custom-firstpage">
+        <h1>
+          <ul style="font-size:50%">
+            <li style="margin-top:10px">鼠标左键<i class="fa fa-volume-up"></i>听读音</li> 
+            <li style="margin-top:10px">根据读音与右边的图片记忆单词</li>
+            <li style="margin-top:10px">结合相关单词的例子加深对单词拼写的记忆</li>
+            <li style="margin-top:10px">支持左右键翻页，必须听完读音才能走哦</li>
+          </ul>
+        </h1>
       </div>
     </div>
     {% for word in words %}
