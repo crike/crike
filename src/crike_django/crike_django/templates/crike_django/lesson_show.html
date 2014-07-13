@@ -13,7 +13,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'bookblock/css/demo4.css' %}" />
 <script src="{% static 'bookblock/js/modernizr.custom.js' %}"></script>
 <style>
-.pin h1{
+.pin{
+background-image: url({% static 'images/background/subject-pattern2.png' %});
 background-color: #FFFFCC;
 }
 </style>
@@ -55,12 +56,12 @@ background-color: #FFFFCC;
             {% for mean in word.mean %}
             <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
             {% endfor %}
-          </ul></br>
+          </ul>
           {% if word.example %}
           <strong style="font-size:50%;color:black;">Example:</strong>
-          <ul style="margin-top:10px">
-          <li style="font-size:70%;color:blue;">{{ word.example }}</li>
-          <li style="font-size:70%;color:blue;margin-top:10px">{{ word.example_t }}</li>
+          <ul style='font-size:50%; margin-top:10px'>
+          <li style="font-size:120%;color:blue;">{{ word.example }}</li>
+          <li style="font-size:120%;color:blue;">{{ word.example_t }}</li>
           </ul>
           {% endif %}
         </h1>
