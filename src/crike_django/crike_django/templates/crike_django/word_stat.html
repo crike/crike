@@ -1,7 +1,6 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
+{% extends 'crike_django/lesson_base.html' %}
 
-{% block content %}
+{% block subcontent %}
 <div class="bs-docs-section">
 <div class="row">
   <div class="col-lg-12">
@@ -15,20 +14,27 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>正确次数</th>
-            <th>错误次数</th>
-            <th>标签</th>
-            <th>正确率</th>
+            <th>音标</th>
+            <th>释义</th>
+            <th>正确率(正/误)</th>
           </tr>
         </thead>
         <tbody>
         {% for word_stat in word_stats %}
           <tr>
             <td>{{ word_stat.word.name }}</td>
-            <td>{{ word_stat.correct_num }}</td>
-            <td>{{ word_stat.mistake_num }}</td>
-            <td>{{ word_stat.tag }}</td>
-            <td>{{ word_stat.accuracy }}</td>
+            <td>[{{word_stat.word.phonetics}}]
+            <a onmouseover='delayPlay("/media/audios/{{ word_stat.word.name }}.mp3");'
+                onmouseout ="clearTimeout(timer);"
+                onclick='playSound("/media/audios/{{ word_stat.word.name }}.mp3");'
+                title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a>
+            </td>
+            <td>
+              {% for mean in word_stat.word.mean %}
+                {{mean}};
+              {% endfor %}
+            </td>
+            <td>{{ word_stat.accuracy }} ({{ word_stat.correct_num }}/{{ word_stat.mistake_num }})</td>
           </tr>
         {% endfor %}
         </tbody>
@@ -46,13 +52,15 @@
 {% include 'js/csrf.js' %}
 
 $('#clear_button').on('click', function(){
-	$.ajax({
-	    url: '{% url "word_stat" %}',
-	    type: 'DELETE',
-	    success: function(result) {
-	        location.reload();
-	    }
-	});
+  if (confirm('你确定要清空所有常错词？')) {
+    $.ajax({
+        url: '{% url "word_stat" %}',
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
+        }
+    });
+  }
 })
 
 </script>
