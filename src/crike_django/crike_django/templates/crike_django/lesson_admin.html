@@ -41,6 +41,9 @@
   };
   function radioOn(id,name) {
     phonetics = $('#'+id+'div').find('li[id="id_phonetics"]').text().replace('[','').replace(']','');
+    structure = $('#'+id+'div').find('li[id="id_structure"]').text();
+    extension = $('#'+id+'div').find('li[id="id_extension"]').text();
+    remark = $('#'+id+'div').find('li[id="id_remark"]').text();
     example = $('#'+id+'div').find('li[id="id_example"]').text();
     example_t = $('#'+id+'div').find('li[id="id_example_t"]').text();
     var means = [];
@@ -48,6 +51,9 @@
     mean = means.join("\n");
     $('#UpdWordForm').find('input[id="id_name"]').prop('value', name);
     $('#UpdWordForm').find('input[id="id_phonetics"]').prop('value', phonetics);
+    $('#UpdWordForm').find('textarea[id="id_structure"]').val(structure);
+    $('#UpdWordForm').find('textarea[id="id_extension"]').val(extension);
+    $('#UpdWordForm').find('textarea[id="id_remark"]').val(remark);
     $('#UpdWordForm').find('textarea[id="id_example"]').val(example);
     $('#UpdWordForm').find('textarea[id="id_example_t"]').val(example_t);
     //waste a lot of time on .text(), that will not change the textarea once modified the content, use .val() !!!!
@@ -151,9 +157,23 @@ function onRetrieve(name) {
         {% for mean in word.mean %}
         <li id='id_mean'>{{mean}}</li>
         {% endfor %}
+        {% if word.structure %}
+        <strong style="font-size:70%">Structure:</strong>
+        <li id='id_structure'>{{ word.structure }}</li>
+        {% endif %}
+        {% if word.extension %}
+        <strong style="font-size:70%">Extension:</strong>
+        <li id='id_extension'>{{ word.extension }}</li>
+        {% endif %}
+        {% if word.remark %}
+        <strong style="font-size:70%">Remark:</strong>
+        <li id='id_remark'>{{ word.remark }}</li>
+        {% endif %}
+        {% if word.example %}
         <strong style="font-size:70%">Example:</strong>
         <li id='id_example'>{{ word.example }}</li>
         <li id='id_example_t'>{{ word.example_t }}</li>
+        {% endif %}
         </ul>
       </div>
     </div>

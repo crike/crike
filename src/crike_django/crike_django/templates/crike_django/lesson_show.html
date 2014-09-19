@@ -67,6 +67,24 @@ background-color: #FFFFCC;
             <li style='margin-left:10px;font-size:150%'>{{mean}}</li>
             {% endfor %}
           </ul>
+          {% if word.structure %}
+          <strong style="font-size:50%;color:black;">Structure:</strong>
+          <ul style='font-size:50%; margin-top:10px'>
+          <li style="font-size:120%;color:red;">{{ word.structure }}</li>
+          </ul>
+          {% endif %}
+          {% if word.extension %}
+          <strong style="font-size:50%;color:black;">Extension:</strong>
+          <ul style='font-size:50%; margin-top:10px'>
+          <li style="font-size:120%;color:orange;">{{ word.extension }}</li>
+          </ul>
+          {% endif %}
+          {% if word.remark %}
+          <strong style="font-size:50%;color:black;">Remark:</strong>
+          <ul style='font-size:50%; margin-top:10px'>
+          <li style="font-size:120%;color:green;">{{ word.remark }}</li>
+          </ul>
+          {% endif %}
           {% if word.example %}
           <strong style="font-size:50%;color:black;">Example:</strong>
           <ul style='font-size:50%; margin-top:10px'>

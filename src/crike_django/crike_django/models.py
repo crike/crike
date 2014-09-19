@@ -59,6 +59,9 @@ class Word(models.Model):
     name = models.CharField(max_length=50, unique=True)
     phonetics = models.CharField(max_length=50)
     mean = ListField(models.CharField(max_length=100))
+    structure = models.CharField(max_length=80,blank=True)
+    extension = models.CharField(max_length=80,blank=True)
+    remark = models.CharField(max_length=500,blank=True)
     example = models.CharField(max_length=500,blank=True)
     example_t = models.CharField(max_length=500,blank=True)
     
