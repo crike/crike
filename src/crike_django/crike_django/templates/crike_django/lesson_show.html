@@ -68,29 +68,17 @@ background-color: #FFFFCC;
             {% endfor %}
           </ul>
           {% if word.structure %}
-          <strong style="font-size:50%;color:black;">Structure:</strong>
-          <ul style='font-size:50%; margin-top:10px'>
-          <li style="font-size:120%;color:red;">{{ word.structure }}</li>
-          </ul>
+          <label style='font-size:50%;color:red'><strong style="color:black;">Structure: </strong>{{ word.structure }}</label></br>
           {% endif %}
           {% if word.extension %}
-          <strong style="font-size:50%;color:black;">Extension:</strong>
-          <ul style='font-size:50%; margin-top:10px'>
-          <li style="font-size:120%;color:orange;">{{ word.extension }}</li>
-          </ul>
+          <label style='font-size:50%;color:orange'><strong style="color:black;">Extension: </strong>{{ word.extension }}</label></br>
           {% endif %}
           {% if word.remark %}
-          <strong style="font-size:50%;color:black;">Remark:</strong>
-          <ul style='font-size:50%; margin-top:10px'>
-          <li style="font-size:120%;color:green;">{{ word.remark }}</li>
-          </ul>
+          <label style='font-size:50%;color:green'><strong style="color:black;">Remark: </strong>{{ word.remark }}</label></br>
           {% endif %}
           {% if word.example %}
-          <strong style="font-size:50%;color:black;">Example:</strong>
-          <ul style='font-size:50%; margin-top:10px'>
-          <li style="font-size:120%;color:blue;">{{ word.example }}</li>
-          <li style="font-size:120%;color:blue;">{{ word.example_t }}</li>
-          </ul>
+          <label style='font-size:50%;color:blue'><strong style="color:black;">Example: </strong>
+            {{ word.example }} ({{word.example_t}})</label></br>
           {% endif %}
         </h1>
         </div>
