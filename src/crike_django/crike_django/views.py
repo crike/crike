@@ -63,7 +63,10 @@ def get_lessonemb(book, lesson):
     return None
 
 def get_lessonobj(lessonemb):
-    return lessonemb.book.lesson_set.filter(name=lessonemb.name)[0]
+    objs = lessonemb.book.lesson_set.filter(name=lessonemb.name)
+    if len(objs) > 0:
+        return objs[0]
+    return None
 
 def get_words_from_lesson(book, lesson):
     lessonobj = get_lessonemb(book, lesson)
@@ -118,6 +121,11 @@ def delete_exam_lesson(lessonemb):
     for exam in examobjs:
         exam.lessons.remove(lessonemb)
         exam.save()
+
+def delete_lesson_stat(lessonemb):
+    stats = LessonStat.objects.filter(lesson=lessonemb)
+    for stat in stats:
+        stat.delete()
 
 def today():
     return datetime.datetime.now().date()
@@ -208,7 +216,12 @@ class HomeView(TemplateView):
 
         stats = LessonStat.objects.filter(user=request.user)
         for stat in stats:
-            lesson = stat.lesson
+            try:
+                lesson = stat.lesson
+            except:
+                stat.delete()
+                continue
+
             if lesson.name != 'strange_words' and stat.selected:
                 lesson.stat = stat
                 todos.append({'book':lesson.book, 'lesson':lesson})
@@ -1456,9 +1469,12 @@ class BooksAdminView(TemplateView):
             for lesson in lessons:
                 for lessonemb in bookob.lessons:
                     if lessonemb.name == lesson:
-                        get_lessonobj(lessonemb).delete()
+                        lessonobj = get_lessonobj(lessonemb)
+                        if lessonobj:
+                            lessonobj.delete()
                         bookob.lessons.remove(lessonemb)
                         delete_exam_lesson(lessonemb)
+                        delete_lesson_stat(lessonemb)
             bookob.save()
             if len(bookob.lessons) == 0:
                 bookob.delete()
