@@ -3,9 +3,9 @@
 
 English online teaching and learning system.
 
-![image](https://github.com/crike/crike/screenshots/crike.png)
-![image](https://github.com/crike/crike/screenshots/crike_learn.png)
-![image](https://github.com/crike/crike/screenshots/crike_admin.png)
+![image](https://github.com/crike/crike/tree/master/screenshots/crike.png)
+![image](https://github.com/crike/crike/tree/master/screenshots/crike_learn.png)
+![image](https://github.com/crike/crike/tree/master/screenshots/crike_admin.png)
 
 Todo
 -----
