@@ -3,6 +3,10 @@
 
 English online teaching and learning system.
 
+![image](https://github.com/crike/crike/screenshots/crike.png)
+![image](https://github.com/crike/crike/screenshots/crike_learn.png)
+![image](https://github.com/crike/crike/screenshots/crike_admin.png)
+
 Todo
 -----
 * 统计信息：对教师所教的所有学生建立图表，包括直方图，排名表等信息
