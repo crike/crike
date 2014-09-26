@@ -1,7 +1,7 @@
 ﻿crike
 =====
 
-English online teaching and testing system.
+English online teaching and learning system.
 
 Todo
 -----
