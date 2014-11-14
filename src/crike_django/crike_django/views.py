@@ -894,6 +894,55 @@ class ExamView(TemplateView):
         examstat.score_words = score
         examstat.save()
         
+        return HttpResponseRedirect('/c2e/'+id)
+
+class C2EView(TemplateView):
+    template_name='crike_django/exam_c2e.html'
+
+    def get(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        name = exam.name
+        words = []
+        for lessonobj in exam.lessons:
+            words += Word.objects.filter(id__in=lessonobj.words)
+
+        if len(words) == 0:
+            return HttpResponseRedirect('/choice/'+id)
+
+        for word in words:
+            words_list = filter(lambda x: x.name !=word.name, words)
+            count = len(words_list)
+            if count > 3:
+                options = sample(words_list, 3)
+            else:
+                options = sample(words_list, count)
+            options.insert(randrange(len(options)+1), word)
+            word.options = options
+
+        return render(request, self.template_name,
+                {'words':words, 'id':id, 'name':name})
+
+    def post(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        ans = request.POST.getlist('ans')
+        ques = request.POST.getlist('ques')
+        score = 0
+
+        for i,an in enumerate(ans):
+            if an == ques[i]:
+                score += 1
+        
+        """
+        profile = get_profile(request.user)
+        if profile:
+            profile_record_exam_ret(profile, ret)
+        """
+
+        examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+        examstat.score = score
+        examstat.score_words = score
+        examstat.save()
+        
         if exam.withtrans:
             return HttpResponseRedirect('/trans/'+id)
         else:
