@@ -1,0 +1,86 @@
+{% extends 'crike_django/lesson_base.html' %}
+{% load staticfiles %}
+
+{% block subcontent %}
+<script type="text/javascript"> 
+function stopRKey(evt) { 
+  var evt = (evt) ? evt : ((event) ? event : null); 
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+} 
+document.onkeypress = stopRKey; 
+</script>
+
+<div id='overlay'></div>
+<div id='popup' class='pin'></div>
+
+<div class='jumbotron subject-header-container2'>
+  <div id="counter" style='float:right;'></div>
+  <h1>
+    鼠标轻抚<i class="fa fa-volume-up"></i>听发音，<br>填写完整单词
+  </h1>
+</div>
+
+<form id='DictationForm' action='/dictation/{{id}}' method='post'>
+  {% csrf_token %}
+  <div class='row'>
+    {% for word in words %}
+    <div class="col-6 col-sm-6 col-lg-3">  
+      <input type="text" name="ans{{forloop.counter0}}" autocomplete="off">
+      <input name="ques{{forloop.counter}}" value="{{word.name}}" hidden="true">
+      <a onmouseover="delayPlay('/media/audios/{{ word.name }}.mp3');"
+          onmouseout ="clearTimeout(timer);" 
+          onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
+          title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a><br>
+      <!--strong id='feedback{{forloop.counter0}}'>Fill the blank</strong-->
+    </div>
+    {% endfor %}
+  </div>
+  <input type="submit" onClick='onSubmit();' value="submit" class="btn btn-primary btn-lg" style="margin-bottom:10px;margin-top:5px">
+</form>
+
+<script>
+  $('.step-links').hide();
+  var form = $('#DictationForm');
+  var ques = new Array();
+  var ans = new Array();
+
+  $(function(){
+    var form = $('#DictationForm');
+    $('#counter').countdown({
+       image: "{% static 'countdown/img/digits.png' %}",
+       {% if words|length < 10 %}
+       startTime: '0{{words|length}}:00',
+       {% else %}
+       startTime: '{{words|length}}:00',
+       {% endif %}
+       timerEnd: function(){ 
+        $('#popup')
+        .html("<label style='font-size:300%'>时间到.. <i style='color:orange' class='fa fa-frown-o'></i></label>")
+        .show()
+        $('#overlay').show()
+        setTimeout( function () { onSubmit();$(form).submit(); }, 1000);
+       },
+       format: 'mm:ss'
+    });
+  });
+
+  function onSubmit() {
+    $(form).find( "input[name^='ques']" )
+           .each(function() { ques.push($(this).prop('value')) });
+    $(form).find( "input[name^='ans']" )
+           .each(function() { ans.push($(this).prop('value')) });
+
+    for (i=0;i<ques.length;i++)
+      $('<input>').attr({name:'ques', value:ques[i], hidden:'true'}).appendTo(form);
+    for (i=0;i<ans.length;i++)
+      $('<input>').attr({name:'ans', value:ans[i], hidden:'true'}).appendTo(form);
+  };
+</script>
+
+{% block body_footer %}
+<script src="{% static 'countdown/js/jquery.countdown.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% endblock %}
+

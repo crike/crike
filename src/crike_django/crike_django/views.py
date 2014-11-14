@@ -939,8 +939,52 @@ class C2EView(TemplateView):
         """
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
-        examstat.score = score
-        examstat.score_words = score
+        examstat.score += score
+        examstat.score_words += score
+        examstat.save()
+        
+        return HttpResponseRedirect('/dictation/'+id)
+
+class DictationView(TemplateView):
+    template_name='crike_django/exam_dictation.html'
+
+    def get(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        name = exam.name
+        words = []
+        for lessonobj in exam.lessons:
+            words += Word.objects.filter(id__in=lessonobj.words)
+
+        if len(words) == 0:
+            return HttpResponseRedirect('/choice/'+id)
+
+        for word in words:
+            words = sample(words, len(words))
+
+        return render(request, self.template_name,
+                {'words':words, 'id':id, 'name':name})
+
+    def post(self, request, id):
+        exam = Exam.objects.filter(id=id)[0]
+        ans = request.POST.getlist('ans')
+        ques = request.POST.getlist('ques')
+        score = 0
+        
+        for i,an in enumerate(ans):
+            print(an)
+            print(ques[i])
+            if an == ques[i]:
+                score += 1
+        
+        """
+        profile = get_profile(request.user)
+        if profile:
+            profile_record_exam_ret(profile, ret)
+        """
+
+        examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
+        examstat.score += score
+        examstat.score_words += score
         examstat.save()
         
         if exam.withtrans:
@@ -1178,7 +1222,7 @@ class ExamAdminView(TemplateView):
         for lessonid in lessonids:
             lesson = Lesson.objects.filter(id=lessonid)[0]
             exam.lessons.append(lesson)
-            exam.totalpoints += len(lesson.words)
+            exam.totalpoints += len(lesson.words)*3
 
         if request.POST.get('withtrans', None):
             exam.withtrans = True;
