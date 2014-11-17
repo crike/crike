@@ -73,12 +73,12 @@ background-color: #FFFFCC;
           {% if word.extension %}
           <label style='font-size:50%;color:orange'><strong style="color:black;">Extension: </strong>{{ word.extension }}</label></br>
           {% endif %}
-          {% if word.remark %}
-          <label style='font-size:50%;color:green'><strong style="color:black;">Remark: </strong>{{ word.remark }}</label></br>
-          {% endif %}
           {% if word.example %}
           <label style='font-size:50%;color:blue'><strong style="color:black;">Example: </strong>
             {{ word.example }} ({{word.example_t}})</label></br>
+          {% endif %}
+          {% if word.remark %}
+          <label style='font-size:50%;color:green'><strong style="color:black;">Remark: </br></strong>{{ word.remark|linebreaksbr }}</label></br>
           {% endif %}
         </h1>
         </div>
