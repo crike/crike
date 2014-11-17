@@ -155,25 +155,25 @@ function popup_message(text)
   <p>Question{{forloop.counter}}:</p>
   <div class='choice_question'>
     <div class="col-12 col-sm-12 col-lg-12">
-      <div class="thumbnail">
+      <div class="thumbnail" style="background-color: #DDFFFF">
         <p class="autogrow_question">{{ques.question|linebreaksbr}}</p>
       </div>
     </div>
     <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
       <input type="radio" name="answer{{forloop.counter}}" value=1>
-      <div class="thumbnail">A<p id="choice_1" class="autogrow_choice">{{ques.answers.0|linebreaksbr}}</p></div>
+      <div class="thumbnail" style="background-color: #CCEEFF">A<p id="choice_1" class="autogrow_choice">{{ques.answers.0|linebreaksbr}}</p></div>
     </div>
     <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
       <input type="radio" name="answer{{forloop.counter}}" value=2>
-      <div class="thumbnail">B<p id="choice_2" class="autogrow_choice">{{ques.answers.1|linebreaksbr}}</p></div>
+      <div class="thumbnail" style="background-color: #CCEEFF">B<p id="choice_2" class="autogrow_choice">{{ques.answers.1|linebreaksbr}}</p></div>
     </div>
     <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
       <input type="radio" name="answer{{forloop.counter}}" value=3>
-      <div class="thumbnail">C<p id="choice_3" class="autogrow_choice">{{ques.answers.2|linebreaksbr}}</p></div>
+      <div class="thumbnail" style="background-color: #CCEEFF">C<p id="choice_3" class="autogrow_choice">{{ques.answers.2|linebreaksbr}}</p></div>
     </div>
     <div class="col-6 col-sm-6 col-lg-3" onclick="onPick(this);">
       <input type="radio" name="answer{{forloop.counter}}" value=4>
-      <div class="thumbnail">D<p id="choice_4" class="autogrow_choice">{{ques.answers.3|linebreaksbr}}</p></div>
+      <div class="thumbnail" style="background-color: #CCEEFF">D<p id="choice_4" class="autogrow_choice">{{ques.answers.3|linebreaksbr}}</p></div>
     </div>
   </div>
   {% endfor %}
