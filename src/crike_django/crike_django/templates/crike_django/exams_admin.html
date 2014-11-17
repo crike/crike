@@ -486,6 +486,11 @@ function addNewReading(me) {
 
 $(function(){init_jeditable();});
 
+function checkWithTrans(e) {
+  $(e).parents("form").find("#modified").show();
+  $(e).parents("form").find("button").show();
+}
+
 </script>
 
 <div class="jumbotron">
@@ -546,9 +551,9 @@ $(function(){init_jeditable();});
     <div class="page-header">
       <h4>词汇测验</h4>
       {% if exam.withtrans %}
-      <input type="checkbox" name="withtrans" checked>加入句子翻译题
+      <input type="checkbox" onclick="checkWithTrans(this)" name="withtrans" checked>加入句子翻译题
       {% else %}
-      <input type="checkbox" name="withtrans">加入句子翻译题
+      <input type="checkbox" onclick="checkWithTrans(this)" name="withtrans">加入句子翻译题
       {% endif %}
     </div>
     <div class='row'>
