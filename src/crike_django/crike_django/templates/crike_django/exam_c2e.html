@@ -95,25 +95,22 @@
     <input type="submit" onClick='onSubmit(event);' value="submit" class="btn btn-primary btn-lg" style="margin-right:20px;margin-bottom:10px;">
   </div>
 
-  <div class='row e2c'>
+  <div class='row c2e'>
   {% for word in words %}
-    <div class="col-6 col-sm-6 col-lg-4">  
-    <h2>{{forloop.counter}}. 
-        {% for m in word.mean %}
-          {{m}};
-        {% endfor %}
-    <a onmouseover='delayPlay("/media/audios/{{ word.name }}.mp3");'
-        onmouseout ="clearTimeout(timer);"
-        onclick='playSound("/media/audios/{{ word.name }}.mp3");'
-        title="发音" href="javascript:;"><i class="fa fa-volume-up"></i></a>
-    </h2>
+    <div class="col-6 col-sm-6 col-lg-3">  
+      <h3>{{forloop.counter}}. </h3>
+      <p>
+        <textarea readonly row="2" disabled style="width:100%;border:none;font-size:120%;resize:none;">
+          {% for mean in word.mean %}
+            {{mean}};
+          {% endfor %}
+        </textarea>
+      </p>
     <input name="ques{{forloop.counter}}" value="{{word.name}}" hidden="true">
     {% for option in word.options %}
-      <div class="pin" style="width:100%" onclick='onPick(this)'>
-        <p>
+      <div class="pin" style="width:100%;height:40px" onclick='onPick(this)'>
         <input type="radio" name="pickanswer{{forloop.parentloop.counter}}" value="{{option.name}}">
           {{option.name}};
-        </p>
       </div>
     {% endfor %}
     </div>
