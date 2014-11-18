@@ -1219,7 +1219,7 @@ class ExamResultView(TemplateView):
         examstat.total_words = 0
         examstat.total_trans = 0
         for lesson in exam.lessons:
-            examstat.total_words += len(lesson.words)
+            examstat.total_words += len(lesson.words)*3
             if exam.withtrans:
                 examstat.total_trans += len(lesson.words)*5
 
@@ -1252,15 +1252,18 @@ class ExamAdminView(TemplateView):
         else:
             exam = Exam.objects.get_or_create(name=examname)[0]
 
-        for lessonid in lessonids:
-            lesson = Lesson.objects.filter(id=lessonid)[0]
-            exam.lessons.append(lesson)
-            exam.totalpoints += len(lesson.words)*3
-
         if request.POST.get('withtrans', None):
             exam.withtrans = True;
         else:
             exam.withtrans = False;
+
+        for lessonid in lessonids:
+            lesson = Lesson.objects.filter(id=lessonid)[0]
+            exam.lessons.append(lesson)
+            if exam.withtrans:
+                exam.totalpoints += len(lesson.words)*8
+            else:
+                exam.totalpoints += len(lesson.words)*3
 
         exam.choices[:] = []
         choices_raw = request.POST.getlist('choice')
