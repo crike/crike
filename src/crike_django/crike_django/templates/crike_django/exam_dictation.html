@@ -32,7 +32,7 @@ document.onkeypress = stopRKey;
           onmouseout ="clearTimeout(timer);" 
           onclick="playSound('/media/audios/{{ word.name }}.mp3');" 
           title="发音" href="javascript:;"><i class="fa fa-volume-up" style='font-size:150%'></i></a><br>
-      <!--strong id='feedback{{forloop.counter0}}'>Fill the blank</strong-->
+        <strong id='phonetics{{forloop.counter0}}'>[{{word.phonetics}}]</strong>
     </div>
     {% endfor %}
   </div>
