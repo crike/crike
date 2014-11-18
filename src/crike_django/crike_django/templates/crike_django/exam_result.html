@@ -66,31 +66,70 @@ init([
         <th>#</th> 
         <th>总分</th>
         <th>得分</th>
-        <th>备注</th>
+        <th>错题</th>
       </tr>
       <tr>
         <th>词义题</th> 
         <th>{{examstat.total_words}}</th>
         <th>{{examstat.score_words}}</th>
-        <th></th>
+        <th>
+          <strong>e2c:</strong>
+          <label style="color:red">
+          {% for item in examstat.wrong_e2c %}
+            {{item}};
+          {% endfor %}
+          </label>
+          <strong>| c2e:</strong>
+          <label style="color:red">
+          {% for item in examstat.wrong_c2e %}
+            {{item}};
+          {% endfor %}
+          </label>
+          <strong>| dictation:</strong>
+          <label style="color:red">
+          {% for item in examstat.wrong_dictation %}
+            {{item}};
+          {% endfor %}
+          </label>
+        </th>
       </tr>
       <tr>
         <th>翻译题</th>
         <th>{{examstat.total_trans}}</th>
         <th>{{examstat.score_trans}}</th>
-        <th></th>
+        <th>
+          <label style="color:red">
+          {% for item in examstat.wrong_trans %}
+            {{item}};
+          {% endfor %}
+          </label>
+        </th>
       </tr>
       <tr>
         <th>选择题</th>
         <th>{{examstat.total_choices}}</th>
         <th>{{examstat.score_choices}}</th>
-        <th></th>
+        <th>
+          <label style="color:red">
+          {% for item in examstat.wrong_choices %}
+            {{item}};
+          {% endfor %}
+          </label>
+        </th>
+      </tr>
       </tr>
       <tr>
         <th>阅读题</th>
         <th>{{examstat.total_readings}}</th>
         <th>{{examstat.score_readings}}</th>
-        <th></th>
+        <th>
+          <label style="color:red">
+          {% for item in examstat.wrong_readings %}
+            {{item}};
+          {% endfor %}
+          </label>
+        </th>
+      </tr>
       </tr>
       <tr>
         <th>合计</th>

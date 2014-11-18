@@ -281,6 +281,12 @@ class ExamStat(models.Model):
     score_trans = models.IntegerField(blank=True, default=0)
     score_choices = models.IntegerField(blank=True, default=0)
     score_readings = models.IntegerField(blank=True, default=0)
+    wrong_e2c = ListField(models.CharField(max_length=50))
+    wrong_c2e = ListField(models.CharField(max_length=50))
+    wrong_dictation = ListField(models.CharField(max_length=50))
+    wrong_trans = ListField(models.CharField(max_length=50))
+    wrong_choices = ListField(models.CharField(max_length=50))
+    wrong_readings = ListField(models.CharField(max_length=50))
     timestamp = models.DateTimeField(auto_now=True)
     tag = models.CharField(max_length=140, blank=True, null=True)
 

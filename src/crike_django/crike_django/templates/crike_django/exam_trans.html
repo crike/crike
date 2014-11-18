@@ -53,7 +53,8 @@
       }
       ret.push('true');
     });
-    $('<input>').attr({name:'ret', value:ret, hidden:'true'}).appendTo(form);
+    for (i=0;i<ques.length;i++)
+      $('<input>').attr({name:'ret', value:ret[i], hidden:'true'}).appendTo(form);
   };
 
   function onPick(pin,num,option) {

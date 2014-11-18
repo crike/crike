@@ -878,10 +878,14 @@ class ExamView(TemplateView):
         ans = request.POST.getlist('ans')
         ques = request.POST.getlist('ques')
         score = 0
+        wrong_list =[]
 
         for i,an in enumerate(ans):
             if an == ques[i]:
                 score += 1
+            else:
+                wrong_list.append(ques[i])
+
         
         """
         profile = get_profile(request.user)
@@ -892,6 +896,7 @@ class ExamView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score = score
         examstat.score_words = score
+        examstat.wrong_e2c = wrong_list
         examstat.save()
         
         return HttpResponseRedirect('/c2e/'+id)
@@ -927,10 +932,13 @@ class C2EView(TemplateView):
         ans = request.POST.getlist('ans')
         ques = request.POST.getlist('ques')
         score = 0
+        wrong_list = []
 
         for i,an in enumerate(ans):
             if an == ques[i]:
                 score += 1
+            else:
+                wrong_list.append(ques[i])
         
         """
         profile = get_profile(request.user)
@@ -941,6 +949,7 @@ class C2EView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.score_words += score
+        examstat.wrong_c2e = wrong_list
         examstat.save()
         
         return HttpResponseRedirect('/dictation/'+id)
@@ -969,12 +978,13 @@ class DictationView(TemplateView):
         ans = request.POST.getlist('ans')
         ques = request.POST.getlist('ques')
         score = 0
+        wrong_list = []
         
         for i,an in enumerate(ans):
-            print(an)
-            print(ques[i])
             if an == ques[i]:
                 score += 1
+            else:
+                wrong_list.append(ques[i])
         
         """
         profile = get_profile(request.user)
@@ -985,6 +995,7 @@ class DictationView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.score_words += score
+        examstat.wrong_dictation = wrong_list
         examstat.save()
         
         if exam.withtrans:
@@ -1023,12 +1034,19 @@ class TransView(TemplateView):
 
     def post(self, request, id):
         exam = Exam.objects.filter(id=id)[0]
-        retlist = request.POST.get('ret').split(',')
-        score = 0
+        retlist = request.POST.getlist('ret')
 
-        for ret in retlist:
+        words = []
+        for lessonobj in exam.lessons:
+            words += Word.objects.filter(id__in=lessonobj.words)
+        score = 0
+        wrong_list = []
+
+        for i,ret in enumerate(retlist):
             if ret == 'true':
                 score += 5
+            else:
+                wrong_list.append(words[i])
         
         """
         profile = get_profile(request.user)
@@ -1039,6 +1057,7 @@ class TransView(TemplateView):
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.score_trans = score
+        examstat.wrong_trans = wrong_list
         examstat.save()
         if len(exam.choices) == 0 and len(exam.readings) == 0:
             profile = get_profile(request.user)
@@ -1077,6 +1096,7 @@ class ChoiceView(TemplateView):
         choices = exam.choices
 
         score = 0
+        wrong_list = []
         for i in range(length):
             ans = request.POST.get('answer'+str(i+1), None)
             if ans != None and choices[i].rightindex == eval(ans):
@@ -1084,10 +1104,14 @@ class ChoiceView(TemplateView):
                 profile = get_profile(request.user)
                 if profile:
                     profile_record_exam_ret(profile, 'true')
+            else:
+                wrong_list.append(str(i+1)+".("+ans+")")
+
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
         examstat.score_choices = score
+        examstat.wrong_choices = wrong_list
         examstat.save()
 
         if len(exam.readings) == 0:
@@ -1137,6 +1161,7 @@ class ReadingView(TemplateView):
         reading = exam.readings[curpage]
 
         score = 0
+        wrong_list = []
         for i in range(5):
             ans = request.POST.get('answer'+str(i+1), None)
             if ans != None and reading.questions[i].rightindex == eval(ans):
@@ -1144,10 +1169,18 @@ class ReadingView(TemplateView):
                 profile = get_profile(request.user)
                 if profile:
                     profile_record_exam_ret(profile, 'true')
+            else:
+                wrong_list.append(str(curpage+1)+"_"+str(i+1)+".("+ans+")")
 
         examstat = ExamStat.objects.get_or_create(user=request.user, exam=exam)[0]
         examstat.score += score
-        examstat.score_readings = score
+        if curpage == 0:
+            examstat.wrong_readings = wrong_list
+            examstat.score_readings = score
+        else:
+            examstat.wrong_readings = examstat.wrong_readings + wrong_list
+            examstat.score_readings = examstat.score_readings + score
+
         examstat.save()
 
         if page == '0':
