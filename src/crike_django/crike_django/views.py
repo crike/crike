@@ -440,7 +440,7 @@ def lesson_success(request, book, lesson, tag):
                                                        lesson=lessonobj)[0]
     setattr(lesson_result, tag, 25)
     lesson_stat_update(lesson_result)
-    print "user %s complete lesson %s part %s %d" % (user, lesson, tag, 25)
+    #print "user %s complete lesson %s part %s %d" % (user, lesson, tag, 25)
 
 
 def profile_record_right(profile, correct_num):
