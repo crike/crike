@@ -1,7 +1,7 @@
 # Django settings for crike_django project.
 import os
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 CURRENT_DIR = os.path.dirname( __file__ ).replace( '\\'  ,  '/' )
 PROJECT_DIR = os.path.dirname(CURRENT_DIR).replace( '\\'  ,  '/' )
