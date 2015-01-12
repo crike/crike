@@ -3,6 +3,7 @@
 # Distribute Script for Vine #
 ##############################
 
+# use this by "source install.sh"
 # WARNING: the script is not mature.
 # Read https://github.com/crike-comment/crike/blob/master/PREREQUISITE.md for more details.
 
@@ -36,6 +37,7 @@ install_pypackages()
     #########################
     # django-nonrel section #
     #########################
+    pip uninstall Django
     pip install git+https://github.com/django-nonrel/django@nonrel-1.5
     pip install git+https://github.com/django-nonrel/djangotoolbox
     pip install git+https://github.com/django-nonrel/mongodb-engine
@@ -45,6 +47,7 @@ install_pypackages()
     ####################
     pip install gunicorn
     cp config/gunicorn_start ~/crike/bin/
+    sudo chmod +x ~/crike/bin/gunicorn_start
 }
 
 install_mac ()
@@ -70,12 +73,6 @@ install_ubuntu ()
     install_pypackages
 
     ####################
-    # gunicorn section #
-    ####################
-    pip install gunicorn
-    cp gunicorn_start $HOME/crike/bin/.
-
-    ######################
     # supervisor section #
     ######################
     echo "Installing and configuring supervisor..."
@@ -92,7 +89,6 @@ EOF
 
     mkdir -p $HOME/crike/logs
     touch $HOME/crike/logs/gunicorn_supervisor.log
-    sudo supervisord
 
     sudo supervisorctl reread
     sudo supervisorctl update
