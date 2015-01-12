@@ -25,6 +25,14 @@ install_pypackages()
     virtualenv ~/crike
     source ~/crike/bin/activate
 
+    # NOTE: If you're using windows, please use Pillow installer from here: http://www.lfd.uci.edu/~gohlke/pythonlibs/
+    # (Pillow is a better maintained PIL lib.)
+    items_pip="django-registration django-crispy-forms django-haystack jieba Whoosh Pillow python-social-auth python-memcached django_akismet_comments elasticsearch pyelasticsearch django-avatar pytz pygeoip"
+
+    for i in $items_pip; do
+        pip install -i http://pypi.douban.com/simple $i
+    done
+
     #########################
     # django-nonrel section #
     #########################
@@ -32,15 +40,6 @@ install_pypackages()
     pip install git+https://github.com/django-nonrel/django@nonrel-1.5
     pip install git+https://github.com/django-nonrel/djangotoolbox
     pip install git+https://github.com/django-nonrel/mongodb-engine
-
-    # NOTE: If you're using windows, please use Pillow installer from here: http://www.lfd.uci.edu/~gohlke/pythonlibs/
-    # (Pillow is a better maintained PIL lib.)
-    items_pip="django-registration django-crispy-forms django-admin-bootstrapped django-haystack jieba Whoosh Pillow python-social-auth python-memcached django_akismet_comments elasticsearch pyelasticsearch django-avatar pytz pygeoip"
-
-    for i in $items_pip; do
-        pip install -i http://pypi.douban.com/simple $i
-    done
-
 
     ####################
     # gunicorn section #
