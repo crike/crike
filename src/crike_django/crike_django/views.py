@@ -767,7 +767,7 @@ class LessonsChooseView(TemplateView):
             print e
             return HttpResponseRedirect('/error/')#TODO error page
         """
-        books = Book.objects.filter(is_public=True)
+        books = Book.objects.filter(is_public=True).order_by('name')
         if len(books) == 0:
             return render(request, self.template_name,{})
 
@@ -781,7 +781,7 @@ class LessonsChooseView(TemplateView):
                 # XXX this result should never save
                 lesson.result = lesson_result
 
-            las = LessonApply.objects.all()
+        las = LessonApply.objects.all()
 
         return render(request, self.template_name, {'books': books, 'lesson_applies':las})
 
