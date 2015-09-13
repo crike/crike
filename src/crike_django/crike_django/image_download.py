@@ -62,7 +62,7 @@ class download_from_bing_thread(threading.Thread):
                 break
 
             sizes = re.findall('t2=\"[^<>/"]* ([^<>/" ]*?)$', imginfo, re.M | re.S)
-            if len(sizes) == 0 or eval(sizes[0]) > 1000:
+            if len(sizes) == 0 or eval(sizes[0]) > 500:
                 continue
             urls = re.findall('^(http[^&]+\.[j|J][p|P][g|G])&quot', imginfo, re.M | re.S)
             if len(urls) == 0:

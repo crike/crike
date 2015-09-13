@@ -286,7 +286,7 @@ class TeacherView(TemplateView):
 def play_audio(request, name):
     #word = Word.objects.filter(name=name)[0]
     #return HttpResponse(word.audio.read(), content_type="audio/mpeg")
-    path = MEDIA_ROOT+'/audios/'+name
+    path = MEDIA_ROOT+'/audios/'+name+'.mp3'
     if os.path.exists(path):
         file = open(path, 'rb')
         return HttpResponse(file.read(), content_type="audio/mpeg")
@@ -294,7 +294,7 @@ def play_audio(request, name):
         return HttpResponse(None)
 
 def show_image(request, name, num):
-    path = MEDIA_ROOT+'/images/'+name+'/'+num
+    path = MEDIA_ROOT+'/images/'+name+'/'+num+'.jpg'
     if os.path.exists(path):
         file = open(path, 'rb')
         return HttpResponse(file.read(), content_type='image/jpeg')
@@ -1689,16 +1689,20 @@ class WeixinBiggerView(TemplateView):
         print xml_str
         xml = etree.fromstring(xml_str)#进行XML解析
         msgType=xml.find("MsgType").text
+        content = {'mode':'text', 'title':'', 'desc':'',
+                'picurl':'', 'url':'http://114.215.113.3/'}
 
         if msgType == "event":
             event = xml.find("Event").text
             if event == "subscribe":
-                content = "欢迎关注比格！目前支持英文单词翻译，just type me a word"
+                content['desc'] = "欢迎关注比格！目前支持英文单词翻译，just type me a word"
+            elif event == "unsubscribe":
+                content['desc'] = "Good bye, seems you don't need me anymore, uuu..."
+            content['mode'] = 'text'
 
         elif msgType == "text":
-            content=xml.find("Content").text#获得用户所输入的内容
-            if re.match('^[A-Za-z]+$', content):
-                wordname = content
+            wordname=xml.find("Content").text#获得用户所输入的内容
+            if re.match('^[A-Za-z]+$', wordname):
                 words = Word.objects.filter(name=wordname)
                 if not words:
                     mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
@@ -1708,9 +1712,18 @@ class WeixinBiggerView(TemplateView):
                     words = Word.objects.filter(name=wordname)
 
                 if words:
-                    content=wordname+' ['+words[0].phonetics+']'+' | '.join(words[0].mean)
+                    content['title']=wordname
+                    content['desc']='['+words[0].phonetics+']\n'+'\n'.join(words[0].mean)
+                    content['picurl']='http://114.215.113.3/media/images/'+wordname+'/0'
+                    content['url']='http://114.215.113.3/media/audios/'+wordname
+                    content['mode'] = 'news'
+                else:
+                    content['desc'] = "Sorry, I don't know "+wordname
+                    content['mode'] = 'text'
+
             else:
-                content = "Sorry, I don't know "+content
+                content['desc'] = "Sorry, I don't know "+wordname
+                content['mode'] = 'text'
 
         fromUser=xml.find("FromUserName").text
         toUser=xml.find("ToUserName").text
@@ -1731,7 +1744,7 @@ class WeixinBiggerView(TemplateView):
         print signature
         print timestamp
 
-        #这里的token我放在setting，可以根据自己需求修改
+        #这里的token根据自己需求修改
         token="weixinbigger"
 
         tmplist=[token,timestamp,nonce]
@@ -1744,12 +1757,30 @@ class WeixinBiggerView(TemplateView):
             return None
 
     def reply_str(self, toUser, fromUser, createTime, content):
-        xml_str = """<xml>
-                  <ToUserName><![CDATA["""+toUser+"""]]></ToUserName>
-                  <FromUserName><![CDATA["""+fromUser+"""]]></FromUserName>
-                  <CreateTime>"""+createTime+"""</CreateTime>
-                  <MsgType><![CDATA[text]]></MsgType>
-                  <Content><![CDATA["""+content+"""]]></Content>
-                  </xml>"""
+        if content['mode'] == 'text':
+            xml_str = """<xml>
+<ToUserName><![CDATA["""+toUser+"""]]></ToUserName>
+<FromUserName><![CDATA["""+fromUser+"""]]></FromUserName>
+<CreateTime>"""+createTime+"""</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA["""+content['desc']+"""]]></Content>
+</xml>"""
+        elif content['mode'] == 'news':
+            xml_str = """<xml>
+<ToUserName><![CDATA["""+toUser+"""]]></ToUserName>
+<FromUserName><![CDATA["""+fromUser+"""]]></FromUserName>
+<CreateTime>"""+createTime+"""</CreateTime>
+<MsgType><![CDATA[news]]></MsgType>
+<ArticleCount>1</ArticleCount>
+<Articles>
+<item>
+<Title><![CDATA["""+content['title']+"""]]></Title>
+<Description><![CDATA["""+content['desc']+"""]]></Description>
+<PicUrl><![CDATA["""+content['picurl']+"""]]></PicUrl>
+<Url><![CDATA["""+content['url']+"""]]></Url>
+</item>
+</Articles>
+</xml>"""
+
         return xml_str
 
