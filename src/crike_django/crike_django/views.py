@@ -10,6 +10,8 @@ import time
 import datetime
 import json
 import re
+import urllib
+import urllib2
 
 
 from django.views.generic import *
@@ -35,6 +37,8 @@ from multiprocessing import Process
 import hashlib
 from lxml import etree
 from django.utils.encoding import smart_str
+from poster.encode import multipart_encode
+from poster.streaminghttp import register_openers
 
 # Utils
 def save_file(srcfile, dst):
@@ -326,7 +330,7 @@ def retrieve_word(request, book, lesson, word):
 
 class UserHistoryView(TemplateView):
     template_name = 'crike_django/user_history.html'
-    
+
     def get(self, request, *args, **kwargs):
         user_history = WordEventRecorder.objects.filter(user=request.user)
         tags = {}
@@ -356,10 +360,10 @@ def get_profile(user):
 
 class UserHeadSculptureView(TemplateView):
     template_name = 'crike_django/'
-    
+
     def get(self, request, *args, **kwargs):
         return HttpResponseForbidden('allowed only via POST')
-    
+
     def post(self, request, *args, **kwargs):
         form = UploadHeadSculptureForm(request.POST, request.FILES)
         if form.is_valid():
@@ -482,7 +486,7 @@ def count_words_learnt(profile):
         stats = WordStat.objects.filter(user=request.user)
     except WordStat.DoesNotExist:
         pass
-    
+
     words_learnt = 0
     words_mistake_num = 0
     words_correct_num = 0
@@ -532,7 +536,7 @@ def word_event_recorder(request, book, lesson, tag):
     else:
         correct_num = 0
         mistake_num = int(num)
-    
+
     word_stat.correct_num += correct_num
     word_stat.mistake_num += mistake_num
     word_stat.save()
@@ -542,7 +546,7 @@ def word_event_recorder(request, book, lesson, tag):
                                            correct_num=correct_num,
                                            mistake_num=mistake_num)
     wer.save()
-    
+
     profile = get_profile(request.user)
     if profile:
         profile_record_right(profile, correct_num)
@@ -566,7 +570,7 @@ def words_event_recorder(request, book, lesson, tag):
         else:
             correct_num = 0
             mistake_num = int(num[i])
-        
+
         word_stat.correct_num += correct_num
         word_stat.mistake_num += mistake_num
         word_stat.save()
@@ -891,7 +895,6 @@ class ExamView(TemplateView):
             else:
                 wrong_list.append(ques[i])
 
-        
         """
         profile = get_profile(request.user)
         if profile:
@@ -903,7 +906,7 @@ class ExamView(TemplateView):
         examstat.score_words = score
         examstat.wrong_e2c = wrong_list
         examstat.save()
-        
+
         return HttpResponseRedirect('/c2e/'+id)
 
 class C2EView(TemplateView):
@@ -944,7 +947,7 @@ class C2EView(TemplateView):
                 score += 1
             else:
                 wrong_list.append(ques[i])
-        
+
         """
         profile = get_profile(request.user)
         if profile:
@@ -956,7 +959,7 @@ class C2EView(TemplateView):
         examstat.score_words += score
         examstat.wrong_c2e = wrong_list
         examstat.save()
-        
+
         return HttpResponseRedirect('/dictation/'+id)
 
 class DictationView(TemplateView):
@@ -984,13 +987,13 @@ class DictationView(TemplateView):
         ques = request.POST.getlist('ques')
         score = 0
         wrong_list = []
-        
+
         for i,an in enumerate(ans):
             if an == ques[i]:
                 score += 1
             else:
                 wrong_list.append(ques[i])
-        
+
         """
         profile = get_profile(request.user)
         if profile:
@@ -1002,7 +1005,7 @@ class DictationView(TemplateView):
         examstat.score_words += score
         examstat.wrong_dictation = wrong_list
         examstat.save()
-        
+
         if exam.withtrans:
             return HttpResponseRedirect('/trans/'+id)
         else:
@@ -1052,7 +1055,7 @@ class TransView(TemplateView):
                 score += 5
             else:
                 wrong_list.append(words[i])
-        
+
         """
         profile = get_profile(request.user)
         if profile:
@@ -1237,7 +1240,7 @@ class ExamAdminView(TemplateView):
 
     def get(self, request):
         exams = Exam.objects.all()
-        return render(request, self.template_name, 
+        return render(request, self.template_name,
                 {'books':Book.objects.all(),'exams':exams})
 
     def post(self, request, *args, **kwargs):
@@ -1282,14 +1285,14 @@ class ExamAdminView(TemplateView):
                 choiceobj.rightindex = rightindex;
             else:
                 choiceobj.rightindex = 0;
-            exam.choices.append(choiceobj) 
+            exam.choices.append(choiceobj)
 
         exam.readings[:] = []
         readings_raw = request.POST.getlist('reading')
         for reading_raw in readings_raw:
             reading = json.loads(reading_raw)
             article = reading['article'].replace("<br>","\n")
-            readingobj = Reading(name=reading['name'], 
+            readingobj = Reading(name=reading['name'],
                                         article=article)
             for question in reading['questions']:
                 questionobj = Choicesingle(question=question['question'])
@@ -1674,7 +1677,7 @@ class WordPopupView(TemplateView):
         return HttpResponse(status=204)
 
 class WeixinBiggerView(TemplateView):
-    
+
     @csrf_exempt
     def get(self, request):
         ret = self.checkSignature(request)
@@ -1684,13 +1687,15 @@ class WeixinBiggerView(TemplateView):
             return HttpResponse("Ping, I love you!!!")
 
     @csrf_exempt
-    def post(self, request):        
+    def post(self, request):
         xml_str = smart_str(request.body)
         print xml_str
         xml = etree.fromstring(xml_str)#进行XML解析
         msgType=xml.find("MsgType").text
         content = {'mode':'text', 'title':'', 'desc':'',
                 'picurl':'', 'url':'http://114.215.113.3/'}
+        IMAGE_URL_BASE = 'http://114.215.113.3/media/images/'
+        AUDIO_URL_BASE = 'http://114.215.113.3/media/audios/'
 
         if msgType == "event":
             event = xml.find("Event").text
@@ -1714,8 +1719,8 @@ class WeixinBiggerView(TemplateView):
                 if words:
                     content['title']=wordname
                     content['desc']='['+words[0].phonetics+']\n'+'\n'.join(words[0].mean)
-                    content['picurl']='http://114.215.113.3/media/images/'+wordname+'/0'
-                    content['url']='http://114.215.113.3/media/audios/'+wordname
+                    content['picurl']=IMAGE_URL_BASE+wordname+'/0'
+                    content['url']=AUDIO_URL_BASE+wordname
                     content['mode'] = 'news'
                 else:
                     content['desc'] = "Sorry, I don't know "+wordname
@@ -1723,6 +1728,24 @@ class WeixinBiggerView(TemplateView):
 
             else:
                 content['desc'] = "Sorry, I don't know "+wordname
+                content['mode'] = 'text'
+
+        elif msgType == "image":
+            picurl = xml.find("PicUrl").text
+            msgid = xml.find("MsgId").text
+            mediaid = xml.find("MediaId").text
+
+            process = Process(target=download_image_from_weixin, args=(picurl, mediaid, ))
+            process.start()
+
+            if picurl:
+                content['mode'] = 'news'
+                content['picurl'] = IMAGE_URL_BASE+'from_weixin/'+mediaid
+                content['url'] = IMAGE_URL_BASE+'from_weixin/'+mediaid#TODO output pic
+                content['title'] = '比格已经收到您的图片，正在处理中'
+                content['desc'] = '我们将在24小时后制作完成，请届时点击该消息获取'
+            else:
+                content['desc'] = "十分抱歉，您的图片未上传成功，请稍后重试"
                 content['mode'] = 'text'
 
         fromUser=xml.find("FromUserName").text
@@ -1741,8 +1764,6 @@ class WeixinBiggerView(TemplateView):
         timestamp=request.GET.get('timestamp',None)
         nonce=request.GET.get('nonce',None)
         echostr=request.GET.get('echostr',None)
-        print signature
-        print timestamp
 
         #这里的token根据自己需求修改
         token="weixinbigger"
@@ -1784,3 +1805,72 @@ class WeixinBiggerView(TemplateView):
 
         return xml_str
 
+def is_file_valid(file):
+    try:
+        if type(file) == unicode or type(file) == str:
+            if os.path.getsize(file) < 10000:
+                return False
+            file = open(file,"rb")
+        first_char = file.read(1) #get the first character
+        if not first_char:
+            print "file is empty" #first character is the empty string..
+            return False
+        else:
+            file.seek(0)
+            return True
+    except Exception as e:
+        print(e)
+        return False
+
+def download_image_from_weixin(picurl, mediaid):
+    PIC_DIR = MEDIA_ROOT+"/images/from_weixin/"
+    requrl = "http://113.87.81.100:5000/neural-task"
+
+    if not os.path.exists(PIC_DIR):
+        os.makedirs(PIC_DIR)
+    fname = os.path.join(PIC_DIR, '%s.jpg') % mediaid
+    try:
+        urllib.urlretrieve(picurl, fname)
+        if not is_file_valid(fname):
+            os.remove(fname)
+        else:
+            register_openers()
+            datagen, headers = multipart_encode(
+                    {'image':open(fname, "rb"),
+                     'image_id':mediaid})
+            request = urllib2.Request(requrl, datagen, headers)
+            print urllib2.urlopen(request).read()
+
+    except IOError, e:
+        # Throw away some gifs...blegh.
+        print 'could not save %s' % picurl
+
+@csrf_exempt
+def neural_task_reply(request):
+    if request.method == 'GET':
+        print_request_header(request)
+        return HttpResponse(status=403)
+
+    PIC_DIR = MEDIA_ROOT+"/images/from_weixin/"
+    mediaid = request.POST.get('image_id', None)
+    if not mediaid:
+        print "Can't get image_id"
+        return
+    if not os.path.exists(PIC_DIR):
+        os.makedirs(PIC_DIR)
+    fname = os.path.join(PIC_DIR, '%s.jpg') % mediaid
+    if request.FILES.get('image', None):
+        save_file(request.FILES['image'], fname)
+    return
+
+@csrf_exempt
+def print_request_header(request):
+    regex_http_          = re.compile(r'^HTTP_.+$')
+    regex_content_type   = re.compile(r'^CONTENT_TYPE$')
+    regex_content_length = re.compile(r'^CONTENT_LENGTH$')
+
+    request_headers = {}
+    for header in request.META:
+        if regex_http_.match(header) or regex_content_type.match(header) or regex_content_length.match(header):
+            request_headers[header] = request.META[header]
+            print header, request.META[header]
