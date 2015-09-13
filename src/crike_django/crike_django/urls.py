@@ -76,4 +76,7 @@ urlpatterns = patterns('',
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     url(r'^wordpopup/(?P<wordname>.*)$', WordPopupView.as_view(), name='word_popup_view'),
+
+# Weixin bigger
+    url(r'^bigger.*$', WeixinBiggerView.as_view(), name='weixin_bigger_view'),
 )

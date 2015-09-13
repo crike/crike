@@ -1,9 +1,9 @@
 #!/bin/bash
 # add a line to "/etc/crontab" like:
-# 30 18   * * 7   root    sh /media/sf_GitHub/crike/src/crike_django/backupdb.sh
+# 30 18   * * 7   root    sh /root/git/crike/src/crike_django/backupdb.sh
 
 # for restore:
-# mongorestore [--drop] /opt/backup/mongodb-dump-$DATE/crikedb
+# mongorestore [--drop] /root/crike/data/backup/mongodb-dump-$DATE/crikedb
 
 DATE=`date +"%Y-%m-%d"`
-mongodump --db crikedb --out /opt/backup/mongodb-dump-$DATE
+mongodump --db crikedb --out /root/crike/data/backup/mongodb-dump-$DATE

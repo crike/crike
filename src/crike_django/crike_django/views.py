@@ -9,6 +9,7 @@ import os
 import time
 import datetime
 import json
+import re
 
 
 from django.views.generic import *
@@ -30,6 +31,10 @@ from word_utils import download_word, handle_uploaded_file
 from image_download import download_images_single, is_path_full
 from multiprocessing import Process
 
+# Weixin
+import hashlib
+from lxml import etree
+from django.utils.encoding import smart_str
 
 # Utils
 def save_file(srcfile, dst):
@@ -1667,4 +1672,69 @@ class WordPopupView(TemplateView):
         word_stat.save()
 
         return HttpResponse(status=204)
+
+def checkSignature(request):
+    signature=request.GET.get('signature',None)
+    timestamp=request.GET.get('timestamp',None)
+    nonce=request.GET.get('nonce',None)
+    echostr=request.GET.get('echostr',None)
+    print signature
+    print timestamp
+
+    #这里的token我放在setting，可以根据自己需求修改
+    token="weixinbigger"
+
+    tmplist=[token,timestamp,nonce]
+    tmplist.sort()
+    tmpstr="%s%s%s"%tuple(tmplist)
+    tmpstr=hashlib.sha1(tmpstr).hexdigest()
+    if tmpstr==signature:
+        return echostr
+    else:
+        return None
+
+class WeixinBiggerView(TemplateView):
+    
+    @csrf_exempt
+    def get(self, request):
+        ret = checkSignature(request)
+        if ret:
+            return HttpResponse(ret)
+        else:
+            return HttpResponse("Ping, I love you!!!")
+
+    @csrf_exempt
+    def post(self, request):        
+        xml_str = smart_str(request.body)
+        print xml_str
+        xml = etree.fromstring(xml_str)#进行XML解析
+        content=xml.find("Content").text#获得用户所输入的内容
+        if re.match('^[A-Za-z]+$', content):
+            wordname = content
+            words = Word.objects.filter(name=wordname)
+            if not words:
+                mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
+                if os.path.exists(mp3path):
+                    os.remove(mp3path)
+                download_word(wordname)
+                words = Word.objects.filter(name=wordname)
+
+            if words:
+                content=wordname+' ['+words[0].phonetics+']'+' | '.join(words[0].mean)
+        else:
+            content = "Sorry, I don't know "+content
+
+        msgType=xml.find("MsgType").text
+        fromUser=xml.find("FromUserName").text
+        toUser=xml.find("ToUserName").text
+        xml.find("Content").text = content
+        xml.find("FromUserName").text = toUser
+        xml.find("ToUserName").text = fromUser
+        xml = etree.tostring(xml,encoding='utf-8')
+        print xml
+        return HttpResponse(xml)
+
+    @csrf_exempt
+    def dispatch(self, request):
+        return super(WeixinBiggerView, self).dispatch(request)
 
