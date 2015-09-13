@@ -16,3 +16,5 @@
 ###python
 * python-dev (apt-get install python-dev)
 * Pillow (pip install Pillow)
+* poster
+* lxml
