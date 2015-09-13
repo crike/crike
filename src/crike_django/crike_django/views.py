@@ -1673,31 +1673,11 @@ class WordPopupView(TemplateView):
 
         return HttpResponse(status=204)
 
-def checkSignature(request):
-    signature=request.GET.get('signature',None)
-    timestamp=request.GET.get('timestamp',None)
-    nonce=request.GET.get('nonce',None)
-    echostr=request.GET.get('echostr',None)
-    print signature
-    print timestamp
-
-    #这里的token我放在setting，可以根据自己需求修改
-    token="weixinbigger"
-
-    tmplist=[token,timestamp,nonce]
-    tmplist.sort()
-    tmpstr="%s%s%s"%tuple(tmplist)
-    tmpstr=hashlib.sha1(tmpstr).hexdigest()
-    if tmpstr==signature:
-        return echostr
-    else:
-        return None
-
 class WeixinBiggerView(TemplateView):
     
     @csrf_exempt
     def get(self, request):
-        ret = checkSignature(request)
+        ret = self.checkSignature(request)
         if ret:
             return HttpResponse(ret)
         else:
@@ -1708,33 +1688,68 @@ class WeixinBiggerView(TemplateView):
         xml_str = smart_str(request.body)
         print xml_str
         xml = etree.fromstring(xml_str)#进行XML解析
-        content=xml.find("Content").text#获得用户所输入的内容
-        if re.match('^[A-Za-z]+$', content):
-            wordname = content
-            words = Word.objects.filter(name=wordname)
-            if not words:
-                mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
-                if os.path.exists(mp3path):
-                    os.remove(mp3path)
-                download_word(wordname)
-                words = Word.objects.filter(name=wordname)
-
-            if words:
-                content=wordname+' ['+words[0].phonetics+']'+' | '.join(words[0].mean)
-        else:
-            content = "Sorry, I don't know "+content
-
         msgType=xml.find("MsgType").text
+
+        if msgType == "event":
+            event = xml.find("Event").text
+            if event == "subscribe":
+                content = "欢迎关注比格！目前支持英文单词翻译，just type me a word"
+
+        elif msgType == "text":
+            content=xml.find("Content").text#获得用户所输入的内容
+            if re.match('^[A-Za-z]+$', content):
+                wordname = content
+                words = Word.objects.filter(name=wordname)
+                if not words:
+                    mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
+                    if os.path.exists(mp3path):
+                        os.remove(mp3path)
+                    download_word(wordname)
+                    words = Word.objects.filter(name=wordname)
+
+                if words:
+                    content=wordname+' ['+words[0].phonetics+']'+' | '.join(words[0].mean)
+            else:
+                content = "Sorry, I don't know "+content
+
         fromUser=xml.find("FromUserName").text
         toUser=xml.find("ToUserName").text
-        xml.find("Content").text = content
-        xml.find("FromUserName").text = toUser
-        xml.find("ToUserName").text = fromUser
-        xml = etree.tostring(xml,encoding='utf-8')
-        print xml
-        return HttpResponse(xml)
+        createTime=xml.find("CreateTime").text
+        xml_str = self.reply_str(fromUser,toUser,createTime,content)
+        print xml_str
+        return HttpResponse(xml_str)
 
     @csrf_exempt
     def dispatch(self, request):
         return super(WeixinBiggerView, self).dispatch(request)
+
+    def checkSignature(self, request):
+        signature=request.GET.get('signature',None)
+        timestamp=request.GET.get('timestamp',None)
+        nonce=request.GET.get('nonce',None)
+        echostr=request.GET.get('echostr',None)
+        print signature
+        print timestamp
+
+        #这里的token我放在setting，可以根据自己需求修改
+        token="weixinbigger"
+
+        tmplist=[token,timestamp,nonce]
+        tmplist.sort()
+        tmpstr="%s%s%s"%tuple(tmplist)
+        tmpstr=hashlib.sha1(tmpstr).hexdigest()
+        if tmpstr==signature:
+            return echostr
+        else:
+            return None
+
+    def reply_str(self, toUser, fromUser, createTime, content):
+        xml_str = """<xml>
+                  <ToUserName><![CDATA["""+toUser+"""]]></ToUserName>
+                  <FromUserName><![CDATA["""+fromUser+"""]]></FromUserName>
+                  <CreateTime>"""+createTime+"""</CreateTime>
+                  <MsgType><![CDATA[text]]></MsgType>
+                  <Content><![CDATA["""+content+"""]]></Content>
+                  </xml>"""
+        return xml_str
 
