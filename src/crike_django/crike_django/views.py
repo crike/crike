@@ -1848,20 +1848,20 @@ def download_image_from_weixin(picurl, mediaid):
 @csrf_exempt
 def neural_task_reply(request):
     if request.method == 'GET':
-        print_request_header(request)
+        #print_request_header(request)
         return HttpResponse(status=403)
 
     PIC_DIR = MEDIA_ROOT+"/images/from_weixin/"
     mediaid = request.POST.get('image_id', None)
     if not mediaid:
         print "Can't get image_id"
-        return
+        return HttpResponse(status=403)
     if not os.path.exists(PIC_DIR):
         os.makedirs(PIC_DIR)
     fname = os.path.join(PIC_DIR, '%s.jpg') % mediaid
     if request.FILES.get('image', None):
         save_file(request.FILES['image'], fname)
-    return
+    return HttpResponse(status=200)
 
 @csrf_exempt
 def print_request_header(request):
