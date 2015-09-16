@@ -1696,6 +1696,7 @@ class WeixinBiggerView(TemplateView):
                 'picurl':'', 'url':'http://114.215.113.3/'}
         IMAGE_URL_BASE = 'http://114.215.113.3/media/images/'
         AUDIO_URL_BASE = 'http://114.215.113.3/media/audios/'
+        URL_BASE = 'http://114.215.113.3/'
 
         if msgType == "event":
             event = xml.find("Event").text
@@ -1743,7 +1744,7 @@ class WeixinBiggerView(TemplateView):
             process.start()
 
             picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
-            outurl = IMAGE_URL_BASE+'to_weixin/'+mediaid#TODO a web page
+            outurl = URL_BASE+'get-neural-task-result/'+mediaid
             picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
 
             """
@@ -1893,3 +1894,8 @@ def print_request_header(request):
         if regex_http_.match(header) or regex_content_type.match(header) or regex_content_length.match(header):
             request_headers[header] = request.META[header]
             print header, request.META[header]
+
+@csrf_exempt
+def get_neural_task_result(request, mediaid):
+    template_name = 'crike_django/neural_task_result.html'
+    return render(request, template_name, {'MediaID':mediaid})

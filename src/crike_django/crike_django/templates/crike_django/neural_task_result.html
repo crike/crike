@@ -1,0 +1,35 @@
+<script>
+function weixinAddContact(name){
+  WeixinJSBridge.invoke("addContact", {webtype: "1",username: name}, function(e) {
+    WeixinJSBridge.log(e.err_msg);
+    //e.err_msg:add_contact:added 已经添加
+    //e.err_msg:add_contact:cancel 取消添加
+    //e.err_msg:add_contact:ok 添加成功
+    if(e.err_msg == 'add_contact:added' || e.err_msg == 'add_contact:ok'){
+        //关注成功，或者已经关注过
+    }
+  })
+}
+</script>
+<style type="text/css">
+    .item {
+        width:100%;
+        margin:0 auto;
+        font-size:32px;
+        font-weight:bold;
+        color:#ff0000;
+        text-align:center;
+    }
+</style>
+<div class="item">
+Before:
+  <img alt="before" width="100%" src="/media/images/from_weixin/{{MediaID}}">
+</div>
+<div class="item">
+After:
+  <img alt="您的图片正在处理中，请耐心等待。再次感谢您关注比格！" width="100%" src="/media/images/to_weixin/{{MediaID}}">
+</div>
+<div class="item">
+  <img alt="900x500" width="50%" src="/media/images/weixin-static/qrcode_for_gh_1">
+<!--a href="#" onclick="WeiXinAddContact('bigger-bige')" style="font-size:300%">点击关注</a-->
+</div>
