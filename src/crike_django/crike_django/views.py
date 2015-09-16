@@ -1700,7 +1700,11 @@ class WeixinBiggerView(TemplateView):
         if msgType == "event":
             event = xml.find("Event").text
             if event == "subscribe":
-                content['desc'] = "欢迎关注比格！目前支持英文单词翻译，just type me a word"
+                content['desc'] = """欢迎关注比格！
+小格目前有两大技能：
+1）英文单词没有我不会的
+2）我还是印象派油画大师
+您可以发单词考我；也可以发图片，我给您画成印象派"""
             elif event == "unsubscribe":
                 content['desc'] = "Good bye, seems you don't need me anymore, uuu..."
             content['mode'] = 'text'
@@ -1738,10 +1742,22 @@ class WeixinBiggerView(TemplateView):
             process = Process(target=download_image_from_weixin, args=(picurl, mediaid, ))
             process.start()
 
-            if picurl:
+            picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
+            outurl = IMAGE_URL_BASE+'to_weixin/'+mediaid#TODO a web page
+            picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
+
+            """
+            count = 20
+            while count > 0 and process.is_alive():
+                time.sleep(1)
+                count -= 1
+            """
+            time.sleep(1)
+
+            if os.path.exists(picpath):
                 content['mode'] = 'news'
-                content['picurl'] = IMAGE_URL_BASE+'from_weixin/'+mediaid
-                content['url'] = IMAGE_URL_BASE+'from_weixin/'+mediaid#TODO output pic
+                content['picurl'] = picurl
+                content['url'] = outurl
                 content['title'] = '比格已经收到您的图片，正在处理中'
                 content['desc'] = '我们将在24小时后制作完成，请届时点击该消息获取'
             else:
@@ -1824,7 +1840,7 @@ def is_file_valid(file):
 
 def download_image_from_weixin(picurl, mediaid):
     PIC_DIR = MEDIA_ROOT+"/images/from_weixin/"
-    requrl = "http://113.87.81.100:5000/neural-task"
+    requrl = "http://long-long-long-name-for-pc.anwcl.com:5000/neural-task"
 
     if not os.path.exists(PIC_DIR):
         os.makedirs(PIC_DIR)
@@ -1834,12 +1850,15 @@ def download_image_from_weixin(picurl, mediaid):
         if not is_file_valid(fname):
             os.remove(fname)
         else:
-            register_openers()
-            datagen, headers = multipart_encode(
-                    {'image':open(fname, "rb"),
-                     'image_id':mediaid})
-            request = urllib2.Request(requrl, datagen, headers)
-            print urllib2.urlopen(request).read()
+            try:
+                register_openers()
+                datagen, headers = multipart_encode(
+                        {'image':open(fname, "rb"),
+                         'image_id':mediaid})
+                request = urllib2.Request(requrl, datagen, headers)
+                print urllib2.urlopen(request).read()
+            except IOError, e:
+                print '[POST] could not post %s' % picurl
 
     except IOError, e:
         # Throw away some gifs...blegh.
@@ -1851,7 +1870,7 @@ def neural_task_reply(request):
         #print_request_header(request)
         return HttpResponse(status=403)
 
-    PIC_DIR = MEDIA_ROOT+"/images/from_weixin/"
+    PIC_DIR = MEDIA_ROOT+"/images/to_weixin/"
     mediaid = request.POST.get('image_id', None)
     if not mediaid:
         print "Can't get image_id"
