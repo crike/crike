@@ -1736,16 +1736,20 @@ class WeixinBiggerView(TemplateView):
                 content['mode'] = 'text'
 
         elif msgType == "image":
-            picurl = xml.find("PicUrl").text
+            picurl_o = xml.find("PicUrl").text
             msgid = xml.find("MsgId").text
             mediaid = xml.find("MediaId").text
 
-            process = Process(target=download_image_from_weixin, args=(picurl, mediaid, ))
+            process = Process(target=download_image_from_weixin, args=(picurl_o, mediaid, ))
             process.start()
 
             picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
             outurl = URL_BASE+'get-neural-task-result/'+mediaid
             picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
+
+            fromUser=xml.find("FromUserName").text
+            toUser=xml.find("ToUserName").text
+            createTime=xml.find("CreateTime").text
 
             """
             count = 20
@@ -1757,17 +1761,16 @@ class WeixinBiggerView(TemplateView):
 
             if os.path.exists(picpath):
                 content['mode'] = 'news'
-                content['picurl'] = picurl
+                content['picurl'] = picurl_o
                 content['url'] = outurl
                 content['title'] = '比格已经收到您的图片，正在处理中'
                 content['desc'] = '我们将在24小时后制作完成，请届时点击该消息获取'
+                process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, fromUser, ))
+                process.start()
             else:
                 content['desc'] = "十分抱歉，您的图片未上传成功，请稍后重试"
                 content['mode'] = 'text'
 
-        fromUser=xml.find("FromUserName").text
-        toUser=xml.find("ToUserName").text
-        createTime=xml.find("CreateTime").text
         xml_str = self.reply_str(fromUser,toUser,createTime,content)
         print xml_str
         return HttpResponse(xml_str)
@@ -1841,7 +1844,6 @@ def is_file_valid(file):
 
 def download_image_from_weixin(picurl, mediaid):
     PIC_DIR = MEDIA_ROOT+"/images/from_weixin/"
-    requrl = "http://long-long-long-name-for-pc.anwcl.com:5000/neural-task"
 
     if not os.path.exists(PIC_DIR):
         os.makedirs(PIC_DIR)
@@ -1850,20 +1852,24 @@ def download_image_from_weixin(picurl, mediaid):
         urllib.urlretrieve(picurl, fname)
         if not is_file_valid(fname):
             os.remove(fname)
-        else:
-            try:
-                register_openers()
-                datagen, headers = multipart_encode(
-                        {'image':open(fname, "rb"),
-                         'image_id':mediaid})
-                request = urllib2.Request(requrl, datagen, headers)
-                print urllib2.urlopen(request).read()
-            except IOError, e:
-                print '[POST] could not post %s' % picurl
-
     except IOError, e:
         # Throw away some gifs...blegh.
         print 'could not save %s' % picurl
+
+def send_image_to_neural_server(fname, mediaid, userid):
+    requrl = "http://long-long-long-name-for-pc.anwcl.com:5000/neural-task"
+
+    try:
+        register_openers()
+        datagen, headers = multipart_encode(
+                {'image':open(fname, "rb"),
+                 'image_id':mediaid,
+                 'user_id':userid})
+        request = urllib2.Request(requrl, datagen, headers)
+        print urllib2.urlopen(request).read()
+    except IOError, e:
+        print '[POST] could not post %s' % picurl
+
 
 @csrf_exempt
 def neural_task_reply(request):
