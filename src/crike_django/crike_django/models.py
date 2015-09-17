@@ -7,6 +7,15 @@ from djangotoolbox.fields import EmbeddedModelField, ListField
 from django.conf import settings
 from django.core.cache import cache
 
+class NeuralTask(models.Model):
+    userid = models.CharField(max_length=50)
+    mediaid = models.CharField(max_length=128)
+    msgid = models.CharField(max_length=50)
+    time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    style = models.CharField(max_length=50)
+    payed = models.BooleanField(default=False)
+    done = models.BooleanField(default=False)
+
 '''
 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
 当前目标：实现word、book、user、course，其余皆往后排

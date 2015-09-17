@@ -1739,6 +1739,20 @@ class WeixinBiggerView(TemplateView):
             picurl_o = xml.find("PicUrl").text
             msgid = xml.find("MsgId").text
             mediaid = xml.find("MediaId").text
+            fromUser=xml.find("FromUserName").text
+            toUser=xml.find("ToUserName").text
+            createTime=xml.find("CreateTime").text
+
+            tasks = NeuralTask.objects.filter(userid=fromUser, done=False)
+            print len(tasks)
+            if len(tasks) >= 3:
+                content['desc'] = ("十分抱歉，您的排队任务已经超过3个。"
+                                  "我们目前的服务能力有限，请您等待前面的任务完成后再试，谢谢！"
+                                  "（点击前面的任务消息可以查看是否完成）")
+                content['mode'] = 'text'
+                xml_str = self.reply_str(fromUser,toUser,createTime,content)
+                print xml_str
+                return HttpResponse(xml_str)
 
             process = Process(target=download_image_from_weixin, args=(picurl_o, mediaid, ))
             process.start()
@@ -1746,10 +1760,6 @@ class WeixinBiggerView(TemplateView):
             picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
             outurl = URL_BASE+'get-neural-task-result/'+mediaid
             picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
-
-            fromUser=xml.find("FromUserName").text
-            toUser=xml.find("ToUserName").text
-            createTime=xml.find("CreateTime").text
 
             """
             count = 20
@@ -1767,6 +1777,10 @@ class WeixinBiggerView(TemplateView):
                 content['desc'] = '我们将在24小时后制作完成，请届时点击该消息获取'
                 process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, fromUser, ))
                 process.start()
+
+                task = NeuralTask.objects.create(userid=fromUser, mediaid=mediaid,
+                                            msgid=msgid, style="starry_night")
+                task.save()
             else:
                 content['desc'] = "十分抱歉，您的图片未上传成功，请稍后重试"
                 content['mode'] = 'text'
@@ -1887,6 +1901,11 @@ def neural_task_reply(request):
     fname = os.path.join(PIC_DIR, '%s.jpg') % mediaid
     if request.FILES.get('image', None):
         save_file(request.FILES['image'], fname)
+        tasks = NeuralTask.objects.filter(mediaid=mediaid)
+        if len(tasks) > 0:
+            task = tasks[0]
+            task.done = True
+            task.save()
     return HttpResponse(status=200)
 
 @csrf_exempt
