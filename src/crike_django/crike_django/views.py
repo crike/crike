@@ -1872,13 +1872,15 @@ def download_image_from_weixin(picurl, mediaid):
 
 def send_image_to_neural_server(fname, mediaid, userid):
     requrl = "http://long-long-long-name-for-pc.anwcl.com:5000/neural-task"
+    IMAGE_URL_BASE = 'http://114.215.113.3/media/images/'
 
     try:
         register_openers()
         datagen, headers = multipart_encode(
                 {'image':open(fname, "rb"),
                  'image_id':mediaid,
-                 'user_id':userid})
+                 'user_id':userid,
+                 'image_url':IMAGE_URL_BASE+'from_weixin/'+mediaid})
         request = urllib2.Request(requrl, datagen, headers)
         print urllib2.urlopen(request).read()
     except IOError, e:
