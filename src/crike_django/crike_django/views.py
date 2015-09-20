@@ -1676,6 +1676,14 @@ class WordPopupView(TemplateView):
 
         return HttpResponse(status=204)
 
+
+"""
+weixin bigger code
+"""
+IMAGE_URL_BASE = 'http://114.215.113.3/media/images/'
+AUDIO_URL_BASE = 'http://114.215.113.3/media/audios/'
+URL_BASE = 'http://114.215.113.3/'
+
 class WeixinBiggerView(TemplateView):
 
     @csrf_exempt
@@ -1694,9 +1702,6 @@ class WeixinBiggerView(TemplateView):
         msgType=xml.find("MsgType").text
         content = {'mode':'text', 'title':'', 'desc':'',
                 'picurl':'', 'url':'http://114.215.113.3/'}
-        IMAGE_URL_BASE = 'http://114.215.113.3/media/images/'
-        AUDIO_URL_BASE = 'http://114.215.113.3/media/audios/'
-        URL_BASE = 'http://114.215.113.3/'
 
         if msgType == "event":
             event = xml.find("Event").text
@@ -1736,12 +1741,21 @@ class WeixinBiggerView(TemplateView):
                 content['mode'] = 'text'
 
         elif msgType == "image":
-            picurl_o = xml.find("PicUrl").text
+            picurl = xml.find("PicUrl").text
             msgid = xml.find("MsgId").text
             mediaid = xml.find("MediaId").text
             fromUser=xml.find("FromUserName").text
             toUser=xml.find("ToUserName").text
             createTime=xml.find("CreateTime").text
+
+            """
+            content['desc'] = ("服务器升级维护中，暂停服务；"
+                               "预计21号恢复服务，给您带来的不便，敬请谅解")
+            content['mode'] = 'text'
+            xml_str = self.reply_str(fromUser,toUser,createTime,content)
+            print xml_str
+            return HttpResponse(xml_str)
+            """
 
             tasks = NeuralTask.objects.filter(userid=fromUser, done=False)
             print len(tasks)
@@ -1753,37 +1767,18 @@ class WeixinBiggerView(TemplateView):
                 xml_str = self.reply_str(fromUser,toUser,createTime,content)
                 print xml_str
                 return HttpResponse(xml_str)
+ 
+            task = NeuralTask.objects.create(userid=fromUser, mediaid=mediaid,
+                                             msgid=msgid, style="starry_night",
+                                             status="prepost", picurl=picurl)
+            task.save()
 
-            process = Process(target=download_image_from_weixin, args=(picurl_o, mediaid, ))
-            process.start()
+            content['mode'] = 'news'
+            content['picurl'] = picurl
+            content['url'] = URL_BASE+'get-neural-task-status/'+mediaid
+            content['title'] = '比格图片任务卡'
+            content['desc'] = '请点击该消息选择画风，跟踪进展，获取处理结果。'
 
-            picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
-            outurl = URL_BASE+'get-neural-task-result/'+mediaid
-            picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
-
-            """
-            count = 20
-            while count > 0 and process.is_alive():
-                time.sleep(1)
-                count -= 1
-            """
-            time.sleep(1)
-
-            if os.path.exists(picpath):
-                content['mode'] = 'news'
-                content['picurl'] = picurl_o
-                content['url'] = outurl
-                content['title'] = '比格已经收到您的图片，正在处理中'
-                content['desc'] = '我们将在24小时后制作完成，请届时点击该消息获取'
-                process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, fromUser, ))
-                process.start()
-
-                task = NeuralTask.objects.create(userid=fromUser, mediaid=mediaid,
-                                            msgid=msgid, style="starry_night")
-                task.save()
-            else:
-                content['desc'] = "十分抱歉，您的图片未上传成功，请稍后重试"
-                content['mode'] = 'text'
 
         xml_str = self.reply_str(fromUser,toUser,createTime,content)
         print xml_str
@@ -1839,6 +1834,36 @@ class WeixinBiggerView(TemplateView):
 
         return xml_str
 
+def start_neural_task(task):
+    picurl = task.picurl
+    mediaid = task.mediaid
+    fromUser = task.userid
+    style = task.style
+
+    process = Process(target=download_image_from_weixin, args=(picurl, mediaid, ))
+    process.start()
+
+    picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
+    picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
+
+    """
+    count = 20
+    while count > 0 and process.is_alive():
+        time.sleep(1)
+        count -= 1
+    """
+    time.sleep(1)
+
+    if os.path.exists(picpath):
+        process2 = Process(target=send_image_to_neural_server, args=(picpath, mediaid, fromUser, style, ))
+        process2.start()
+
+        task.status = 'posted'
+        task.picurl = picurl
+        task.save()
+    else:
+        print "Can not save pic %s from weixin" % mediaid
+
 def is_file_valid(file):
     try:
         if type(file) == unicode or type(file) == str:
@@ -1870,9 +1895,8 @@ def download_image_from_weixin(picurl, mediaid):
         # Throw away some gifs...blegh.
         print 'could not save %s' % picurl
 
-def send_image_to_neural_server(fname, mediaid, userid):
+def send_image_to_neural_server(fname, mediaid, userid, style):
     requrl = "http://long-long-long-name-for-pc.anwcl.com:5000/neural-task"
-    IMAGE_URL_BASE = 'http://114.215.113.3/media/images/'
 
     try:
         register_openers()
@@ -1880,11 +1904,12 @@ def send_image_to_neural_server(fname, mediaid, userid):
                 {'image':open(fname, "rb"),
                  'image_id':mediaid,
                  'user_id':userid,
+                 'style_image':IMAGE_URL_BASE+'weixin-static/'+style,
                  'image_url':IMAGE_URL_BASE+'from_weixin/'+mediaid})
         request = urllib2.Request(requrl, datagen, headers)
         print urllib2.urlopen(request).read()
     except IOError, e:
-        print '[POST] could not post %s' % picurl
+        print '[POST] could not post %s' % mediaid
 
 
 @csrf_exempt
@@ -1907,6 +1932,7 @@ def neural_task_reply(request):
         if len(tasks) > 0:
             task = tasks[0]
             task.done = True
+            task.status = 'finished'
             task.save()
     return HttpResponse(status=200)
 
@@ -1923,6 +1949,38 @@ def print_request_header(request):
             print header, request.META[header]
 
 @csrf_exempt
-def get_neural_task_result(request, mediaid):
-    template_name = 'crike_django/neural_task_result.html'
-    return render(request, template_name, {'MediaID':mediaid})
+def get_neural_task_status(request, mediaid):
+    tasks = NeuralTask.objects.filter(mediaid=mediaid)
+    if len(tasks) == 0:
+        print "Can't find task %s" % mediaid
+        return HttpResponse(status=403)
+
+    task = tasks[0]
+
+    if task.status == 'prepost':
+        return render(request, 'crike_django/neural_task_prepost.html',{'MediaID':mediaid})
+    if task.status == 'posted':
+        return render(request, 'crike_django/neural_task_posted.html', {'MediaID':mediaid})
+    if task.status == 'finished':
+        return render(request, 'crike_django/neural_task_result.html', {'MediaID':mediaid})
+
+@csrf_exempt
+def set_neural_task_prepost(request):
+    mediaid = request.POST.get('mediaid', None)
+    style = request.POST.get('style', None)
+    if not mediaid:
+        return HttpResponse(status=403)
+
+    tasks = NeuralTask.objects.filter(mediaid=mediaid)
+    if len(tasks) == 0:
+        print "Can't find task %s" % mediaid
+        return HttpResponse(status=403)
+
+    task = tasks[0]
+
+    if task.status == 'prepost':
+        task.style = style
+        task.save()
+        start_neural_task(task)
+
+    return HttpResponseRedirect("/get-neural-task-status/"+mediaid)

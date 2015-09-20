@@ -11,10 +11,13 @@ class NeuralTask(models.Model):
     userid = models.CharField(max_length=50)
     mediaid = models.CharField(max_length=128)
     msgid = models.CharField(max_length=50)
+    picurl = models.CharField(max_length=160)
     time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
     style = models.CharField(max_length=50)
     payed = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
+    #prepost,posted,finished,canceled
+    status = models.CharField(max_length=50, default='prepost')
 
 '''
 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video

@@ -80,5 +80,6 @@ urlpatterns = patterns('',
 # Weixin bigger
     url(r'^bigger.*$', WeixinBiggerView.as_view(), name='weixin_bigger_view'),
     url(r'^neural-task-reply.*$', views.neural_task_reply),
-    url(r'^get-neural-task-result/(?P<mediaid>.*?)$', views.get_neural_task_result),
+    url(r'^get-neural-task-status/(?P<mediaid>.*?)$', views.get_neural_task_status),
+    url(r'^neural-task-prepost.*$', views.set_neural_task_prepost),
 )
