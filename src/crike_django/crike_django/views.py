@@ -29,7 +29,7 @@ from django.utils import simplejson
 from crike_django.models import *
 from crike_django.forms import *
 from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
-from word_utils import download_word, handle_uploaded_file
+from word_utils import download_word, handle_uploaded_file, get_content_from_url
 from image_download import download_images_single, is_path_full
 from multiprocessing import Process
 
@@ -1700,6 +1700,11 @@ class WeixinBiggerView(TemplateView):
         print xml_str
         xml = etree.fromstring(xml_str)#进行XML解析
         msgType=xml.find("MsgType").text
+        msgid = xml.find("MsgId").text
+        fromUser=xml.find("FromUserName").text
+        toUser=xml.find("ToUserName").text
+        createTime=xml.find("CreateTime").text
+
         content = {'mode':'text', 'title':'', 'desc':'',
                 'picurl':'', 'url':'http://114.215.113.3/'}
 
@@ -1742,11 +1747,7 @@ class WeixinBiggerView(TemplateView):
 
         elif msgType == "image":
             picurl = xml.find("PicUrl").text
-            msgid = xml.find("MsgId").text
             mediaid = xml.find("MediaId").text
-            fromUser=xml.find("FromUserName").text
-            toUser=xml.find("ToUserName").text
-            createTime=xml.find("CreateTime").text
 
             """
             content['desc'] = ("服务器升级维护中，暂停服务；"
@@ -1904,7 +1905,7 @@ def send_image_to_neural_server(fname, mediaid, userid, style):
                 {'image':open(fname, "rb"),
                  'image_id':mediaid,
                  'user_id':userid,
-                 'style_image':IMAGE_URL_BASE+'weixin-static/'+style,
+                 'style_image_path':style+'.jpg',
                  'image_url':IMAGE_URL_BASE+'from_weixin/'+mediaid})
         request = urllib2.Request(requrl, datagen, headers)
         print urllib2.urlopen(request).read()
@@ -1926,15 +1927,22 @@ def neural_task_reply(request):
     if not os.path.exists(PIC_DIR):
         os.makedirs(PIC_DIR)
     fname = os.path.join(PIC_DIR, '%s.jpg') % mediaid
-    if request.FILES.get('image', None):
-        save_file(request.FILES['image'], fname)
-        tasks = NeuralTask.objects.filter(mediaid=mediaid)
-        if len(tasks) > 0:
-            task = tasks[0]
-            task.done = True
+    tasks = NeuralTask.objects.filter(mediaid=mediaid)
+    if len(tasks) > 0:
+        task = tasks[0]
+        task.done = True
+        if request.FILES.get('image', None):
+            save_file(request.FILES['image'], fname)
             task.status = 'finished'
             task.save()
-    return HttpResponse(status=200)
+            return HttpResponse(status=200)
+        else:
+            task.status = 'error'#TODO need to modify posted html to let user restart the task
+            task.save()
+            return HttpResponse(status=403)
+    else:
+        return HttpResponse(status=403)
+
 
 @csrf_exempt
 def print_request_header(request):
@@ -1956,10 +1964,20 @@ def get_neural_task_status(request, mediaid):
         return HttpResponse(status=403)
 
     task = tasks[0]
+    picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
 
     if task.status == 'prepost':
         return render(request, 'crike_django/neural_task_prepost.html',{'MediaID':mediaid})
     if task.status == 'posted':
+        content = get_content_from_url('http://long-long-long-name-for-pc.anwcl.com:5000/')
+        task_list = re.findall(mediaid, content, re.M | re.S)
+        if len(task_list) == 0:
+            process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, task.userid, task.style, ))
+            process.start()
+        return render(request, 'crike_django/neural_task_posted.html', {'MediaID':mediaid})
+    if task.status == 'error':
+        process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, task.userid, task.style, ))
+        process.start()
         return render(request, 'crike_django/neural_task_posted.html', {'MediaID':mediaid})
     if task.status == 'finished':
         return render(request, 'crike_django/neural_task_result.html', {'MediaID':mediaid})
