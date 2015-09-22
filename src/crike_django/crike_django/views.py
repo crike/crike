@@ -1859,7 +1859,7 @@ def start_neural_task(task):
         process2 = Process(target=send_image_to_neural_server, args=(picpath, mediaid, fromUser, style, ))
         process2.start()
 
-        task.status = 'posted'
+        task.status = 'posting'
         task.picurl = picurl
         task.save()
     else:
@@ -1968,16 +1968,25 @@ def get_neural_task_status(request, mediaid):
 
     if task.status == 'prepost':
         return render(request, 'crike_django/neural_task_prepost.html',{'MediaID':mediaid})
-    if task.status == 'posted':
+    if task.status == 'posting':
+        time.sleep(3)
         content = get_content_from_url('http://long-long-long-name-for-pc.anwcl.com:5000/')
         task_list = re.findall(mediaid, content, re.M | re.S)
         if len(task_list) == 0:
             process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, task.userid, task.style, ))
             process.start()
+            print 'No task found, post again!'
+        else:
+            task.status = 'posted'
+            task.save()
+        return render(request, 'crike_django/neural_task_posted.html', {'MediaID':mediaid})
+    if task.status == 'posted':
         return render(request, 'crike_django/neural_task_posted.html', {'MediaID':mediaid})
     if task.status == 'error':
         process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, task.userid, task.style, ))
         process.start()
+        task.status = 'posting'
+        task.save()
         return render(request, 'crike_django/neural_task_posted.html', {'MediaID':mediaid})
     if task.status == 'finished':
         return render(request, 'crike_django/neural_task_result.html', {'MediaID':mediaid})

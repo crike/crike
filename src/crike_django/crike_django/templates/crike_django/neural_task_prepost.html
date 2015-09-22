@@ -44,7 +44,7 @@ function setStyle(me){
     <input hidden='true' id='input_style' name='style' value=''>
     <input hidden='true' id='input_mediaid' name='mediaid' value='{{MediaID}}'>
     <div>您已选择<strong id='submit_msg' style='color:red'></strong>画风</div>
-    <input type="submit" value="提交">
+    <input type="submit" onclick="this.disabled=true; this.value='提交中...';$('#setstyleform').submit();" value="提交">
 </form>
 
 <div class="item">
