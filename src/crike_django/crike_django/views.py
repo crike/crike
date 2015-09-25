@@ -1897,7 +1897,7 @@ def download_image_from_weixin(picurl, mediaid):
         print 'could not save %s' % picurl
 
 def send_image_to_neural_server(fname, mediaid, userid, style):
-    requrl = "http://long-long-long-name-for-pc.anwcl.com:5000/neural-task"
+    requrl = "http://task-manager.anwcl.com/neural-task/"
 
     try:
         register_openers()
@@ -1908,7 +1908,7 @@ def send_image_to_neural_server(fname, mediaid, userid, style):
                  'style_image_path':style+'.jpg',
                  'image_url':IMAGE_URL_BASE+'from_weixin/'+mediaid})
         request = urllib2.Request(requrl, datagen, headers)
-        print urllib2.urlopen(request).read()
+        urllib2.urlopen(request)
     except IOError, e:
         print '[POST] could not post %s' % mediaid
 
@@ -1970,7 +1970,7 @@ def get_neural_task_status(request, mediaid):
         return render(request, 'crike_django/neural_task_prepost.html',{'MediaID':mediaid})
     if task.status == 'posting':
         time.sleep(3)
-        content = get_content_from_url('http://long-long-long-name-for-pc.anwcl.com:5000/')
+        content = get_content_from_url('http://task-manager.anwcl.com/neural-task/')
         task_list = re.findall(mediaid, content, re.M | re.S)
         if len(task_list) == 0:
             process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, task.userid, task.style, ))
