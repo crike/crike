@@ -89,13 +89,14 @@ def download_from_youdao_api(word):
     content = get_content_from_url(BASE_URL)
 
     result = json.loads(content)
-    word.phonetics = result['basic'].get('phonetic','')
-    word.mean = result['basic'].get('explains',[])
+    if result.get('basic',None):
+        word.phonetics = result['basic'].get('phonetic','')
+        word.mean = result['basic'].get('explains',[])
     if len(word.mean) == 0:
         word.mean = result.get('translation',[])
     word.save()
     
-    if not os.path.exists(PATH+word.name+'.mp3'):
+    if not os.path.exists(PATH+word.name+'.mp3') and re.match('^[A-Za-z]+$', word.name):
         download_audio_from_google(word)
 
     else:

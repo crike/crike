@@ -40,6 +40,7 @@ from django.utils.encoding import smart_str
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 from alipay.alipay import *
+from urllib import urlencode,quote,unquote
 
 # Utils
 
@@ -1714,7 +1715,7 @@ class WeixinBiggerView(TemplateView):
         createTime=xml.find("CreateTime").text
 
         content = {'mode':'text', 'title':'', 'desc':'',
-                'picurl':'', 'url':'http://114.215.113.3/'}
+                'picurl':'', 'url':''}
 
         if msgType == "event":
             event = xml.find("Event").text
@@ -1738,21 +1739,36 @@ class WeixinBiggerView(TemplateView):
                 words = Word.objects.filter(name=wordname)
                 if words:#after we try download words
                     content['title']=wordname
-                    content['desc']='['+words[0].phonetics+']\n'+'\n'.join(words[0].mean)
+                    if words[0].phonetics != '':
+                        content['desc']='['+words[0].phonetics+']\n'+'\n'.join(words[0].mean)
+                    else:
+                        content['desc']='\n'.join(words[0].mean)
                     imgpath = MEDIA_ROOT+'/images/'+wordname+"/0.jpg"
                     if os.path.exists(imgpath):
                         content['picurl']=IMAGE_URL_BASE+wordname+'/0'
-                    else:
+                    elif re.match('^[A-Za-z]+$', wordname):
                         process = Process(target=download_images_single, args=(wordname,))
                         process.start()
-                    content['url']=AUDIO_URL_BASE+wordname
+                    mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
+                    if os.path.exists(mp3path):
+                        content['url']=AUDIO_URL_BASE+wordname
                     content['mode'] = 'news'
                 else:
                     content['desc'] = "Sorry, we are still thinking about "+wordname
                     content['mode'] = 'text'
-
             else:
-                content['desc'] = "Sorry, I don't know "+wordname
+                YOUDAO_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=bigger&key=1389170092&type=data&doctype=json&version=1.1&q=' \
+                             +quote(wordname.encode('utf-8'))
+                result = urllib2.urlopen(YOUDAO_URL).read()
+                if result:
+                    print 'mmmmmmmmmmmmm',result
+                    result = json.loads(result)
+                    mean = result.get('translation',[])
+                    if len(mean) != 0:
+                        content['desc'] = '\n'.join(mean)
+
+                if content['desc'] == '':
+                    content['desc'] = "Sorry, I don't know "+wordname
                 content['mode'] = 'text'
 
         elif msgType == "image":
