@@ -82,4 +82,6 @@ urlpatterns = patterns('',
     url(r'^neural-task-reply.*$', views.neural_task_reply),
     url(r'^get-neural-task-status/(?P<mediaid>.*?)$', views.get_neural_task_status),
     url(r'^neural-task-prepost.*$', views.set_neural_task_prepost),
+    url(r'^neural-task-payed.*$', views.set_neural_task_payed),
+    url(r'^notify-neural-task-payed.*$', views.notify_neural_task_payed),
 )

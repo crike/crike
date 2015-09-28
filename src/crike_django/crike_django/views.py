@@ -39,6 +39,7 @@ from lxml import etree
 from django.utils.encoding import smart_str
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
+from alipay.alipay import *
 
 # Utils
 def save_file(srcfile, dst):
@@ -1725,20 +1726,22 @@ class WeixinBiggerView(TemplateView):
             if re.match('^[A-Za-z]+$', wordname):
                 words = Word.objects.filter(name=wordname)
                 if not words:
-                    mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
-                    if os.path.exists(mp3path):
-                        os.remove(mp3path)
                     download_word(wordname)
                     words = Word.objects.filter(name=wordname)
 
-                if words:
+                if words:#after we try download words
                     content['title']=wordname
                     content['desc']='['+words[0].phonetics+']\n'+'\n'.join(words[0].mean)
-                    content['picurl']=IMAGE_URL_BASE+wordname+'/0'
+                    imgpath = MEDIA_ROOT+'/images/'+wordname+"/0.jpg"
+                    if os.path.exists(imgpath):
+                        content['picurl']=IMAGE_URL_BASE+wordname+'/0'
+                    else:
+                        process = Process(target=download_images_single, args=(wordname,))
+                        process.start()
                     content['url']=AUDIO_URL_BASE+wordname
                     content['mode'] = 'news'
                 else:
-                    content['desc'] = "Sorry, I don't know "+wordname
+                    content['desc'] = "Sorry, we are still thinking about "+wordname
                     content['mode'] = 'text'
 
             else:
@@ -1970,7 +1973,7 @@ def get_neural_task_status(request, mediaid):
         return render(request, 'crike_django/neural_task_prepost.html',{'MediaID':mediaid})
     if task.status == 'posting':
         time.sleep(3)
-        content = get_content_from_url('http://task-manager.anwcl.com/neural-task/')
+        content = get_content_from_url('http://task-manager.anwcl.com')
         task_list = re.findall(mediaid, content, re.M | re.S)
         if len(task_list) == 0:
             process = Process(target=send_image_to_neural_server, args=(picpath, mediaid, task.userid, task.style, ))
@@ -2008,6 +2011,69 @@ def set_neural_task_prepost(request):
     if task.status == 'prepost':
         task.style = style
         task.save()
+        '''
+        if task.payed:
+            start_neural_task(task)
+        else:
+            start_payment(task)
+            '''
         start_neural_task(task)
 
     return HttpResponseRedirect("/get-neural-task-status/"+mediaid)
+
+@csrf_exempt
+def start_payment(task):
+    url = create_partner_trade_by_buyer(task.mediaid,
+                                        u"比格油画",
+                                        u"您选择了画风 "+task.style,
+                                        9.9)
+    print 'uuuuu',url
+    return HttpResponseRedirect(url)
+
+@csrf_exempt
+def set_neural_task_payed(request):
+    if notify_verify(request.GET):
+        mediaid = request.GET.get('out_trade_no')
+        if not mediaid:
+            return HttpResponse(status=403)
+
+        tasks = NeuralTask.objects.filter(mediaid=mediaid)
+        if len(tasks) == 0:
+            print "Can't find task %s" % mediaid
+            return HttpResponse(status=403)
+
+        task = tasks[0]
+        task.payed = True
+        task.save()
+        start_neural_task(task)
+        trade_no = request.GET.get('trade_no')
+        url=send_goods_confirm_by_platform (trade_no)
+        req=urllib.urlopen (url)
+
+        return HttpResponseRedirect("/get-neural-task-status/"+mediaid)
+
+    return HttpResponse(status=403)
+
+@csrf_exempt
+def notify_neural_task_payed(request):
+    if notify_verify(request.POST):
+        mediaid = request.GET.get('out_trade_no')
+        if not mediaid:
+            return HttpResponse(status=403)
+
+        tasks = NeuralTask.objects.filter(mediaid=mediaid)
+        if len(tasks) == 0:
+            print "Can't find task %s" % mediaid
+            return HttpResponse(status=403)
+
+        task = tasks[0]
+        task.payed = True
+        task.save()
+        start_neural_task(task)
+        trade_no = request.GET.get('trade_no')
+        url=send_goods_confirm_by_platform (trade_no)
+        req=urllib.urlopen (url)
+
+        return HttpResponse('success')
+
+    return HttpResponse('fail')
