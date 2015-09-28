@@ -42,6 +42,13 @@ from poster.streaminghttp import register_openers
 from alipay.alipay import *
 
 # Utils
+
+def clean_word(request,wordname):
+    words = Word.objects.filter(name=wordname)
+    for word in words:
+        word.delete()
+    return HttpResponse("Word "+wordname+" has been cleaned!")
+
 def save_file(srcfile, dst):
     try:
         file = open(dst, 'wb')
@@ -1725,10 +1732,10 @@ class WeixinBiggerView(TemplateView):
             wordname=xml.find("Content").text#获得用户所输入的内容
             if re.match('^[A-Za-z]+$', wordname):
                 words = Word.objects.filter(name=wordname)
-                if not words:
+                if not words or len(words[0].mean) == 0:
                     download_word(wordname)
-                    words = Word.objects.filter(name=wordname)
 
+                words = Word.objects.filter(name=wordname)
                 if words:#after we try download words
                     content['title']=wordname
                     content['desc']='['+words[0].phonetics+']\n'+'\n'.join(words[0].mean)

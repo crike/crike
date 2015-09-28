@@ -9,6 +9,7 @@ import time
 import re
 import os
 import threading
+import json
 from multiprocessing import Process
 from crike_django.models import Word, Lesson, Book
 from crike_django.settings import MEDIA_ROOT
@@ -82,6 +83,23 @@ def download_from_youdao(word):
 
     else:
         print('[youdao] '+word.name+' download failed!')
+    
+def download_from_youdao_api(word):
+    BASE_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=bigger&key=1389170092&type=data&doctype=json&version=1.1&q='+word.name
+    content = get_content_from_url(BASE_URL)
+
+    result = json.loads(content)
+    word.phonetics = result['basic'].get('phonetic','')
+    word.mean = result['basic'].get('explains',[])
+    if len(word.mean) == 0:
+        word.mean = result.get('translation',[])
+    word.save()
+    
+    if not os.path.exists(PATH+word.name+'.mp3'):
+        download_audio_from_google(word)
+
+    else:
+        print('[youdao api] '+word.name+' download failed!')
     
 def download_from_iciba(word):
     BASE_URL = 'http://www.iciba.com/'+word.name
@@ -183,8 +201,9 @@ def download_word(wordname):
     else:
         word = Word.objects.create(name=wordname)
     print('Start downloading "%s"' % wordname)
-    download_from_iciba(word)
+    #download_from_iciba(word)
     #download_audio_from_google(word)
+    download_from_youdao_api(word)
     word.save()
 
 def download_thread_single_engine(word, engine):
@@ -326,7 +345,7 @@ def download_words(book, lesson, words):
     thread1.start()
     print('Thread 1 started!')
     time.sleep(2)
-    thread2 = download_thread_with_engine(book, lesson, tempwords, download_from_youdao)
+    thread2 = download_thread_with_engine(book, lesson, tempwords, download_from_youdao_api)
     thread2.deamon = True
     thread2.start()
     print('Thread 2 started!')

@@ -59,6 +59,7 @@ urlpatterns = patterns('',
     url(r'^admin/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/?$', LessonAdminView.as_view()),
     url(r'^lesson_apply/accept/(?P<id>.*?)/?$', LessonApplyAcceptView.as_view()),
     url(r'^lesson_apply/delete/(?P<id>.*?)/?$', LessonApplyDeleteView.as_view()),
+    url(r'^clean/(?P<wordname>.*?)$', views.clean_word),
 
 # Study process for students
     url(r'^study/book/(?P<book>.*?)/lesson/(?P<lesson>.*?)/show/?$', login_required(LessonShowView.as_view()), name='lesson_show_view'),
