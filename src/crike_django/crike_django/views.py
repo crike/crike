@@ -1745,13 +1745,13 @@ class WeixinBiggerView(TemplateView):
                         content['desc']='\n'.join(words[0].mean)
                     imgpath = MEDIA_ROOT+'/images/'+wordname+"/0.jpg"
                     if os.path.exists(imgpath):
-                        content['picurl']=IMAGE_URL_BASE+wordname+'/0'
+                        content['picurl']=IMAGE_URL_BASE+wordname+'/0.jpg'
                     elif re.match('^[A-Za-z]+$', wordname):
                         process = Process(target=download_images_single, args=(wordname,))
                         process.start()
                     mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
                     if os.path.exists(mp3path):
-                        content['url']=AUDIO_URL_BASE+wordname
+                        content['url']=AUDIO_URL_BASE+wordname+".mp3"
                     content['mode'] = 'news'
                 else:
                     content['desc'] = "Sorry, we are still thinking about "+wordname
@@ -1870,7 +1870,7 @@ def start_neural_task(task):
     process = Process(target=download_image_from_weixin, args=(picurl, mediaid, ))
     process.start()
 
-    picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid
+    picurl = IMAGE_URL_BASE+'from_weixin/'+mediaid+'.jpg'
     picpath = MEDIA_ROOT+"/images/from_weixin/"+mediaid+".jpg"
 
     """
@@ -1932,7 +1932,7 @@ def send_image_to_neural_server(fname, mediaid, userid, style):
                  'image_id':mediaid,
                  'user_id':userid,
                  'style_image_path':style+'.jpg',
-                 'image_url':IMAGE_URL_BASE+'from_weixin/'+mediaid})
+                 'image_url':IMAGE_URL_BASE+'from_weixin/'+mediaid+'.jpg'})
         request = urllib2.Request(requrl, datagen, headers)
         urllib2.urlopen(request)
     except IOError, e:
