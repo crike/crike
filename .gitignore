@@ -1,4 +1,5 @@
-
+*.map
+src/crike_django/crike_django/alipay
 src/crike_django/crike_django/media
 *.swp
 nohup.out
