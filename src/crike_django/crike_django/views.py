@@ -1724,9 +1724,10 @@ class WeixinBiggerView(TemplateView):
             if event == "subscribe":
                 content['desc'] = """欢迎关注比格！
 小格目前有两大技能：
-1）英文单词没有我不会的
+1）我是英文达人
 2）我还是印象派油画大师
-您可以发单词考我；也可以发图片，我给您画成印象派"""
+您可以发单词、句子考我，可以语音哦；
+也可以发图片，我给您画成印象派"""
             elif event == "unsubscribe":
                 content['desc'] = "Good bye, seems you don't need me anymore, uuu..."
             content['mode'] = 'text'
@@ -1735,7 +1736,8 @@ class WeixinBiggerView(TemplateView):
             if msgType == "text":
                 wordname=xml.find("Content").text#获得用户所输入的内容
             else:
-                wordname=xml.find("Recognition").text.replace(u'！',' ').replace(u'。',' ')
+                text_raw=xml.find("Recognition").text
+                wordname=text_raw.replace(u'！',' ').replace(u'。',' ')
             if re.match('^[A-Za-z]+$', wordname):
                 words = Word.objects.filter(name=wordname)
                 if not words or len(words[0].mean) == 0:
@@ -1770,7 +1772,7 @@ class WeixinBiggerView(TemplateView):
                     result = json.loads(result)
                     mean = result.get('translation',[])
                     if len(mean) != 0:
-                        content['desc'] = '\n'.join(mean)
+                        content['desc'] = wordname+'\n'+'\n'.join(mean)
 
                 if content['desc'] == '':
                     content['desc'] = "Sorry, I don't know "+wordname
