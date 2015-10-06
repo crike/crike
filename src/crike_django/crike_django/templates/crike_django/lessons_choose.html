@@ -144,7 +144,9 @@ function expandBook(me) {
         <a class="thumbnail" style="width:100%;cursor:pointer" title="加入我的课程" onclick="addToMine('{{lesson.id}}')">
           <div class="caption"></div>
           <p>课程：{{lesson.name}}</p>
+          {% comment %}
           <div>{% include 'crike_django/lesson_result.html' %}</div>
+          {% endcomment %}
           <p style="color:sienna;margin-left:10px;">sum:{{lesson.words|length}}</p>
           <!-- <button style="" onclick="location.href='#'">学习状态</button> -->
         </a>

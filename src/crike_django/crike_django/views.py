@@ -792,12 +792,14 @@ class LessonsChooseView(TemplateView):
         if not request.user.is_authenticated():
             return render(request, self.template_name, {'books': books})
 
+        '''
         for book in books:
             for lesson in book.lessons:
                 lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                                  lesson=lesson)[0]
                 # XXX this result should never save
                 lesson.result = lesson_result
+                '''
 
         las = LessonApply.objects.all()
 
