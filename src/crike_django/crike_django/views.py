@@ -1731,8 +1731,11 @@ class WeixinBiggerView(TemplateView):
                 content['desc'] = "Good bye, seems you don't need me anymore, uuu..."
             content['mode'] = 'text'
 
-        elif msgType == "text":
-            wordname=xml.find("Content").text#获得用户所输入的内容
+        elif msgType == "text" or msgType == "voice":
+            if msgType == "text":
+                wordname=xml.find("Content").text#获得用户所输入的内容
+            else:
+                wordname=xml.find("Recognition").text.replace(u'！',' ').replace(u'。',' ')
             if re.match('^[A-Za-z]+$', wordname):
                 words = Word.objects.filter(name=wordname)
                 if not words or len(words[0].mean) == 0:
