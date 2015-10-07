@@ -77,8 +77,7 @@ def download_from_youdao(word):
                 
         word.save()
             
-        if not os.path.exists(PATH+word.name+'.mp3'):
-            download_audio_from_google(word)
+        download_audio_from_youdao(word)
 
 
     else:
@@ -96,11 +95,11 @@ def download_from_youdao_api(word):
         word.mean = result.get('translation',[])
     word.save()
     
-    if not os.path.exists(PATH+word.name+'.mp3') and re.match('^[A-Za-z]+$', word.name):
-        download_audio_from_google(word)
+    if re.match('^[A-Za-z]+$', word.name):
+        download_audio_from_youdao(word)
 
     else:
-        print('[youdao api] '+word.name+' download failed!')
+        print('[youdao api] '+word.name+' audio download failed!')
     
 def download_from_iciba(word):
     BASE_URL = 'http://www.iciba.com/'+word.name
@@ -168,6 +167,18 @@ def is_file_valid(file):
     except Exception as e:
         print(e)
         return False
+
+def download_audio_from_youdao(word):
+    try:
+        mp3file = get_data_from_req(
+                "http://dict.youdao.com/dictvoice?audio="+word.name)
+        filepath = os.path.join(PATH, word.name+'.mp3')
+        file = open(filepath, 'wb')
+        file.write(mp3file.read())
+        file.close()
+        #word.audio.put(mp3file.read(), content_type='audio/mp3')
+    except Exception as e:
+        print(e)
 
 def download_audio_from_google(word):
     try:
