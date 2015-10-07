@@ -1726,7 +1726,8 @@ class WeixinBiggerView(TemplateView):
 小格目前有两大技能：
 1）我是英文达人
 2）我还是印象派油画大师
-您可以发单词、句子考我，可以语音哦；
+我能中英互翻，可以语音哦，跟我说话我帮您翻译；
+我词汇量巨大，发单词考我，绝对难不倒我；
 也可以发图片，我给您画成印象派"""
             elif event == "unsubscribe":
                 content['desc'] = "Good bye, seems you don't need me anymore, uuu..."
@@ -1756,9 +1757,12 @@ class WeixinBiggerView(TemplateView):
                     elif re.match('^[A-Za-z]+$', wordname):
                         process = Process(target=download_images_single, args=(wordname,))
                         process.start()
+                    '''
                     mp3path = MEDIA_ROOT+'/audios/'+wordname+".mp3"
                     if os.path.exists(mp3path):
                         content['url']=AUDIO_URL_BASE+wordname+".mp3"
+                        '''
+                    content['url'] = 'http://dict.youdao.com/dictvoice?audio='+wordname
                     content['mode'] = 'news'
                 else:
                     content['desc'] = "Sorry, we are still thinking about "+wordname
