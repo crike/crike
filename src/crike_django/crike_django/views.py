@@ -1739,7 +1739,47 @@ class WeixinBiggerView(TemplateView):
             else:
                 text_raw=xml.find("Recognition").text
                 wordname=text_raw.replace(u'！',' ').replace(u'。',' ')
-            if re.match('^[A-Za-z]+$', wordname):
+
+            if re.match('^#.+$', wordname):#this is a command
+                cmdline = wordname[1:].split(' ')
+                cmd = cmdline[0]
+                content['mode'] = 'text'
+                if cmd == 'h':
+                    content['desc'] = """
+h: 打印本帮助信息;
+l: 列出历史查询单词:
+    无参数：全部;
+    参数n：最近n个;
+d: 删除某单词:
+    可接一个或多个单词,
+    以空格分隔;
+                    """
+                elif cmd == 'l':
+                    if len(cmdline) == 2 and re.match('^[1-9]+[0-9]*$', cmdline[1]):
+                        end = eval(cmdline[1])
+                        items = BiggerWord.objects.filter(userid=fromUser).order_by('-time_added')[:end]
+                    else:
+                        items = BiggerWord.objects.filter(userid=fromUser).order_by('-time_added')
+
+                    rets = ['Your list: (%d)'%len(items),]
+                    for item in items:
+                        rets.append(item.wordname+' '+item.time_added.strftime("[%m-%d %H:%M:%S]"))
+                    content['desc'] = '\n'.join(rets)
+
+                elif cmd == 'd':
+                    if len(cmdline) >= 2:
+                        rets = []
+                        for arg in cmdline[1:]:
+                            if re.match('^[A-Za-z]+$', arg):
+                                items = BiggerWord.objects.filter(userid=fromUser, wordname=arg)
+                                for item in items:
+                                    rets.append(item.wordname)
+                                    item.delete()
+                        content['desc'] = ','.join(rets)+'\ndeleted!'
+                    else:
+                        content['desc'] = u"请指定您要删除的单词"
+
+            elif re.match('^[A-Za-z]+$', wordname):
                 words = Word.objects.filter(name=wordname)
                 if not words or len(words[0].mean) == 0:
                     download_word(wordname)
@@ -1764,6 +1804,10 @@ class WeixinBiggerView(TemplateView):
                         '''
                     content['url'] = 'http://dict.youdao.com/dictvoice?audio='+wordname
                     content['mode'] = 'news'
+
+                    #record this to db, will let user to list their history
+                    item = BiggerWord.objects.create(userid=fromUser, wordname=wordname)
+                    item.save()
                 else:
                     content['desc'] = "Sorry, we are still thinking about "+wordname
                     content['mode'] = 'text'

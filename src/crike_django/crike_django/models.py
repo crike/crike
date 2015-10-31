@@ -19,6 +19,11 @@ class NeuralTask(models.Model):
     #prepost,posted,finished,canceled
     status = models.CharField(max_length=50, default='prepost')
 
+class BiggerWord(models.Model):
+    userid = models.CharField(max_length=50)
+    time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    wordname = models.CharField(max_length=50, unique=True)
+
 '''
 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
 当前目标：实现word、book、user、course，其余皆往后排
