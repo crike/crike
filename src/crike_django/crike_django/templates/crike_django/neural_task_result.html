@@ -1,3 +1,6 @@
+<html>
+
+<head>
 <script>
 function weixinAddContact(name){
   WeixinJSBridge.invoke("addContact", {webtype: "1",username: name}, function(e) {
@@ -11,27 +14,74 @@ function weixinAddContact(name){
   })
 }
 </script>
+
 <style type="text/css">
+    body {
+        background-color:#000000;
+    }
+    p {
+        margin: 30px 0 20px 0;
+    }
     .item {
+        width:96%;
+        margin:0 auto;
+        padding: 20px 0 0px 0;
+        font-size:50px;
+        font-weight:bold;
+        color:#ffffff;
+        text-align:center;
+    }
+    .article {
+        width:100%;
+        margin:0 auto;
+        font-size:100px;
+        font-weight:bold;
+        color:#ffffff;
+        text-align:center;
+        padding:40px 0px 0px 0px;
+    }
+    .desc {
         width:100%;
         margin:0 auto;
         font-size:32px;
         font-weight:bold;
-        color:#ff0000;
+        color:#ffffff;
         text-align:center;
+        padding:0px 0px 20px 0px;
+    }
+    .footer {
+        padding:30px 0px 30px 0px;
     }
 </style>
+</head>
+
+<body>
+    <div class="article">
+        比格
+    </div>
+    <div class="desc">
+        机器艺术大师
+    </div>
+
 <div class="item">
-Before:
-  <img alt="before" width="100%" src="/media/images/from_weixin/{{MediaID}}.jpg">
-</div>
-<div class="item">
-After:
   <a href="http://114.215.113.3/media/images/to_weixin/{{MediaID}}.jpg">
     <img alt="您的图片正在处理中，请耐心等待。再次感谢您关注比格！" width="100%" src="/media/images/to_weixin/{{MediaID}}.jpg">
   </a>
+  <p>画作</p>
 </div>
 <div class="item">
+  <img alt="before" width="100%" src="/media/images/from_weixin/{{MediaID}}.jpg">
+  <p>原图</p>
+</div>
+<div class="item">
+    <p>关注比格，提高你的逼格</p>
   <img alt="900x500" width="50%" src="/media/images/weixin-static/qrcode_for_gh_1.jpg">
 <!--a href="#" onclick="WeiXinAddContact('bigger-bige')" style="font-size:300%">点击关注</a-->
 </div>
+
+<div class="footer">
+</div>
+
+</body>
+
+</html>

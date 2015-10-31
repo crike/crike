@@ -1,3 +1,6 @@
+<html>
+
+<head>
 <script>
 function weixinAddContact(name){
   WeixinJSBridge.invoke("addContact", {webtype: "1",username: name}, function(e) {
@@ -12,22 +15,34 @@ function weixinAddContact(name){
 }
 </script>
 <style type="text/css">
+    body {
+        background-color:#000000;
+    }
     .item {
         width:100%;
         margin:0 auto;
-        font-size:32px;
-        font-weight:bold;
-        color:#ff0000;
+        font-size:40px;
+        color:white;
         text-align:center;
     }
+    strong {
+        color:red;
+    }
 </style>
+</head>
+
+<body>
 <div class="item">
   <img alt="before" width="100%" src="/media/images/from_weixin/{{MediaID}}.jpg">
 </div>
 <div class="item">
-  <strong>您的图片正在处理中，请耐心等待。再次感谢您关注比格!<strong>
+    您的图片正在处理中，由于我们的服务器能力有限，排队任务较多，请耐心等待。
+    欢迎打赏我们，以提高处理能力，</br>
+    <strong>支付宝bn0418@126.com。</strong></br>
+        比格衷心感谢您的支持!
 </div>
 <div class="item">
   <img alt="900x500" width="50%" src="/media/images/weixin-static/qrcode_for_gh_1.jpg">
 <!--a href="#" onclick="WeiXinAddContact('bigger-bige')" style="font-size:300%">点击关注</a-->
 </div>
+</body>
