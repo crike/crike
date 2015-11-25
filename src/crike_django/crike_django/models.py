@@ -12,7 +12,7 @@ class NeuralTask(models.Model):
     mediaid = models.CharField(max_length=128)
     msgid = models.CharField(max_length=50)
     picurl = models.CharField(max_length=160)
-    time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    time_added = models.DateTimeField(auto_now_add=True)
     style = models.CharField(max_length=50)
     payed = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
@@ -21,8 +21,10 @@ class NeuralTask(models.Model):
 
 class BiggerWord(models.Model):
     userid = models.CharField(max_length=50)
-    time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
+    time_added = models.DateTimeField(auto_now_add=True)
+    time_modified = models.DateTimeField(auto_now=True)
     wordname = models.CharField(max_length=50, unique=True)
+    count = models.IntegerField(default=0) #count of query
 
 '''
 数据库基本模型分为word、lesson(embedded)、book、user、course、voice、image、game、video
@@ -241,8 +243,8 @@ class Student(Profile):
 
 class StatBase(models.Model):
     date = models.DateField(auto_now_add=True)
-    time_added = models.DateTimeField(auto_now_add=True, auto_now=True)
-    time_modified = models.DateTimeField(auto_now_add=True)
+    time_added = models.DateTimeField(auto_now_add=True)
+    time_modified = models.DateTimeField(auto_now=True)
     time_deleted = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):

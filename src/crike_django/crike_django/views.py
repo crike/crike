@@ -1757,13 +1757,13 @@ d: 删除某单词:
                 elif cmd == 'l':
                     if len(cmdline) == 2 and re.match('^[1-9]+[0-9]*$', cmdline[1]):
                         end = eval(cmdline[1])
-                        items = BiggerWord.objects.filter(userid=fromUser).order_by('-time_added')[:end]
+                        items = BiggerWord.objects.filter(userid=fromUser).order_by('-time_modified')[:end]
                     else:
-                        items = BiggerWord.objects.filter(userid=fromUser).order_by('-time_added')
+                        items = BiggerWord.objects.filter(userid=fromUser).order_by('-time_modified')
 
                     rets = ['Your list: (%d)'%len(items),]
                     for item in items:
-                        rets.append(item.wordname+' '+item.time_added.strftime("[%m-%d %H:%M:%S]"))
+                        rets.append(item.wordname+' '+item.time_added.strftime("[%m-%d %H:%M:%S]")+'['+str(item.count)+']')
                     content['desc'] = '\n'.join(rets)
 
                 elif cmd == 'd':
@@ -1805,12 +1805,14 @@ d: 删除某单词:
                     content['url'] = 'http://dict.youdao.com/dictvoice?audio='+wordname
                     content['mode'] = 'news'
 
-                    #record this to db, will let user to list their history
-                    item = BiggerWord.objects.create(userid=fromUser, wordname=wordname)
-                    item.save()
                 else:
                     content['desc'] = "Sorry, we are still thinking about "+wordname
                     content['mode'] = 'text'
+
+                #record this to db, will let user to list their history
+                item = BiggerWord.objects.get_or_create(userid=fromUser, wordname=wordname)[0]
+                item.count = item.count + 1
+                item.save()
             else:
                 YOUDAO_URL = 'http://fanyi.youdao.com/openapi.do?keyfrom=bigger&key=1389170092&type=data&doctype=json&version=1.1&q=' \
                              +quote(wordname.encode('utf-8'))
