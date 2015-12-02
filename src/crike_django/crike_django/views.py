@@ -1707,20 +1707,25 @@ class WeixinBiggerView(TemplateView):
 
     @csrf_exempt
     def post(self, request):
+        def gettext(tag):
+            if xml.find(tag) is not None:
+                return xml.find(tag).text
+            else:
+                return ''
         xml_str = smart_str(request.body)
         print xml_str
         xml = etree.fromstring(xml_str)#进行XML解析
-        msgType=xml.find("MsgType").text
-        msgid = xml.find("MsgId").text
-        fromUser=xml.find("FromUserName").text
-        toUser=xml.find("ToUserName").text
-        createTime=xml.find("CreateTime").text
+        msgType = gettext("MsgType")
+        msgid = gettext("MsgId")
+        fromUser = gettext("FromUserName")
+        toUser = gettext("ToUserName")
+        createTime = gettext("CreateTime")
 
         content = {'mode':'text', 'title':'', 'desc':'',
                 'picurl':'', 'url':''}
 
         if msgType == "event":
-            event = xml.find("Event").text
+            event = gettext("Event")
             if event == "subscribe":
                 content['desc'] = """欢迎关注比格！
 小格目前有两大技能：
@@ -1735,9 +1740,9 @@ class WeixinBiggerView(TemplateView):
 
         elif msgType == "text" or msgType == "voice":
             if msgType == "text":
-                wordname=xml.find("Content").text#获得用户所输入的内容
+                wordname=gettext("Content")#获得用户所输入的内容
             else:
-                text_raw=xml.find("Recognition").text
+                text_raw=gettext("Recognition")
                 wordname=text_raw.replace(u'！',' ').replace(u'。',' ')
 
             if re.match('^#.+$', wordname):#this is a command
@@ -1829,8 +1834,8 @@ d: 删除某单词:
                 content['mode'] = 'text'
 
         elif msgType == "image":
-            picurl = xml.find("PicUrl").text
-            mediaid = xml.find("MediaId").text
+            picurl = gettext("PicUrl")
+            mediaid = gettext("MediaId")
 
             """
             content['desc'] = ("服务器升级维护中，暂停服务；"
