@@ -1768,7 +1768,7 @@ d: 删除某单词:
 
                     rets = ['Your list: (%d)'%len(items),]
                     for item in items:
-                        rets.append(item.wordname+' '+item.time_added.strftime("[%m-%d %H:%M:%S]")+'['+str(item.count)+']')
+                        rets.append(item.wordname+'\n    ['+str(item.count)+']'+item.time_modified.strftime("%m-%d %H:%M:%S"))
                     content['desc'] = '\n'.join(rets)
 
                 elif cmd == 'd':
