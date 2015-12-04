@@ -13,6 +13,7 @@ import re
 import urllib
 import urllib2
 
+from datetime import timedelta
 
 from django.views.generic import *
 from django.http import *
@@ -28,7 +29,7 @@ from django.utils import simplejson
 # Imaginary function to handle an uploaded file.
 from crike_django.models import *
 from crike_django.forms import *
-from crike_django.settings import MEDIA_ROOT,STATIC_ROOT
+from crike_django.settings import MEDIA_ROOT,STATIC_ROOT,TIME_ZONE
 from word_utils import download_word, handle_uploaded_file, get_content_from_url
 from image_download import download_images_single, is_path_full
 from multiprocessing import Process
@@ -1768,7 +1769,8 @@ d: 删除某单词:
 
                     rets = ['Your list: (%d)'%len(items),]
                     for item in items:
-                        rets.append(item.wordname+'\n    ['+str(item.count)+']'+item.time_modified.strftime("%m-%d %H:%M:%S"))
+                        rets.append(item.wordname+'\n    ['+str(item.count)+']'+
+                                (item.time_modified+timedelta(hours=8)).strftime("%m-%d %H:%M:%S"))
                     content['desc'] = '\n'.join(rets)
 
                 elif cmd == 'd':
