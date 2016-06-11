@@ -43,6 +43,10 @@ from poster.streaminghttp import register_openers
 from alipay.alipay import *
 from urllib import urlencode,quote,unquote
 
+#for encode error
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 # Utils
 
 def clean_word(request,wordname):
@@ -641,7 +645,7 @@ class LessonShowView(TemplateView):
         self._record(request, book, lesson)
         lesson_result = LessonStat.objects.get_or_create(user=request.user,
                                                          lesson=lesson_obj)[0]
-        print 'Show with LessonStat: ', lesson_result
+        #print 'Show with LessonStat: ', lesson_result
 
         return render(request, self.template_name,
                {'words': words, 'book': book, 'lesson': lesson,
@@ -1714,7 +1718,7 @@ class WeixinBiggerView(TemplateView):
             else:
                 return ''
         xml_str = smart_str(request.body)
-        print xml_str
+        #print xml_str
         xml = etree.fromstring(xml_str)#进行XML解析
         msgType = gettext("MsgType")
         msgid = gettext("MsgId")
@@ -1856,7 +1860,7 @@ d: 删除某单词:
                                   "（点击前面的任务消息可以查看是否完成）")
                 content['mode'] = 'text'
                 xml_str = self.reply_str(fromUser,toUser,createTime,content)
-                print xml_str
+                #print xml_str
                 return HttpResponse(xml_str)
  
             task = NeuralTask.objects.create(userid=fromUser, mediaid=mediaid,
@@ -1872,7 +1876,7 @@ d: 删除某单词:
 
 
         xml_str = self.reply_str(fromUser,toUser,createTime,content)
-        print xml_str
+        #print xml_str
         return HttpResponse(xml_str)
 
     @csrf_exempt
